@@ -1,0 +1,150 @@
+/* Reset minimal */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #0d0d0d;
+  color: #f0f0f0;
+  line-height: 1.6;
+  padding-bottom: 100px;
+}
+
+a {
+  color: #ff4d4d;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Header */
+header {
+  background: #1a1a1a;
+  padding: 40px 20px;
+  text-align: center;
+  border-bottom: 2px solid #ff4d4d;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+header p {
+  font-size: 1.2rem;
+  color: #aaa;
+}
+
+nav {
+  margin-top: 20px;
+}
+
+nav a {
+  margin: 0 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Highlight */
+.highlight {
+  padding: 60px 20px;
+  background-color: #111;
+  text-align: center;
+}
+
+.highlight h2 {
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+}
+
+.highlight span {
+  color: #ff4d4d;
+}
+
+.highlight-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+
+.highlight-content img {
+  max-width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(255, 77, 77, 0.2);
+}
+
+.highlight-content .desc {
+  max-width: 400px;
+  text-align: left;
+}
+
+.btn {
+  display: inline-block;
+  margin-top: 20px;
+  background: #ff4d4d;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background: #e60000;
+}
+
+/* Project grid */
+#projects {
+  padding: 60px 20px;
+  background: #0d0d0d;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.project-card {
+  background: #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(255, 77, 77, 0.15);
+  transition: transform 0.2s;
+}
+
+.project-card:hover {
+  transform: scale(1.03);
+}
+
+.project-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.project-card h3 {
+  padding: 15px;
+}
+
+/* Footer */
+footer {
+  padding: 40px 20px;
+  background: #1a1a1a;
+  text-align: center;
+  border-top: 2px solid #ff4d4d;
+}
+
+footer h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
