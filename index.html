@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Antoine Pezzulo – Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&display=swap" rel="stylesheet">
   <style>
     :root {
       --radius: 1rem;
@@ -17,10 +18,6 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-    }
-
-    html {
-      scrollbar-width: none;
     }
 
     html::-webkit-scrollbar {
@@ -167,7 +164,7 @@
       -webkit-backdrop-filter: blur(10px);
       transform: translateY(100%);
       opacity: 0;
-      transition: transform 0.4s ease, opacity 0.4s ease;
+      transition: transform 0.15s ease-out, opacity 0.15s ease-out;
       z-index: 2;
     }
 
@@ -176,16 +173,75 @@
       opacity: 1;
     }
 
+    .project.featured .card-front h3 {
+      font-size: 2.4rem;
+      padding: 2rem;
+      font-family: 'Bruno Ace SC', sans-serif;
+      letter-spacing: 0.06em;
+    }
+
     .card-back {
       transform: rotateY(180deg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding: 1rem 1.5rem;
       color: #fff;
-      font-size: 1.5rem;
+      font-size: 1rem;
+    }
+
+    .card-back-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      width: 100%;
+      gap: 1rem;
+    }
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .top-row h4 {
+      font-size: 1.3rem;
       font-weight: bold;
-      padding: 2rem;
-      text-align: center;
+      margin-bottom: 0.2rem;
+    }
+
+    .top-row span {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #ccc;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .action-button {
+      background: #e2e2e2;
+      color: #000;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      border-radius: 1.5rem;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .action-button:hover {
+      background: #f5f5f5;
+      transform: scale(1.05);
+    }
+
+    .card-back p {
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: #ccc;
     }
 
     footer {
@@ -200,138 +256,192 @@
     }
 
     @keyframes fadeUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes fadeDown {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes fadeCard {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>ANTOINE PEZZULO</h1>
-    <p>Game Design Student — ISART Digital</p>
-  </header>
+<header>
+  <h1>ANTOINE PEZZULO</h1>
+  <p>Game Design Student — ISART Digital</p>
+</header>
 
-  <div class="section-title">Projects</div>
+<div class="section-title">Projects</div>
 
-  <div class="projects">
-    <div class="project featured">
-      <div class="card-inner">
-        <div class="card-face card-front">
-          <img src="img/rockets_banner.png" alt="Muscles & Rockets">
-          <h3>Muscles & Rockets</h3>
-        </div>
-        <div class="card-face card-back">Coming Soon</div>
+<div class="projects">
+  <!-- METRO -->
+  <div class="project featured">
+    <div class="card-inner">
+      <div class="card-face card-front">
+        <img src="img/rockets_banner.png" alt="METRO">
+        <h3>METRO</h3>
       </div>
-    </div>
-
-    <div class="project">
-      <div class="card-inner">
-        <div class="card-face card-front">
-          <img src="img/project1_thumb.png" alt="Voracines">
-          <h3>Voracines</h3>
+      <div class="card-face card-back">
+        <div class="card-back-content">
+          <div class="top-row">
+            <div>
+              <h4>METRO</h4>
+              <span>Solo</span>
+            </div>
+            <div class="buttons">
+              <a href="#" class="action-button">itch.io</a>
+              <a href="#" class="action-button">Trailer</a>
+              <a href="#" class="action-button">⬇</a>
+            </div>
+          </div>
+          <p>Un jeu de vitesse dans un tunnel néon en vue arrière. Évitez les obstacles et surfez sur la musique.</p>
         </div>
-        <div class="card-face card-back">Coming Soon</div>
-      </div>
-    </div>
-
-    <div class="project">
-      <div class="card-inner">
-        <div class="card-face card-front">
-          <img src="img/project2_thumb.png" alt="Tetriest">
-          <h3>Tetriest</h3>
-        </div>
-        <div class="card-face card-back">Coming Soon</div>
-      </div>
-    </div>
-
-    <div class="project">
-      <div class="card-inner">
-        <div class="card-face card-front">
-          <img src="img/project3_thumb.png" alt="Space Arena">
-          <h3>Space Arena</h3>
-        </div>
-        <div class="card-face card-back">Coming Soon</div>
       </div>
     </div>
   </div>
 
-  <div class="section-title">Contact</div>
+  <!-- Pleasant Chalk -->
+  <div class="project">
+    <div class="card-inner">
+      <div class="card-face card-front">
+        <img src="img/project1_thumb.png" alt="Pleasant Chalk">
+        <h3>Pleasant Chalk</h3>
+      </div>
+      <div class="card-face card-back">
+        <div class="card-back-content">
+          <div class="top-row">
+            <div>
+              <h4>Pleasant Chalk</h4>
+              <span>Solo</span>
+            </div>
+            <div class="buttons">
+              <a href="#" class="action-button">itch.io</a>
+              <a href="#" class="action-button">Trailer</a>
+              <a href="#" class="action-button">⬇</a>
+            </div>
+          </div>
+          <p>Un puzzle narratif poétique basé sur la mémoire, le mouvement et les traces laissées au sol.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <footer>
-    Email : antoine.pezzulo@email.com<br>
-    LinkedIn : @antoinepezzulo
-  </footer>
+  <!-- Muscles & Rockets -->
+  <div class="project">
+    <div class="card-inner">
+      <div class="card-face card-front">
+        <img src="img/project2_thumb.png" alt="Muscles & Rockets">
+        <h3>Muscles & Rockets</h3>
+      </div>
+      <div class="card-face card-back">
+        <div class="card-back-content">
+          <div class="top-row">
+            <div>
+              <h4>Muscles & Rockets</h4>
+              <span>Team of 8</span>
+            </div>
+            <div class="buttons">
+              <a href="#" class="action-button">itch.io</a>
+              <a href="#" class="action-button">Trailer</a>
+              <a href="#" class="action-button">⬇</a>
+            </div>
+          </div>
+          <p>Un platformer 2.5D où le personnage avance uniquement grâce au recul d’un lance-roquettes. Zéro saut, 100% action.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <script>
-    document.querySelectorAll('.project').forEach(project => {
-      const inner = project.querySelector('.card-inner');
-      let targetX = 0, targetY = 0;
-      let currentX = 0, currentY = 0;
-      const friction = 0.06;
-      const maxRotation = project.classList.contains('featured') ? 6 : 12;
-      let isFlipping = false;
+  <!-- Voracines -->
+  <div class="project">
+    <div class="card-inner">
+      <div class="card-face card-front">
+        <img src="img/project3_thumb.png" alt="Voracines">
+        <h3>Voracines</h3>
+      </div>
+      <div class="card-face card-back">
+        <div class="card-back-content">
+          <div class="top-row">
+            <div>
+              <h4>Voracines</h4>
+              <span>Team of 8</span>
+            </div>
+            <div class="buttons">
+              <a href="#" class="action-button">itch.io</a>
+              <a href="#" class="action-button">Trailer</a>
+              <a href="#" class="action-button">⬇</a>
+            </div>
+          </div>
+          <p>Un jeu de plateau stratégique où des arbres maléfiques s’étendent autour d’un village pour dévorer la vie humaine.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-      const update = () => {
-        if (!isFlipping) {
-          currentX += (targetX - currentX) * friction;
-          currentY += (targetY - currentY) * friction;
-          const baseY = inner.classList.contains('flipped') ? 180 : 0;
-          inner.style.transform = `rotateX(${currentY}deg) rotateY(${currentX + baseY}deg)`;
-        }
-        requestAnimationFrame(update);
-      };
-      update();
+<div class="section-title">Contact</div>
 
-      project.addEventListener('mousemove', e => {
-        if (isFlipping) return;
-        const rect = project.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const percentX = x / rect.width;
-        const percentY = y / rect.height;
-        targetX = (percentX - 0.5) * 2 * maxRotation;
-        targetY = (0.5 - percentY) * 2 * maxRotation;
-      });
+<footer>
+  Email : antoine.pezzulo@email.com<br>
+  LinkedIn : @antoinepezzulo
+</footer>
 
-      project.addEventListener('mouseleave', () => {
-        if (isFlipping) return;
-        targetX = 0;
-        targetY = 0;
-      });
+<script>
+  document.querySelectorAll('.project').forEach(project => {
+    const inner = project.querySelector('.card-inner');
+    let targetX = 0, targetY = 0;
+    let currentX = 0, currentY = 0;
+    const friction = 0.06;
+    const maxRotation = project.classList.contains('featured') ? 6 : 12;
+    let isFlipping = false;
 
-      project.addEventListener('click', () => {
-        if (isFlipping) return;
-        isFlipping = true;
-        inner.style.transition = 'transform 0.8s ease';
-        const isNowFlipped = inner.classList.toggle('flipped');
-        const baseY = isNowFlipped ? 180 : 0;
-        inner.style.transform = `rotateX(0deg) rotateY(${baseY}deg)`;
+    const update = () => {
+      if (!isFlipping) {
+        currentX += (targetX - currentX) * friction;
+        currentY += (targetY - currentY) * friction;
+        const baseY = inner.classList.contains('flipped') ? 180 : 0;
+        inner.style.transform = `rotateX(${currentY}deg) rotateY(${currentX + baseY}deg)`;
+      }
+      requestAnimationFrame(update);
+    };
+    update();
 
-        setTimeout(() => {
-          targetX = targetY = currentX = currentY = 0;
-          inner.style.transition = '';
-          isFlipping = false;
-        }, 800);
-      });
+    project.addEventListener('mousemove', e => {
+      if (isFlipping) return;
+      const rect = project.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const percentX = x / rect.width;
+      const percentY = y / rect.height;
+      targetX = (percentX - 0.5) * 2 * maxRotation;
+      targetY = (0.5 - percentY) * 2 * maxRotation;
     });
-  </script>
+
+    project.addEventListener('mouseleave', () => {
+      if (isFlipping) return;
+      targetX = 0;
+      targetY = 0;
+    });
+
+    project.addEventListener('click', () => {
+      if (isFlipping) return;
+      isFlipping = true;
+      inner.style.transition = 'transform 0.8s ease';
+      const isNowFlipped = inner.classList.toggle('flipped');
+      const baseY = isNowFlipped ? 180 : 0;
+      inner.style.transform = `rotateX(0deg) rotateY(${baseY}deg)`;
+      setTimeout(() => {
+        targetX = targetY = currentX = currentY = 0;
+        inner.style.transition = '';
+        isFlipping = false;
+      }, 800);
+    });
+  });
+</script>
 
 </body>
 </html>
