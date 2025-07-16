@@ -1,57 +1,337 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portfolio Game Designer</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Antoine Pezzulo – Portfolio</title>
+  <style>
+    :root {
+      --radius: 1rem;
+      --bg: linear-gradient(145deg, #0f0f0f, #1c1c1c);
+      --glass: rgba(255, 255, 255, 0.05);
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      --text-color: #f2f2f2;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scrollbar-width: none;
+    }
+
+    html::-webkit-scrollbar {
+      display: none;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+      background: var(--bg);
+      color: var(--text-color);
+      padding: 4rem 1rem 2rem;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 4rem;
+      opacity: 0;
+      transform: translateY(-40px);
+      animation: fadeDown 0.8s ease-out 0.2s forwards;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      font-weight: 900;
+    }
+
+    header p {
+      font-size: 1rem;
+      color: #aaa;
+      letter-spacing: 0.5px;
+      margin-top: 0.5rem;
+      font-weight: 300;
+      opacity: 0;
+      transform: translateY(40px);
+      animation: fadeUp 0.8s ease-out 0.5s forwards;
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      text-transform: uppercase;
+      text-align: center;
+      margin: 4rem 0 2rem;
+      letter-spacing: 0.1em;
+      color: #aaa;
+      position: relative;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 0.8s ease-out 0.7s forwards;
+    }
+
+    .section-title::before,
+    .section-title::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background: #444;
+    }
+
+    .section-title::before { left: 0; }
+    .section-title::after { right: 0; }
+
+    .projects {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .project {
+      background: transparent;
+      border-radius: var(--radius);
+      perspective: 1000px;
+      cursor: pointer;
+      flex: 1 1 calc(50% - 2rem);
+      max-width: calc(50% - 2rem);
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeCard 0.6s ease forwards;
+    }
+
+    .project:nth-child(1) { animation-delay: 1s; }
+    .project:nth-child(2) { animation-delay: 1.2s; }
+    .project:nth-child(3) { animation-delay: 1.4s; }
+    .project:nth-child(4) { animation-delay: 1.6s; }
+
+    .project.featured {
+      flex: 1 1 100%;
+      max-width: 100%;
+    }
+
+    @media (max-width: 700px) {
+      .project {
+        flex: 1 1 100%;
+        max-width: 100%;
+      }
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      transform-style: preserve-3d;
+      border-radius: var(--radius);
+      will-change: transform;
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      background: var(--glass);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      overflow: hidden;
+      transform-style: preserve-3d;
+    }
+
+    .card-front img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-front h3 {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      padding: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transform: translateY(100%);
+      opacity: 0;
+      transition: transform 0.4s ease, opacity 0.4s ease;
+      z-index: 2;
+    }
+
+    .project:hover .card-front h3 {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.5rem;
+      font-weight: bold;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    footer {
+      margin-top: 6rem;
+      padding: 2rem;
+      font-size: 0.9rem;
+      color: #888;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 0.8s ease-out 2s forwards;
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeDown {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeCard {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
 <body>
+
   <header>
-    <h1>Antoine Pezzulo</h1>
-    <p>Game Designer & Creative Coder</p>
-    <nav>
-      <a href="#projects">Projets</a>
-      <a href="#contact">Contact</a>
-    </nav>
+    <h1>ANTOINE PEZZULO</h1>
+    <p>Game Design Student — ISART Digital</p>
   </header>
 
-  <main>
-    <section class="highlight">
-      <h2>En vedette : <span>Muscles & Rockets</span></h2>
-      <div class="highlight-content">
-        <img src="img/rockets_thumb.jpg" alt="Muscles & Rockets">
-        <div class="desc">
-          <p>Un platformer 2.5D où chaque mouvement est déclenché par des explosions de roquettes. Jeu solo intense, sans saut, au feeling viscéral.</p>
-          <a href="muscles-and-rockets.html" class="btn">Découvrir le projet</a>
+  <div class="section-title">Projects</div>
+
+  <div class="projects">
+    <div class="project featured">
+      <div class="card-inner">
+        <div class="card-face card-front">
+          <img src="img/rockets_banner.png" alt="Muscles & Rockets">
+          <h3>Muscles & Rockets</h3>
         </div>
+        <div class="card-face card-back">Coming Soon</div>
       </div>
-    </section>
+    </div>
 
-    <section id="projects">
-      <h2>Mes projets</h2>
-      <div class="project-grid">
-        <a href="project1.html" class="project-card">
-          <img src="img/project1_thumb.jpg" alt="Project 1">
+    <div class="project">
+      <div class="card-inner">
+        <div class="card-face card-front">
+          <img src="img/project1_thumb.png" alt="Voracines">
           <h3>Voracines</h3>
-        </a>
-        <a href="project2.html" class="project-card">
-          <img src="img/project2_thumb.jpg" alt="Project 2">
-          <h3>Tetriest</h3>
-        </a>
-        <a href="project3.html" class="project-card">
-          <img src="img/project3_thumb.jpg" alt="Project 3">
-          <h3>Space Arena</h3>
-        </a>
+        </div>
+        <div class="card-face card-back">Coming Soon</div>
       </div>
-    </section>
-  </main>
+    </div>
 
-  <footer id="contact">
-    <h2>Contact</h2>
-    <p>Email : <a href="mailto:antoine.pezzulo@email.com">antoine.pezzulo@email.com</a></p>
-    <p>LinkedIn : <a href="https://linkedin.com/in/antoinepezzulo">@antoinepezzulo</a></p>
-    <p>Itch.io : <a href="https://antoinepezzulo.itch.io">antoinepezzulo.itch.io</a></p>
+    <div class="project">
+      <div class="card-inner">
+        <div class="card-face card-front">
+          <img src="img/project2_thumb.png" alt="Tetriest">
+          <h3>Tetriest</h3>
+        </div>
+        <div class="card-face card-back">Coming Soon</div>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="card-inner">
+        <div class="card-face card-front">
+          <img src="img/project3_thumb.png" alt="Space Arena">
+          <h3>Space Arena</h3>
+        </div>
+        <div class="card-face card-back">Coming Soon</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Contact</div>
+
+  <footer>
+    Email : antoine.pezzulo@email.com<br>
+    LinkedIn : @antoinepezzulo
   </footer>
+
+  <script>
+    document.querySelectorAll('.project').forEach(project => {
+      const inner = project.querySelector('.card-inner');
+      let targetX = 0, targetY = 0;
+      let currentX = 0, currentY = 0;
+      const friction = 0.06;
+      const maxRotation = project.classList.contains('featured') ? 6 : 12;
+      let isFlipping = false;
+
+      const update = () => {
+        if (!isFlipping) {
+          currentX += (targetX - currentX) * friction;
+          currentY += (targetY - currentY) * friction;
+          const baseY = inner.classList.contains('flipped') ? 180 : 0;
+          inner.style.transform = `rotateX(${currentY}deg) rotateY(${currentX + baseY}deg)`;
+        }
+        requestAnimationFrame(update);
+      };
+      update();
+
+      project.addEventListener('mousemove', e => {
+        if (isFlipping) return;
+        const rect = project.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const percentX = x / rect.width;
+        const percentY = y / rect.height;
+        targetX = (percentX - 0.5) * 2 * maxRotation;
+        targetY = (0.5 - percentY) * 2 * maxRotation;
+      });
+
+      project.addEventListener('mouseleave', () => {
+        if (isFlipping) return;
+        targetX = 0;
+        targetY = 0;
+      });
+
+      project.addEventListener('click', () => {
+        if (isFlipping) return;
+        isFlipping = true;
+        inner.style.transition = 'transform 0.8s ease';
+        const isNowFlipped = inner.classList.toggle('flipped');
+        const baseY = isNowFlipped ? 180 : 0;
+        inner.style.transform = `rotateX(0deg) rotateY(${baseY}deg)`;
+
+        setTimeout(() => {
+          targetX = targetY = currentX = currentY = 0;
+          inner.style.transition = '';
+          isFlipping = false;
+        }, 800);
+      });
+    });
+  </script>
+
 </body>
 </html>
