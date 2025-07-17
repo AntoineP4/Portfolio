@@ -367,13 +367,13 @@
               <span style="font-size: 2rem;">Solo</span>
             </div>
             <div class="buttons" style="gap: 1rem; align-items: center;">
-              <a href="#" class="action-button" style="padding: 1.2rem 2.4rem; font-size: 1.9rem;">
+              <a href="https://youtu.be/voMQWys06b8" target="_blank" class="action-button" style="padding: 1.2rem 2.4rem; font-size: 1.9rem;">
                 <img src="img/ytb logo.png" style="height: 2rem; margin-right: 1rem;">Trailer
               </a>
               <a href="#" class="action-button" style="padding: 1.2rem 2.4rem; font-size: 1.9rem;">
                 <img src="img/itch logo.png" style="height: 2rem; margin-right: 1rem;">Itch.io
               </a>
-              <a href="#" class="action-button download-only">
+              <a href="files/METRO.zip" download class="action-button download-only">
                 <img src="img/dl logo.png" style="height: 2rem; width: 2rem;">
               </a>
             </div>
@@ -404,7 +404,7 @@
             <div class="buttons">
               <a href="#" class="action-button"><img src="img/ytb logo.png">Trailer</a>
               <a href="#" class="action-button"><img src="img/itch logo.png">Itch.io</a>
-              <a href="#" class="action-button download-only"><img src="img/dl logo.png"></a>
+              <a href="files/Pleasant Chalk.zip" download class="action-button download-only"><img src="img/dl logo.png"></a>
             </div>
           </div>
           <p>Un puzzle narratif poétique basé sur la mémoire, le mouvement et les traces laissées au sol.</p>
@@ -429,9 +429,9 @@
               <span>Team of 8</span>
             </div>
             <div class="buttons">
-              <a href="#" class="action-button"><img src="img/ytb logo.png">Trailer</a>
+              <a href="https://youtu.be/cdR5du5tKaw" target="_blank" class="action-button"><img src="img/ytb logo.png">Trailer</a>
               <a href="#" class="action-button"><img src="img/itch logo.png">Itch.io</a>
-              <a href="#" class="action-button download-only"><img src="img/dl logo.png"></a>
+              <a href="files/Muscles & Rockets.zip" download class="action-button download-only"><img src="img/dl logo.png"></a>
             </div>
           </div>
           <p>Un platformer 2.5D où le personnage avance uniquement grâce au recul d’un lance-roquettes. Zéro saut, 100% action.</p>
@@ -456,13 +456,11 @@
               <span>Team of 8</span>
             </div>
             <div class="buttons">
-              <a href="#" class="action-button"><img src="img/ytb logo.png">Trailer</a>
-              <a href="#" class="action-button"><img src="img/itch logo.png">Itch.io</a>
-              <a href="#" class="action-button download-only"><img src="img/dl logo.png"></a>
+              <a href="https://youtu.be/bdllN41GYCA" target="_blank" class="action-button"><img src="img/ytb logo.png">Trailer</a>
             </div>
           </div>
           <p>Un jeu de plateau stratégique où des arbres maléfiques s’étendent autour d’un village pour dévorer la vie humaine.</p>
-          <img src="img/unity logo.png" class="engine-logo">
+          <img src="img/no engine logo.png" class="engine-logo">
         </div>
       </div>
     </div>
@@ -488,7 +486,12 @@
               <a href="#" class="action-button download-only"><img src="img/dl logo.png"></a>
             </div>
           </div>
-          <p>placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder </p>
+<p>
+  A game made by Ludo. Classic Ludo. You know, the man, the myth, the ludothèque himself.<br>
+  Honestly, that bastard went hiking or some crap.<br><br>
+  So yeah, nothing’s gonna get done, I’m telling you straight up. Your guess is as good as mine.<br>
+  All I know is there was supposed to be a build two weeks ago, and now the only thing being built is Ludo’s leg muscles on that goddamn trail.</p>
+
           <img src="img/godot logo.png" class="engine-logo">
         </div>
       </div>
@@ -505,6 +508,10 @@
 </footer>
 
 <script>
+  document.querySelectorAll('.action-button').forEach(btn => {
+    btn.addEventListener('click', e => e.stopPropagation());
+  });
+
   document.querySelectorAll('.project').forEach(project => {
     const inner = project.querySelector('.card-inner');
     let targetX = 0, targetY = 0;
