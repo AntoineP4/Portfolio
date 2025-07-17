@@ -107,6 +107,7 @@
     .project:nth-child(2) { animation-delay: 1.2s; }
     .project:nth-child(3) { animation-delay: 1.4s; }
     .project:nth-child(4) { animation-delay: 1.6s; }
+    .project:nth-child(5) { animation-delay: 1.8s; }
 
     .project.featured {
       flex: 1 1 100%;
@@ -180,6 +181,49 @@
       letter-spacing: 0.06em;
     }
 
+    .project.featured .card-back {
+      font-size: 2rem;
+      padding: 2rem 3rem;
+    }
+
+    .project.featured .top-row h4 {
+      font-size: 2.6rem;
+    }
+
+    .project.featured .top-row span {
+      font-size: 2rem;
+    }
+
+    .project.featured .card-back p {
+      font-size: 1.8rem;
+      line-height: 1.8;
+    }
+
+    .project.featured .action-button {
+      padding: 1.2rem 2.4rem;
+      font-size: 1.9rem;
+      border-radius: 3rem;
+    }
+
+    .project.featured .action-button img {
+      height: 2rem;
+    }
+
+    .project.featured .action-button.download-only {
+      width: 4.4rem;
+      height: 4.4rem;
+      padding: 0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .project.featured .action-button.download-only img {
+      height: 2rem;
+      width: 2rem;
+      object-fit: contain;
+    }
     .card-back {
       transform: rotateY(180deg);
       padding: 1rem 1.5rem;
@@ -228,14 +272,44 @@
       font-weight: 500;
       border-radius: 1.5rem;
       text-decoration: none;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
       transition: background 0.3s ease, transform 0.2s ease;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .action-button img {
+      height: 1rem;
+      margin-right: 0.4rem;
     }
 
     .action-button:hover {
       background: #f5f5f5;
       transform: scale(1.05);
+    }
+
+    .action-button.download-only {
+      border-radius: 50%;
+      width: 2.4rem;
+      height: 2.4rem;
+      padding: 0.3rem;
+      justify-content: center;
+    }
+
+    .action-button.download-only img {
+      height: 1.3rem;
+      margin: 0;
+    }
+
+    .project.featured .engine-logo {
+      height: 3rem;
+    }
+
+    .engine-logo {
+      height: 1.5rem;
+      opacity: 0.7;
+      margin-top: auto;
+      align-self: flex-end;
     }
 
     .card-back p {
@@ -269,7 +343,6 @@
   </style>
 </head>
 <body>
-
 <header>
   <h1>ANTOINE PEZZULO</h1>
   <p>Game Design Student — ISART Digital</p>
@@ -278,6 +351,7 @@
 <div class="section-title">Projects</div>
 
 <div class="projects">
+
   <!-- METRO -->
   <div class="project featured">
     <div class="card-inner">
@@ -289,16 +363,25 @@
         <div class="card-back-content">
           <div class="top-row">
             <div>
-              <h4>METRO</h4>
-              <span>Solo</span>
+              <h4 style="font-size: 2.6rem;">METRO</h4>
+              <span style="font-size: 2rem;">Solo</span>
             </div>
-            <div class="buttons">
-              <a href="#" class="action-button">itch.io</a>
-              <a href="#" class="action-button">Trailer</a>
-              <a href="#" class="action-button">⬇</a>
+            <div class="buttons" style="gap: 1rem; align-items: center;">
+              <a href="#" class="action-button" style="padding: 1.2rem 2.4rem; font-size: 1.9rem;">
+                <img src="img/ytb logo.png" style="height: 2rem; margin-right: 1rem;">Trailer
+              </a>
+              <a href="#" class="action-button" style="padding: 1.2rem 2.4rem; font-size: 1.9rem;">
+                <img src="img/itch logo.png" style="height: 2rem; margin-right: 1rem;">Itch.io
+              </a>
+              <a href="#" class="action-button download-only">
+                <img src="img/dl logo.png" style="height: 2rem; width: 2rem;">
+              </a>
             </div>
           </div>
-          <p>Un jeu de vitesse dans un tunnel néon en vue arrière. Évitez les obstacles et surfez sur la musique.</p>
+          <p style="font-size: 1.8rem; line-height: 1.8;">
+            Un jeu de vitesse dans un tunnel néon en vue arrière. Évitez les obstacles et surfez sur la musique.
+          </p>
+          <img src="img/unity logo.png" class="engine-logo" style="height: 3rem;">
         </div>
       </div>
     </div>
@@ -319,12 +402,13 @@
               <span>Solo</span>
             </div>
             <div class="buttons">
-              <a href="#" class="action-button">itch.io</a>
-              <a href="#" class="action-button">Trailer</a>
-              <a href="#" class="action-button">⬇</a>
+              <a href="#" class="action-button"><img src="img/ytb logo.png">Trailer</a>
+              <a href="#" class="action-button"><img src="img/itch logo.png">Itch.io</a>
+              <a href="#" class="action-button download-only"><img src="img/dl logo.png"></a>
             </div>
           </div>
           <p>Un puzzle narratif poétique basé sur la mémoire, le mouvement et les traces laissées au sol.</p>
+          <img src="img/unity logo.png" class="engine-logo">
         </div>
       </div>
     </div>
@@ -345,12 +429,13 @@
               <span>Team of 8</span>
             </div>
             <div class="buttons">
-              <a href="#" class="action-button">itch.io</a>
-              <a href="#" class="action-button">Trailer</a>
-              <a href="#" class="action-button">⬇</a>
+              <a href="#" class="action-button"><img src="img/ytb logo.png">Trailer</a>
+              <a href="#" class="action-button"><img src="img/itch logo.png">Itch.io</a>
+              <a href="#" class="action-button download-only"><img src="img/dl logo.png"></a>
             </div>
           </div>
           <p>Un platformer 2.5D où le personnage avance uniquement grâce au recul d’un lance-roquettes. Zéro saut, 100% action.</p>
+          <img src="img/unity logo.png" class="engine-logo">
         </div>
       </div>
     </div>
@@ -371,16 +456,45 @@
               <span>Team of 8</span>
             </div>
             <div class="buttons">
-              <a href="#" class="action-button">itch.io</a>
-              <a href="#" class="action-button">Trailer</a>
-              <a href="#" class="action-button">⬇</a>
+              <a href="#" class="action-button"><img src="img/ytb logo.png">Trailer</a>
+              <a href="#" class="action-button"><img src="img/itch logo.png">Itch.io</a>
+              <a href="#" class="action-button download-only"><img src="img/dl logo.png"></a>
             </div>
           </div>
           <p>Un jeu de plateau stratégique où des arbres maléfiques s’étendent autour d’un village pour dévorer la vie humaine.</p>
+          <img src="img/unity logo.png" class="engine-logo">
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Reflect -->
+  <div class="project">
+    <div class="card-inner">
+      <div class="card-face card-front">
+        <img src="img/project4_thumb.png" alt="Reflect">
+        <h3>Reflect</h3>
+      </div>
+      <div class="card-face card-back">
+        <div class="card-back-content">
+          <div class="top-row">
+            <div>
+              <h4>Reflect</h4>
+              <span>Team of 2</span>
+            </div>
+            <div class="buttons">
+              <a href="#" class="action-button"><img src="img/ytb logo.png">Trailer</a>
+              <a href="#" class="action-button"><img src="img/itch logo.png">Itch.io</a>
+              <a href="#" class="action-button download-only"><img src="img/dl logo.png"></a>
+            </div>
+          </div>
+          <p>placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder placeholder </p>
+          <img src="img/godot logo.png" class="engine-logo">
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <div class="section-title">Contact</div>
