@@ -600,8 +600,13 @@
     localStorage.setItem("lang", lang);
   }
 
-  const savedLang = localStorage.getItem("lang") || "fr";
+  // Détection langue navigateur simple et soft
+  const userLang = navigator.language || navigator.userLanguage || 'fr';
+  const defaultLang = userLang.toLowerCase().startsWith('fr') ? 'fr' : 'en';
+  const savedLang = localStorage.getItem("lang") || defaultLang;
+
   switchLanguage(savedLang);
+
   document.querySelectorAll("#lang-switch button").forEach((btn) =>
     btn.addEventListener("click", () => switchLanguage(btn.dataset.lang))
   );
