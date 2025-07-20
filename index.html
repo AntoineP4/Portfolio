@@ -1,672 +1,824 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Antoine Pezzulo – Portfolio</title>
-<link href="https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&display=swap" rel="stylesheet" />
-<style>
-  :root {
-    --radius: 1rem;
-    --bg: linear-gradient(145deg, #0f0f0f, #1c1c1c);
-    --glass: rgba(255,255,255,0.05);
-    --shadow: 0 20px 50px rgba(0,0,0,0.4);
-    --text-color: #f2f2f2;
-    --accent: #6b8cff;
-  }
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-    background: var(--bg);
-    color: var(--text-color);
-    padding: 4rem 1rem 2rem;
-    overflow-x: hidden;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  html::-webkit-scrollbar,
-  body::-webkit-scrollbar {
-    display: none;
-  }
-  header {
-    text-align: center;
-    margin-bottom: 2rem;
-    opacity: 0;
-    transform: translateY(-20px);
-    animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    animation-delay: 0.2s;
-  }
-  header h1 {
-    font-size: 3rem;
-    font-weight: 900;
-  }
-  header p {
-    font-size: 1rem;
-    color: #aaa;
-    letter-spacing: 0.5px;
-    margin-top: 0.5rem;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    animation-delay: 0.4s;
-  }
-  #lang-switch {
-    text-align: center;
-    margin-bottom: 2rem;
-    opacity: 0;
-    transform: translateY(-20px);
-    animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    animation-delay: 0.6s;
-  }
-  #lang-switch button {
-    margin: 0 0.5rem;
-    padding: 0.5rem 1rem;
-    background: rgba(255,255,255,0.1);
-    border: 2px solid transparent;
-    color: var(--text-color);
-    font-size: 1rem;
-    cursor: pointer;
-    border-radius: 0.5rem;
-    transition: background 0.3s, border-color 0.3s;
-  }
-  #lang-switch button:hover {
-    background: rgba(255,255,255,0.2);
-  }
-  #lang-switch button.selected {
-    background: rgba(107,140,255,0.2);
-    border-color: var(--accent);
-  }
-  .section-title {
-    font-size: 1.4rem;
-    text-transform: uppercase;
-    text-align: center;
-    margin: 4rem 0 2rem;
-    letter-spacing: 0.1em;
-    color: #aaa;
-    position: relative;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    animation-delay: 0.8s;
-  }
-  .section-title::before,
-  .section-title::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    width: 40%;
-    height: 1px;
-    background: #444;
-  }
-  .section-title::before {
-    left: 0;
-  }
-  .section-title::after {
-    right: 0;
-  }
-  .projects {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    justify-content: center;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  .project {
-    background: transparent;
-    border-radius: var(--radius);
-    perspective: 1000px;
-    cursor: pointer;
-    flex: 1 1 calc(50% - 2rem);
-    max-width: calc(50% - 2rem);
-    opacity: 0;
-    transform: translateY(30px);
-    animation: slideFadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  }
-  .project:nth-child(1) {
-    animation-delay: 1s;
-  }
-  .project:nth-child(2) {
-    animation-delay: 1.1s;
-  }
-  .project:nth-child(3) {
-    animation-delay: 1.2s;
-  }
-  .project:nth-child(4) {
-    animation-delay: 1.3s;
-  }
-  .project:nth-child(5) {
-    animation-delay: 1.4s;
-  }
-  .project.featured {
-    flex: 1 1 100%;
-    max-width: 100%;
-  }
-  @media (max-width: 700px) {
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Antoine Pezzulo – Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --radius: 1rem;
+      --bg: linear-gradient(145deg, #0f0f0f, #1c1c1c);
+      --glass: rgba(255,255,255,0.05);
+      --shadow: 0 20px 50px rgba(0,0,0,0.4);
+      --text-color: #f2f2f2;
+      --accent: #6b8cff;
+      --modal-bg: rgba(0,0,0,0.8);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+      background: var(--bg);
+      color: var(--text-color);
+      padding: 4rem 1rem 2rem;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
+    @keyframes slideFadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes slideFadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transform: translateY(-20px);
+      animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      animation-delay: 0.2s;
+    }
+    header h1 {
+      font-size: 3rem;
+      font-weight: 900;
+    }
+    header p {
+      font-size: 1rem;
+      color: #aaa;
+      letter-spacing: 0.5px;
+      margin-top: 0.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      animation-delay: 0.4s;
+    }
+
+    #lang-switch {
+      text-align: center;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transform: translateY(-20px);
+      animation: slideFadeIn 0.6s forwards;
+      animation-delay: 0.6s;
+    }
+    #lang-switch button {
+      margin: 0 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(255,255,255,0.1);
+      border: 2px solid transparent;
+      color: var(--text-color);
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 0.5rem;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    #lang-switch button:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    #lang-switch button.selected {
+      background: rgba(107,140,255,0.2);
+      border-color: var(--accent);
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      text-transform: uppercase;
+      text-align: center;
+      margin: 4rem 0 2rem;
+      letter-spacing: 0.1em;
+      color: #aaa;
+      position: relative;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: slideFadeIn 0.6s forwards;
+      animation-delay: 0.8s;
+    }
+    .section-title::before,
+    .section-title::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background: #444;
+    }
+    .section-title::before { left: 0; }
+    .section-title::after { right: 0; }
+
+    .projects {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
     .project {
+      background: transparent;
+      border-radius: var(--radius);
+      perspective: 1000px;
+      cursor: pointer;
+      flex: 1 1 calc(50% - 2rem);
+      max-width: calc(50% - 2rem);
+      opacity: 0;
+      transform: translateY(30px);
+      animation: slideFadeInUp 0.6s forwards;
+    }
+    .project:nth-child(1) { animation-delay: 1s; }
+    .project:nth-child(2) { animation-delay: 1.1s; }
+    .project:nth-child(3) { animation-delay: 1.2s; }
+    .project:nth-child(4) { animation-delay: 1.3s; }
+    .project:nth-child(5) { animation-delay: 1.4s; }
+    .project.featured {
       flex: 1 1 100%;
       max-width: 100%;
     }
-  }
-  .card-inner {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    transform-style: preserve-3d;
-    border-radius: var(--radius);
-    will-change: transform;
-  }
-  .card-face {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    background: var(--glass);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    backdrop-filter: blur(20px);
-    overflow: hidden;
-    transform-style: preserve-3d;
-  }
-  .card-front img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .card-front h3 {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    padding: 1rem;
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #fff;
-    background: rgba(255, 255, 255, 0.07);
-    transform: translateY(100%);
-    opacity: 0;
-    transition: transform 0.15s ease-out, opacity 0.15s ease-out;
-    z-index: 2;
-  }
-  .project:hover .card-front h3 {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  .project.featured .card-front h3 {
-    font-size: 2.4rem;
-    padding: 2rem;
-    font-family: 'Bruno Ace SC', sans-serif;
-    letter-spacing: 0.06em;
-  }
-  .project.featured .card-back {
-    font-size: 2rem;
-    padding: 2rem 3rem;
-  }
-  .project.featured .top-row h4 {
-    font-size: 2.6rem;
-  }
-  .project.featured .top-row span {
-    font-size: 2rem;
-  }
-  .project.featured .card-back p {
-    font-size: 1.8rem;
-    line-height: 1.8;
-  }
-  .action-button {
-    background: #e2e2e2;
-    color: #000;
-    padding: 0.6rem 1.2rem;
-    font-size: 0.95rem;
-    font-weight: 500;
-    border-radius: 1.5rem;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    transition: background 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  .action-button:hover {
-    background: #f5f5f5;
-    transform: scale(1.05);
-  }
-  .action-button img {
-    display: block;
-    height: 1rem;
-    margin-right: 0.4rem;
-  }
-  .action-button.download-only {
-    border-radius: 50%;
-    width: 2.4rem;
-    height: 2.4rem;
-    padding: 0.3rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .action-button.download-only img {
-    width: 1.3rem;
-    height: 1.3rem;
-    margin: 0;
-  }
-  .project.featured .buttons {
-    display: flex;
-    gap: 1rem; /* doublé ici, au lieu de 0.5rem */
-    align-items: flex-start;
-  }
-  .project.featured .action-button {
-    padding: 1.2rem 2.4rem;
-    font-size: 1.9rem;
-    border-radius: 3rem;
-  }
-  .project.featured .action-button img {
-    height: 2rem;
-    margin-right: 1rem;
-  }
-  .project.featured .action-button.download-only {
-    width: 4.4rem;
-    height: 4.4rem;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 0.4rem;
-  }
-  .project.featured .action-button.download-only img {
-    width: 2.2rem;
-    height: 2.2rem;
-    margin: 0;
-  }
-  .card-back {
-    transform: rotateY(180deg);
-    padding: 1rem 1.5rem;
-    color: #fff;
-    font-size: 1rem;
-  }
-  .card-back-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-    gap: 1rem;
-  }
-  .top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-  .top-row h4 {
-    font-size: 1.3rem;
-    font-weight: bold;
-    margin-bottom: 0.2rem;
-  }
-  .top-row span {
-    font-size: 1rem;
-    font-weight: 400;
-    color: #ccc;
-  }
-  .buttons {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-  .engine-logo {
-    height: 1.5rem;
-    opacity: 0.7;
-    margin-top: auto;
-    align-self: flex-end;
-  }
-  .project.featured .engine-logo {
-    height: 3rem;
-  }
-  footer {
-    margin-top: 6rem;
-    padding: 2rem;
-    font-size: 0.9rem;
-    text-align: center;
-    color: #888;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    animation-delay: 1.6s;
-  }
-  @keyframes slideFadeIn {
-    to {
-      opacity: 1;
+    @media (max-width: 700px) {
+      .project {
+        flex: 1 1 100%;
+        max-width: 100%;
+      }
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      transform-style: preserve-3d;
+      border-radius: var(--radius);
+      will-change: transform;
+    }
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      background: var(--glass);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+      overflow: hidden;
+      transform-style: preserve-3d;
+    }
+    .card-front img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .card-front h3 {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      padding: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+      background: rgba(255,255,255,0.07);
+      transform: translateY(100%);
+      opacity: 0;
+      transition: transform 0.15s ease-out, opacity 0.15s ease-out;
+      z-index: 2;
+    }
+    .project:hover .card-front h3 {
       transform: translateY(0);
+      opacity: 1;
+    }
+    .project.featured .card-front h3 {
+      font-size: 2.4rem;
+      padding: 2rem;
+      font-family: 'Bruno Ace SC', sans-serif;
+      letter-spacing: 0.06em;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+      padding: 1rem 1.5rem;
+      color: #fff;
+      font-size: 1rem;
+    }
+    .card-back-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      gap: 1rem;
+    }
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .top-row h4 {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 0.2rem;
+    }
+    .top-row span {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #ccc;
+    }
+    .buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .engine-logo {
+      height: 1.5rem;
+      opacity: 0.7;
+      margin-top: auto;
+      align-self: flex-end;
+    }
+    .project.featured .engine-logo {
+      height: 3rem;
+    }
+
+    .action-button {
+      background: #e2e2e2;
+      color: #000;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      border-radius: 1.5rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .action-button:hover {
+      background: #f5f5f5;
+      transform: scale(1.05);
+    }
+    .action-button img {
+      display: block;
+      height: 1rem;
+      margin-right: 0.4rem;
+    }
+    .action-button.download-only {
+      border-radius: 50%;
+      width: 2.4rem;
+      height: 2.4rem;
+      padding: 0.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .action-button.download-only img {
+      width: 1.3rem;
+      height: 1.3rem;
+      margin: 0;
+    }
+    .project.featured .buttons {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .project.featured .action-button {
+      padding: 1.2rem 2.4rem;
+      font-size: 1.9rem;
+      border-radius: 3rem;
+    }
+    .project.featured .action-button img {
+      height: 2rem;
+      margin-right: 1rem;
+    }
+    .project.featured .action-button.download-only {
+      width: 4.4rem;
+      height: 4.4rem;
+      padding: 0;
+      margin-top: 0.4rem;
+    }
+    .project.featured .action-button.download-only img {
+      width: 2.2rem;
+      height: 2.2rem;
+    }
+
+    .instant-demo {
+      animation: glow 1.5s infinite alternate ease-in-out;
+      border: 2px solid var(--accent);
+    }
+    @keyframes glow {
+      from { box-shadow: 0 0 10px var(--accent); }
+      to { box-shadow: 0 0 40px var(--accent); }
+    }
+
+    footer {
+      margin-top: 6rem;
+      padding: 2rem;
+      font-size: 0.9rem;
+      text-align: center;
+      color: #888;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: slideFadeIn 0.6s forwards;
+      animation-delay: 1.6s;
+    }
+        .project.featured .card-back h4 {
+      font-size: 2.6rem;
+    }
+
+    .project.featured .card-back span {
+      font-size: 2rem;
+    }
+
+    .project.featured .card-back p {
+      font-size: 2rem;
+      line-height: 1.6;
+    }
+      @media (max-width: 768px) {
+    .project.featured .card-back h4,
+    .project.featured .card-back span,
+    .project.featured .card-back p {
+      font-size: 1.4rem !important;
     }
   }
-  @keyframes slideFadeInUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
+    .action-button.instant-demo {
+      background: linear-gradient(135deg, #6b8cff, #88e1f2);
+      color: #fff;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      box-shadow: 0 0 15px rgba(107, 140, 255, 0.5);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      transition: all 0.3s ease;
     }
-  }
-</style>
+
+    .action-button.instant-demo::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.2), transparent 60%);
+      animation: pulse 2s infinite ease-in-out;
+      z-index: 0;
+    }
+
+    .action-button.instant-demo:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(107, 140, 255, 0.8);
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.5; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .action-button.instant-demo img {
+      z-index: 1;
+    }
+    .project.featured.glow-effect .card-back {
+      background: linear-gradient(145deg, #6b8cff20, #88e1f220);
+      box-shadow: 0 0 80px rgba(107, 140, 255, 0.5), inset 0 0 30px rgba(107, 140, 255, 0.2);
+      transition: background 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .project.featured.glow-effect .card-back p,
+    .project.featured.glow-effect .card-back h4,
+    .project.featured.glow-effect .card-back span {
+      color: #e0f0ff;
+      text-shadow: 0 0 10px rgba(107, 140, 255, 0.6);
+    }
+
+        .demo-container {
+      opacity: 0;
+      transform: scale(0.96);
+      animation: demoEnter 0.4s ease-out forwards;
+    }
+
+    @keyframes demoEnter {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .action-button.instant-demo:hover {
+  transform: scale(1.05); /* 👌 juste un léger zoom, sans rotation */
+  box-shadow: 0 0 30px rgba(107, 140, 255, 0.7);
+    }
+    @keyframes demoExit {
+      from {
+        opacity: 1;
+        transform: scale(1);
+      }
+      to {
+        opacity: 0;
+        transform: scale(0.96);
+      }
+    }
+    .demo-exit {
+      animation: demoExit 0.3s ease forwards;
+    }
+    .project.featured .action-button.download-only img {
+      margin: auto;
+      display: block;
+      position: relative;
+      top: 0;
+      left: 0;
+    }
+    .project.featured .action-button.download-only {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .project.featured .card-back {
+      transition: background 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .project.featured.glow-effect .card-back {
+      background: linear-gradient(145deg, #6b8cff20, #88e1f220);
+      box-shadow: 0 0 80px rgba(107, 140, 255, 0.5), inset 0 0 30px rgba(107, 140, 255, 0.2);
+    }
+
+  </style>
 </head>
 <body>
-<header>
-  <h1 data-i18n="name">ANTOINE PEZZULO</h1>
-  <p data-i18n="subtitle">Étudiant Game Design à ISART Digital</p>
-</header>
-<div id="lang-switch">
-  <button data-lang="fr">Français</button>
-  <button data-lang="en">English</button>
-</div>
-<div class="section-title" data-i18n="projects">Mes Projets</div>
-<div class="projects">
-  <!-- METRO -->
-  <div class="project featured">
-    <div class="card-inner">
-      <div class="card-face card-front">
-        <img src="img/metro.png" />
-        <h3>METRO</h3>
-      </div>
-      <div class="card-face card-back">
-        <div class="card-back-content">
-          <div class="top-row">
-            <div>
-              <h4>METRO</h4>
-              <span data-i18n="metro_team">Solo</span>
-            </div>
-            <div class="buttons">
-              <a
-                href="https://youtu.be/voMQWys06b8"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="action-button"
-                ><img src="img/ytb logo.png" />Trailer</a
-              >
-              <a href="#" class="action-button" rel="noopener noreferrer"
-                ><img src="img/itch logo.png" />Itch.io</a
-              >
-              <a href="files/METRO.zip" download class="action-button download-only"
-                ><img src="img/dl logo.png" /></a
-              >
-            </div>
-          </div>
-          <p data-i18n="metro_desc">
-            Un jeu de vitesse dans un tunnel néon en vue arrière. Évitez les
-            obstacles et surfez sur la musique.
-          </p>
-          <img src="img/unity logo.png" class="engine-logo" />
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Pleasant Chalk -->
-  <div class="project">
-    <div class="card-inner">
-      <div class="card-face card-front">
-        <img src="img/pleasant chalk.png" />
-        <h3>Pleasant Chalk</h3>
-      </div>
-      <div class="card-face card-back">
-        <div class="card-back-content">
-          <div class="top-row">
-            <div>
-              <h4>Pleasant Chalk</h4>
-              <span data-i18n="chalk_team">Solo</span>
-            </div>
-            <div class="buttons">
-              <a href="#" class="action-button" rel="noopener noreferrer"
-                ><img src="img/ytb logo.png" />Trailer</a
-              >
-              <a href="#" class="action-button" rel="noopener noreferrer"
-                ><img src="img/itch logo.png" />Itch.io</a
-              >
-              <a href="files/Pleasant Chalk.zip" download class="action-button download-only"
-                ><img src="img/dl logo.png" /></a
-              >
-            </div>
-          </div>
-          <p data-i18n="chalk_desc">
-            Un puzzle narratif poétique basé sur la mémoire, le mouvement et les
-            traces laissées au sol.
-          </p>
-          <img src="img/unity logo.png" class="engine-logo" />
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Muscles & Rockets -->
-  <div class="project">
-    <div class="card-inner">
-      <div class="card-face card-front">
-        <img src="img/muscles & rockets.png" />
-        <h3>Muscles & Rockets</h3>
-      </div>
-      <div class="card-face card-back">
-        <div class="card-back-content">
-          <div class="top-row">
-            <div>
-              <h4>Muscles & Rockets</h4>
-              <span data-i18n="mar_team">Équipe de 8</span>
-            </div>
-            <div class="buttons">
-              <a href="https://youtu.be/cdR5du5tKaw" target="_blank" rel="noopener noreferrer" class="action-button"
-                ><img src="img/ytb logo.png" />Trailer</a
-              >
-              <a href="#" class="action-button" rel="noopener noreferrer"
-                ><img src="img/itch logo.png" />Itch.io</a
-              >
-              <a href="files/Muscles & Rockets.zip" download class="action-button download-only"
-                ><img src="img/dl logo.png" /></a
-              >
-            </div>
-          </div>
-          <p data-i18n="mar_desc">
-            Un platformer 2.5D où le personnage avance uniquement grâce au
-            recul d’un lance-roquettes. Zéro saut, 100% action.
-          </p>
-          <img src="img/unity logo.png" class="engine-logo" />
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Voracines -->
-  <div class="project">
-    <div class="card-inner">
-      <div class="card-face card-front">
-        <img src="img/voracines.png" />
-        <h3>Voracines</h3>
-      </div>
-      <div class="card-face card-back">
-        <div class="card-back-content">
-          <div class="top-row">
-            <div>
-              <h4>Voracines</h4>
-              <span data-i18n="vor_team">Équipe de 8</span>
-            </div>
-            <div class="buttons">
-              <a href="https://youtu.be/bdllN41GYCA" target="_blank" rel="noopener noreferrer" class="action-button"
-                ><img src="img/ytb logo.png" />Trailer</a
-              >
-            </div>
-          </div>
-          <p data-i18n="vor_desc">
-            Un jeu de plateau stratégique où des arbres maléfiques s’étendent
-            autour d’un village pour dévorer la vie humaine.
-          </p>
-          <img src="img/no engine logo.png" class="engine-logo" />
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Reflect -->
-  <div class="project">
-    <div class="card-inner">
-      <div class="card-face card-front">
-        <img src="img/reflect.png" />
-        <h3>Reflect</h3>
-      </div>
-      <div class="card-face card-back">
-        <div class="card-back-content">
-          <div class="top-row">
-            <div>
-              <h4>Reflect</h4>
-              <span data-i18n="ref_team">Équipe de 2</span>
-            </div>
-            <div class="buttons">
-              <a href="#" class="action-button" rel="noopener noreferrer"
-                ><img src="img/ytb logo.png" />Trailer</a
-              >
-              <a href="#" class="action-button" rel="noopener noreferrer"
-                ><img src="img/itch logo.png" />Itch.io</a
-              >
-              <a href="#" class="action-button download-only" rel="noopener noreferrer"
-                ><img src="img/dl logo.png" /></a
-              >
-            </div>
-          </div>
-          <p data-i18n="ref_desc">
-            Un jeu développé par Ludo… et depuis, il est parti randonner.
-          </p>
-          <img src="img/godot logo.png" class="engine-logo" />
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="section-title" data-i18n="contact">Contact</div>
-<footer>
-  <span data-i18n="email">Email : antoine.pezzulo@email.com</span><br />
-  <span data-i18n="linkedin">LinkedIn : @antoinepezzulo</span>
-</footer>
 
-<script>
-  const translations = {
-    fr: {
-      name: "ANTOINE PEZZULO",
-      subtitle: "Étudiant Game Design à ISART Digital",
-      projects: "Mes Projets",
-      contact: "Contact",
-      email: "Email : antoine.pezzulo@email.com",
-      linkedin: "LinkedIn : @antoinepezzulo",
-      metro_team: "Solo",
-      metro_desc:
-        "Un jeu de vitesse dans un tunnel néon en vue arrière. Évitez les obstacles et surfez sur la musique.",
-      chalk_team: "Solo",
-      chalk_desc:
-        "Un puzzle narratif poétique basé sur la mémoire, le mouvement et les traces laissées au sol.",
-      mar_team: "Équipe de 8",
-      mar_desc:
-        "Un platformer 2.5D où le personnage avance uniquement grâce au recul d’un lance-roquettes. Zéro saut, 100% action.",
-      vor_team: "Équipe de 8",
-      vor_desc:
-        "Un jeu de plateau stratégique où des arbres maléfiques s’étendent autour d’un village pour dévorer la vie humaine.",
-      ref_team: "Équipe de 2",
-      ref_desc: "Un jeu développé par Ludo… et depuis, il est parti randonner.",
-    },
-    en: {
-      name: "ANTOINE PEZZULO",
-      subtitle: "Game Design Student at ISART Digital",
-      projects: "My Projects",
-      contact: "Contact",
-      email: "Email: antoine.pezzulo@email.com",
-      linkedin: "LinkedIn: @antoinepezzulo",
-      metro_team: "Solo",
-      metro_desc:
-        "A fast‑paced neon tunnel runner in third‑person view. Dodge obstacles and ride the music.",
-      chalk_team: "Solo",
-      chalk_desc:
-        "A poetic narrative puzzle about memory, movement and chalk traces.",
-      mar_team: "Team of 8",
-      mar_desc:
-        "A 2.5D platformer where the character moves only via rocket recoil. No jump, 100% action.",
-      vor_team: "Team of 8",
-      vor_desc:
-        "A strategic board‑game where evil trees spread around a village to devour human life.",
-      ref_team: "Team of 2",
-      ref_desc:
-        "A game made by Ludo… and then he went hiking, so nothing moved since.",
-    },
-  };
+  <header>
+    <h1 data-i18n="name">ANTOINE PEZZULO</h1>
+    <p data-i18n="subtitle">Étudiant Game Design à ISART Digital</p>
+  </header>
+
+  <div id="lang-switch">
+    <button data-lang="fr">Français</button>
+    <button data-lang="en">English</button>
+  </div>
+
+  <div class="section-title" data-i18n="projects">Mes Projets</div>
+  <div class="projects">
+
+<!-- METRO (featured) -->
+<div class="project featured">
+  <div class="card-inner">
+    <div class="card-face card-front">
+      <img src="img/metro.png" alt="METRO screenshot" />
+      <h3>METRO</h3>
+    </div>
+    <div class="card-face card-back">
+      <div class="card-back-content">
+        <div class="top-row">
+          <div>
+            <h4>METRO</h4>
+            <span data-i18n="metro_team">Solo</span>
+          </div>
+          <div class="buttons">
+            <button id="instant-demo-btn" class="action-button instant-demo">
+              <img src="img/play icon.png" alt="" />INSTANT DEMO
+            </button>
+            <a href="https://youtu.be/voMQWys06b8" target="_blank" rel="noopener noreferrer" class="action-button">
+              <img src="img/ytb logo.png" alt="" />Trailer
+            </a>
+            <a href="#" class="action-button">
+              <img src="img/itch logo.png" alt="" />Itch.io
+            </a>
+            <a href="files/METRO.zip" download class="action-button download-only">
+              <img src="img/dl logo.png" alt="Download METRO" />
+            </a>
+          </div>
+        </div>
+        <p data-i18n="metro_desc">
+          Un jeu de vitesse dans un tunnel néon en vue arrière. Évitez les obstacles et surfez sur la musique.
+        </p>
+        <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <!-- Pleasant Chalk -->
+    <div class="project">
+      <div class="card-inner">
+        <div class="card-face card-front">
+          <img src="img/pleasant chalk.png" alt="Pleasant Chalk screenshot" />
+          <h3>Pleasant Chalk</h3>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-back-content">
+            <div class="top-row">
+              <div>
+                <h4>Pleasant Chalk</h4>
+                <span data-i18n="chalk_team">Solo</span>
+              </div>
+              <div class="buttons">
+                <a href="#" class="action-button"><img src="img/ytb logo.png" alt="" />Trailer</a>
+                <a href="#" class="action-button"><img src="img/itch logo.png" alt="" />Itch.io</a>
+                <a href="files/Pleasant Chalk.zip" download class="action-button download-only"><img src="img/dl logo.png" alt="" /></a>
+              </div>
+            </div>
+            <p data-i18n="chalk_desc">
+              Un puzzle narratif poétique basé sur la mémoire, le mouvement et les traces laissées au sol.
+            </p>
+            <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Muscles & Rockets -->
+    <div class="project">
+      <div class="card-inner">
+        <div class="card-face card-front">
+          <img src="img/muscles & rockets.png" alt="Muscles & Rockets screenshot" />
+          <h3>Muscles & Rockets</h3>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-back-content">
+            <div class="top-row">
+              <div>
+                <h4>Muscles & Rockets</h4>
+                <span data-i18n="mar_team">Équipe de 8</span>
+              </div>
+              <div class="buttons">
+                <a href="https://youtu.be/cdR5du5tKaw" target="_blank" rel="noopener noreferrer" class="action-button">
+                  <img src="img/ytb logo.png" alt="" />Trailer
+                </a>
+                <a href="#" class="action-button"><img src="img/itch logo.png" alt="" />Itch.io</a>
+                <a href="files/Muscles & Rockets.zip" download class="action-button download-only"><img src="img/dl logo.png" alt="" /></a>
+              </div>
+            </div>
+            <p data-i18n="mar_desc">
+              Un platformer 2.5D où le personnage avance uniquement grâce au recul d’un lance-roquettes. Zéro saut, 100% action.
+            </p>
+            <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Voracines -->
+    <div class="project">
+      <div class="card-inner">
+        <div class="card-face card-front">
+          <img src="img/voracines.png" alt="Voracines screenshot" />
+          <h3>Voracines</h3>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-back-content">
+            <div class="top-row">
+              <div>
+                <h4>Voracines</h4>
+                <span data-i18n="vor_team">Équipe de 8</span>
+              </div>
+              <div class="buttons">
+                <a href="https://youtu.be/bdllN41GYCA" target="_blank" rel="noopener noreferrer" class="action-button">
+                  <img src="img/ytb logo.png" alt="" />Trailer
+                </a>
+              </div>
+            </div>
+            <p data-i18n="vor_desc">
+              Un jeu de plateau stratégique où des arbres maléfiques s’étendent autour d’un village pour dévorer la vie humaine.
+            </p>
+            <img src="img/no engine logo.png" class="engine-logo" alt="No engine logo" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reflect -->
+    <div class="project">
+      <div class="card-inner">
+        <div class="card-face card-front">
+          <img src="img/reflect.png" alt="Reflect screenshot" />
+          <h3>Reflect</h3>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-back-content">
+            <div class="top-row">
+              <div>
+                <h4>Reflect</h4>
+                <span data-i18n="ref_team">Équipe de 2</span>
+              </div>
+              <div class="buttons">
+                <a href="#" class="action-button"><img src="img/ytb logo.png" alt="" />Trailer</a>
+                <a href="#" class="action-button"><img src="img/itch logo.png" alt="" />Itch.io</a>
+                <a href="#" class="action-button download-only"><img src="img/dl logo.png" alt="" /></a>
+              </div>
+            </div>
+            <p data-i18n="ref_desc">
+              Un jeu développé par Ludo… et depuis, il est parti randonner.
+            </p>
+            <img src="img/godot logo.png" class="engine-logo" alt="Godot Logo" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-title" data-i18n="contact">Contact</div>
+  <footer>
+    <span data-i18n="email">Email : antoine.pezzulo@email.com</span><br />
+    <span data-i18n="linkedin">LinkedIn : @antoinepezzulo
+    </span>
+  </footer>
+
+  <script>
+    const translations = {
+      fr: {
+        name: "ANTOINE PEZZULO",
+        subtitle: "Étudiant Game Design à ISART Digital",
+        projects: "Mes Projets",
+        contact: "Contact",
+        email: "Email : antoine.pezzulo@email.com",
+        linkedin: "LinkedIn : @antoinepezzulo",
+        metro_team: "Solo",
+        metro_desc: "Un jeu de vitesse dans un tunnel néon en vue arrière. Évitez les obstacles et surfez sur la musique.",
+        chalk_team: "Solo",
+        chalk_desc: "Un puzzle narratif poétique basé sur la mémoire, le mouvement et les traces laissées au sol.",
+        mar_team: "Équipe de 8",
+        mar_desc: "Un platformer 2.5D où le personnage avance uniquement grâce au recul d’un lance-roquettes. Zéro saut, 100% action.",
+        vor_team: "Équipe de 8",
+        vor_desc: "Un jeu de plateau stratégique où des arbres maléfiques s’étendent autour d’un village pour dévorer la vie humaine.",
+        ref_team: "Équipe de 2",
+        ref_desc: "Un jeu développé par Ludo… et depuis, il est parti randonner.",
+      },
+      en: {
+        name: "ANTOINE PEZZULO",
+        subtitle: "Game Design Student at ISART Digital",
+        projects: "My Projects",
+        contact: "Contact",
+        email: "Email: antoine.pezzulo@email.com",
+        linkedin: "LinkedIn: @antoinepezzulo",
+        metro_team: "Solo",
+        metro_desc: "A fast‑paced neon tunnel runner in third‑person view. Dodge obstacles and ride the music.",
+        chalk_team: "Solo",
+        chalk_desc: "A poetic narrative puzzle about memory, movement and chalk traces.",
+        mar_team: "Team of 8",
+        mar_desc: "A 2.5D platformer where the character moves only via rocket recoil. No jump, 100% action.",
+        vor_team: "Team of 8",
+        vor_desc: "A strategic board‑game where evil trees spread around a village to devour human life.",
+        ref_team: "Team of 2",
+        ref_desc: "A game made by Ludo… and then he went hiking, so nothing moved since.",
+      }
+    };
 
   function switchLanguage(lang) {
-    document.querySelectorAll("[data-i18n]").forEach((el) => {
-      const key = el.getAttribute("data-i18n");
-      if (translations[lang] && translations[lang][key]) {
-        el.textContent = translations[lang][key];
-      }
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      el.textContent = translations[lang][key] || el.textContent;
     });
-    document.querySelectorAll("#lang-switch button").forEach((btn) =>
-      btn.classList.toggle("selected", btn.dataset.lang === lang)
-    );
-    localStorage.setItem("lang", lang);
+    document.querySelectorAll('#lang-switch button')
+      .forEach(btn => btn.classList.toggle('selected', btn.dataset.lang === lang));
+    localStorage.setItem('lang', lang);
   }
-
-  // Détection langue navigateur simple et soft
-  const userLang = navigator.language || navigator.userLanguage || 'fr';
-  const defaultLang = userLang.toLowerCase().startsWith('fr') ? 'fr' : 'en';
-  const savedLang = localStorage.getItem("lang") || defaultLang;
-
+  const savedLang = localStorage.getItem('lang') || 'fr';
   switchLanguage(savedLang);
+  document.querySelectorAll('#lang-switch button')
+    .forEach(btn => btn.addEventListener('click', () => switchLanguage(btn.dataset.lang)));
 
-  document.querySelectorAll("#lang-switch button").forEach((btn) =>
-    btn.addEventListener("click", () => switchLanguage(btn.dataset.lang))
+  // Empêcher les boutons d’arrêter la propagation du clic
+  document.querySelectorAll('.action-button').forEach(btn =>
+    btn.addEventListener('click', e => e.stopPropagation())
   );
 
-  document.querySelectorAll(".action-button").forEach((btn) =>
-    btn.addEventListener("click", (e) => e.stopPropagation())
-  );
+  // ——————————————————————————————————————
+  // Rotation / Parallaxe des cartes
+document.querySelectorAll('.project').forEach(project => {
+  const inner = project.querySelector('.card-inner');
+  let targetX=0, targetY=0, currentX=0, currentY=0;
+  let isFlipping=false;
+  const maxRotation = project.classList.contains('featured') ? 6 : 12;
+  const friction = 0.06;
+  let smoothResetTimeout;
 
-  document.querySelectorAll(".project").forEach((project) => {
-    const inner = project.querySelector(".card-inner");
-    let targetX = 0,
-      targetY = 0,
-      currentX = 0,
-      currentY = 0,
-      isFlipping = false;
-    const friction = 0.06;
-    const maxRotation = project.classList.contains("featured") ? 6 : 12;
+  function update() {
+    if (!isFlipping && project.dataset.disabled!=='true') {
+      currentX += (targetX - currentX) * friction;
+      currentY += (targetY - currentY) * friction;
+      const baseY = inner.classList.contains('flipped') ? 180 : 0;
+      inner.style.transform = `rotateX(${currentY}deg) rotateY(${currentX + baseY}deg)`;
+    }
+    requestAnimationFrame(update);
+  }
+  update();
 
-    const update = () => {
-      if (!isFlipping) {
-        currentX += (targetX - currentX) * friction;
-        currentY += (targetY - currentY) * friction;
-        const baseY = inner.classList.contains("flipped") ? 180 : 0;
-        inner.style.transform = `rotateX(${currentY}deg) rotateY(${currentX + baseY}deg)`;
-      }
-      requestAnimationFrame(update);
-    };
-    update();
-
-    project.addEventListener("mousemove", (e) => {
-      if (isFlipping) return;
-      const rect = project.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const percentX = x / rect.width;
-      const percentY = y / rect.height;
-      targetX = (percentX - 0.5) * 2 * maxRotation;
-      targetY = (0.5 - percentY) * 2 * maxRotation;
-    });
-
-    project.addEventListener("mouseleave", () => {
-      if (isFlipping) return;
-      targetX = 0;
-      targetY = 0;
-    });
-
-    project.addEventListener("click", () => {
-      if (isFlipping) return;
-      isFlipping = true;
-      inner.style.transition = "transform 0.8s ease";
-      const isNowFlipped = inner.classList.toggle("flipped");
-      const baseY = isNowFlipped ? 180 : 0;
-      inner.style.transform = `rotateX(0deg) rotateY(${baseY}deg)`;
-      setTimeout(() => {
-        targetX = targetY = currentX = currentY = 0;
-        inner.style.transition = "";
-        isFlipping = false;
-      }, 800);
-    });
+  project.addEventListener('mousemove', e => {
+    if (isFlipping || project.dataset.disabled==='true') return;
+    clearTimeout(smoothResetTimeout);
+    const r = project.getBoundingClientRect();
+    targetX = ( (e.clientX - r.left)/r.width - 0.5 ) * 2 * maxRotation;
+    targetY = ( 0.5 - (e.clientY - r.top)/r.height ) * 2 * maxRotation;
   });
+  project.addEventListener('mouseleave', () => {
+    if (!isFlipping) {
+      targetX = targetY = 0;
+    }
+  });
+  project.addEventListener('click', () => {
+    if (isFlipping) return;
+    isFlipping = true;
+    inner.style.transition = 'transform 0.8s ease';
+    const now = inner.classList.toggle('flipped');
+    const baseY = now ? 180 : 0;
+    inner.style.transform = `rotateX(0deg) rotateY(${baseY}deg)`;
+    setTimeout(() => {
+      isFlipping = false;
+      inner.style.transition = '';
+      targetX = targetY = currentX = currentY = 0;
+    }, 800);
+  });
+});
+
+// ——————————————————————————————————————
+// INSTANT DEMO + QUITTER DEMO
+const metroCard = document.querySelector('.project.featured');
+const inner = metroCard.querySelector('.card-inner');
+const cardBack = metroCard.querySelector('.card-back-content');
+let originalHTML = cardBack.innerHTML;
+
+function setupInstantDemoHover(btn) {
+  btn.addEventListener('mouseenter', () => metroCard.classList.add('glow-effect'));
+  btn.addEventListener('mouseleave', () => {
+    if (!metroCard.classList.contains('active-demo')) {
+      metroCard.classList.remove('glow-effect');
+    }
+  });
+}
+
+function attachInstantDemo() {
+  const instantBtn = document.getElementById('instant-demo-btn');
+  if (!instantBtn) return;
+  setupInstantDemoHover(instantBtn);
+  instantBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    metroCard.classList.add('glow-effect','active-demo');
+    metroCard.dataset.disabled = 'true';
+    inner.classList.add('flipped');
+    inner.style.transform = 'rotateX(0deg) rotateY(180deg)';
+
+    cardBack.innerHTML = `
+  <div class="demo-container" style="display:flex; flex-direction:column; height:100%;">
+    <div class="demo-header" style="text-align:center; padding:0.5rem;">
+      <button id="exit-demo-btn" class="action-button instant-demo">Close Instant Demo</button>
+    </div>
+    <iframe src="demo/index.html" allowfullscreen
+      style="flex:1; width:100%; height:100%; border:none; border-radius:var(--radius);
+      box-shadow:0 0 60px rgba(107,140,255,0.4); display:block;">
+    </iframe>
+  </div>
+`;
+
+    // smoothing CSS pour fermer
+    setTimeout(() => {
+      const exitBtn = document.getElementById('exit-demo-btn');
+      exitBtn?.addEventListener('click', e => {
+        e.stopPropagation();
+        const demo = cardBack.querySelector('.demo-container');
+        if(!demo) return;
+        demo.classList.add('demo-exit');
+        clearTimeout(window.resetParallaxSmooth);
+        window.resetParallaxSmooth = setTimeout(()=>{
+          metroCard.classList.remove('glow-effect','active-demo');
+          metroCard.removeAttribute('data-disabled');
+          // reset parallax slope
+          inner.style.transition = 'transform 0.5s ease-out';
+          inner.style.transform = 'rotateX(0deg) rotateY(0deg)';
+          setTimeout(()=>{ inner.style.transition = ''; }, 500);
+
+          cardBack.innerHTML = originalHTML;
+          attachInstantDemo();
+        }, 300);
+      });
+    },0);
+  });
+}
+
+document.body.addEventListener('click', e => {
+  if(e.target.closest('.action-button')) e.stopPropagation();
+});
+
+attachInstantDemo();
+
+
+
 </script>
+
 </body>
 </html>

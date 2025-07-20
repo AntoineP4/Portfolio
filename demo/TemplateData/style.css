@@ -1,0 +1,47 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+/* Container principal du WebGL */
+#unity-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  border-radius: 1rem; /* coins arrondis harmonieux */
+}
+
+/* Canvas du jeu */
+#unity-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  background: #000;
+  border-radius: 1rem;
+}
+
+/* Barre de chargement centrée */
+#unity-loading-bar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Logo + barre de progression — à ajuster si besoin */
+#unity-logo { /* ... */ }
+#unity-progress-bar-empty { /* ... */ }
+#unity-progress-bar-full { /* ... */ }
+
+/* Félicitations : plus de footer, plus de scrolling inattendu */
+#unity-footer {
+  display: none !important;
+}
