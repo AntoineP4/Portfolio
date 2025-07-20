@@ -457,6 +457,20 @@
       box-shadow: 0 0 80px rgba(107, 140, 255, 0.5), inset 0 0 30px rgba(107, 140, 255, 0.2);
     }
 
+      @media (max-width: 768px) {
+    .card-inner {
+      transform: none !important;
+    }
+    .project {
+      cursor: default !important;
+    }
+    .action-button.instant-demo,
+    .action-button.download-only,
+    .action-button[href*="itch.io"] {
+      display: none !important;
+    }
+  }
+
   </style>
 </head>
 <body>
@@ -641,6 +655,7 @@
   </footer>
 
   <script>
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
     const translations = {
       fr: {
         name: "ANTOINE PEZZULO",
@@ -699,53 +714,62 @@
     btn.addEventListener('click', e => e.stopPropagation())
   );
 
+if (!isMobile) {
   // ——————————————————————————————————————
   // Rotation / Parallaxe des cartes
-document.querySelectorAll('.project').forEach(project => {
-  const inner = project.querySelector('.card-inner');
-  let targetX=0, targetY=0, currentX=0, currentY=0;
-  let isFlipping=false;
-  const maxRotation = project.classList.contains('featured') ? 6 : 12;
-  const friction = 0.06;
-  let smoothResetTimeout;
+  document.querySelectorAll('.project').forEach(project => {
+    const inner = project.querySelector('.card-inner');
+    let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
+    let isFlipping = false;
+    const maxRotation = project.classList.contains('featured') ? 6 : 12;
+    const friction = 0.06;
 
-  function update() {
-    if (!isFlipping && project.dataset.disabled!=='true') {
-      currentX += (targetX - currentX) * friction;
-      currentY += (targetY - currentY) * friction;
-      const baseY = inner.classList.contains('flipped') ? 180 : 0;
-      inner.style.transform = `rotateX(${currentY}deg) rotateY(${currentX + baseY}deg)`;
+    function update() {
+      if (!isFlipping && project.dataset.disabled !== 'true') {
+        currentX += (targetX - currentX) * friction;
+        currentY += (targetY - currentY) * friction;
+        const baseY = inner.classList.contains('flipped') ? 180 : 0;
+        inner.style.transform = `rotateX(${currentY}deg) rotateY(${currentX + baseY}deg)`;
+      }
+      requestAnimationFrame(update);
     }
-    requestAnimationFrame(update);
-  }
-  update();
+    update();
 
-  project.addEventListener('mousemove', e => {
-    if (isFlipping || project.dataset.disabled==='true') return;
-    clearTimeout(smoothResetTimeout);
-    const r = project.getBoundingClientRect();
-    targetX = ( (e.clientX - r.left)/r.width - 0.5 ) * 2 * maxRotation;
-    targetY = ( 0.5 - (e.clientY - r.top)/r.height ) * 2 * maxRotation;
+    project.addEventListener('mousemove', e => {
+      if (isFlipping || project.dataset.disabled === 'true') return;
+      const r = project.getBoundingClientRect();
+      targetX = ((e.clientX - r.left) / r.width - 0.5) * 2 * maxRotation;
+      targetY = (0.5 - (e.clientY - r.top) / r.height) * 2 * maxRotation;
+    });
+
+    project.addEventListener('mouseleave', () => {
+      if (!isFlipping) targetX = targetY = 0;
+    });
+
+    project.addEventListener('click', () => {
+      if (isFlipping) return;
+      isFlipping = true;
+      inner.style.transition = 'transform 0.8s ease';
+      const now = inner.classList.toggle('flipped');
+      const baseY = now ? 180 : 0;
+      inner.style.transform = `rotateX(0deg) rotateY(${baseY}deg)`;
+      setTimeout(() => {
+        isFlipping = false;
+        inner.style.transition = '';
+        targetX = targetY = currentX = currentY = 0;
+      }, 800);
+    });
   });
-  project.addEventListener('mouseleave', () => {
-    if (!isFlipping) {
-      targetX = targetY = 0;
-    }
+} else {
+  // SIMPLIFIED VERSION: remove flipping + hide buttons
+  document.querySelectorAll('.card-inner').forEach(inner => inner.style.transform = 'none');
+  document.querySelectorAll('.project').forEach(p => p.style.cursor = 'default');
+  document.querySelectorAll('.card-inner').forEach(c => c.classList.remove('flipped'));
+  document.querySelectorAll('.action-button.instant-demo, .action-button.download-only, .action-button[href*="itch.io"]').forEach(btn => {
+    btn.style.display = 'none';
   });
-  project.addEventListener('click', () => {
-    if (isFlipping) return;
-    isFlipping = true;
-    inner.style.transition = 'transform 0.8s ease';
-    const now = inner.classList.toggle('flipped');
-    const baseY = now ? 180 : 0;
-    inner.style.transform = `rotateX(0deg) rotateY(${baseY}deg)`;
-    setTimeout(() => {
-      isFlipping = false;
-      inner.style.transition = '';
-      targetX = targetY = currentX = currentY = 0;
-    }, 800);
-  });
-});
+}
+
 
 // ——————————————————————————————————————
 // INSTANT DEMO + QUITTER DEMO
