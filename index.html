@@ -698,8 +698,7 @@
 
   <script>
     if (window.matchMedia("(max-width: 768px)").matches) {
-      document.body.innerHTML = ''; // empêche chargement du reste
-      document.body.appendChild(document.getElementById("mobile-blocker"));
+      document.querySelectorAll("body > *:not(#mobile-blocker)").forEach(el => el.remove());
       document.getElementById("mobile-blocker").style.display = "flex";
     }
   </script>
@@ -1115,10 +1114,6 @@ document.body.addEventListener('click', e => {
 });
 
 attachInstantDemo();
-
-if (isMobile) {
-  document.getElementById("mobile-warning").style.display = "block";
-}
 
 </script>
 
