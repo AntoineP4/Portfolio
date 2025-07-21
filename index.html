@@ -673,28 +673,54 @@
   </style>
 </head>
 <body>
-  <div id="mobile-blocker" style="
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: black;
-    color: white;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 2rem;
-    z-index: 99999;
-    flex-direction: column;
-  ">
-    <h1 style="font-size: 1.8rem; margin-bottom: 1rem;">ANTOINE PEZZULO – Portfolio</h1>
-    <p style="font-size: 1rem; max-width: 400px; line-height: 1.6;">
-      ❌ Ce site n’est pas accessible sur téléphone.<br><br>
-      ❌ This portfolio is not viewable on mobile.<br><br>
-      📺 Please open it on a computer.
-    </p>
+<div id="mobile-blocker" style="
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: linear-gradient(145deg, #111, #000);
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  z-index: 99999;
+  flex-direction: column;
+  animation: fadeIn 1.2s ease-out forwards;
+  opacity: 0;
+">
+  <div style="font-size: 2rem; margin-bottom: 1rem; animation: float 3s ease-in-out infinite; opacity: 0.5;">
+    😢
   </div>
+  <img src="img/mobile-dead.png" alt="Mobile unsupported" style="
+    width: 100px;
+    margin-bottom: 2rem;
+    opacity: 0.8;
+    animation: pulse 2.5s infinite ease-in-out;
+  " />
+  <h1 style="font-size: 1.8rem; margin-bottom: 1rem; letter-spacing: 1px;">ANTOINE PEZZULO</h1>
+  <p style="font-size: 1rem; max-width: 400px; line-height: 1.6; opacity: 0.8;">
+    Portfolio pensé pour ordinateur uniquement<br><br>
+    Portfolio designed for desktop only.<br><br>
+  </p>
+</div>
+
+<style>
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.05); opacity: 1; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+</style>
 
   <script>
     if (window.matchMedia("(max-width: 768px)").matches) {
