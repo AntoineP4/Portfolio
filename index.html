@@ -673,6 +673,7 @@
   </style>
 </head>
 <body>
+<body>
   <div id="mobile-blocker" style="
     position: fixed;
     top: 0; left: 0;
@@ -687,8 +688,8 @@
     padding: 2rem;
     z-index: 99999;
     flex-direction: column;
-    animation: fadeIn 1.2s ease-out forwards;
     opacity: 0;
+    animation: fadeIn 1.2s ease-out forwards;
   ">
     <div style="font-size: 2rem; margin-bottom: 1rem; animation: float 3s ease-in-out infinite; opacity: 0.5;">
       😢
@@ -732,6 +733,9 @@
     if (window.matchMedia("(max-width: 768px)").matches) {
       document.querySelectorAll("body > *:not(#mobile-blocker)").forEach(el => el.remove());
       document.body.style.overflow = 'hidden';
+      const blocker = document.getElementById("mobile-blocker");
+      blocker.style.display = "flex";
+      blocker.style.opacity = "1"; // Forcer l'affichage si animation fail
     }
   </script>
 
