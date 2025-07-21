@@ -7,16 +7,16 @@
   <link rel="icon" type="image/png" href="img/logo.png" />
 
   <!-- Aperçu pour Discord, Twitter, LinkedIn, etc. -->
-  <meta property="og:title" content="Portfolio Game Design - Antoine Pezzulo" />
-  <meta property="og:description" content="Portfolio Game Design - Antoine Pezzulo" />
-  <meta property="og:image" content="img/preview.png" />
+  <meta property="og:title" content="Portfolio - Antoine Pezzulo" />
+  <meta property="og:description" content="Hub de mes projets de jeux vidéo" />
+  <meta property="og:image" content="https://antoinep4.github.io/site-web/img/preview.png?v=2" />
   <meta property="og:url" content="https://antoinep4.github.io/site-web/" />
   <meta property="og:type" content="website" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Portfolio Game Design - Antoine Pezzulo" />
-  <meta name="twitter:description" content="Portfolio Game Design - Antoine Pezzulo" />
-  <meta name="twitter:image" content="img/preview.png" />
+  <meta name="twitter:title" content="Portfolio - Antoine Pezzulo" />
+  <meta name="twitter:description" content="Hub de mes projets de jeux vidéo" />
+  <meta name="twitter:image" content="https://antoinep4.github.io/site-web/img/preview.png?v=2" />
 
   <!-- Police Bruno Ace SC depuis fichier local -->
   <style>
@@ -999,19 +999,17 @@ function attachInstantDemo() {
     inner.classList.add('flipped');
     inner.style.transform = 'rotateX(180deg) rotateY(0deg)';
 
-    cardBack.innerHTML = `
-      <div class="demo-container" style="display:flex; flex-direction:column; height:100%;">
-        <div class="demo-header" style="text-align:center; padding:0.5rem;">
-          <button id="exit-demo-btn" class="action-button instant-demo">Fermer la démo</button>
+      cardBack.innerHTML = `
+        <div class="demo-container" style="display:flex; flex-direction:column; height:100%;">
+          <div class="demo-header" style="text-align:center; padding:0.5rem;">
+            <button id="exit-demo-btn" class="action-button instant-demo">Fermer la démo</button>
+          </div>
+          <iframe src="demo/index.html" allowfullscreen
+            style="flex:1; width:100%; height:100%; border:none; border-radius:var(--radius); display:block;">
+          </iframe>
         </div>
-        <div id="demo-loader" style="flex:1; display:flex; align-items:center; justify-content:center; font-weight:600; color:#ccc;">
-          Chargement de la démo...
-        </div>
-        <iframe src="demo/index.html" allowfullscreen onload="document.getElementById('demo-loader').style.display='none'" 
-          style="flex:1; width:100%; height:100%; border:none; border-radius:var(--radius); display:block;">
-        </iframe>
-      </div>
-    `;
+      `;
+
 
     setTimeout(() => {
       cardBack.querySelectorAll('.action-button').forEach(btn =>
