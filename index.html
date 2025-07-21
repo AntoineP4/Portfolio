@@ -623,9 +623,22 @@
   will-change: transform;
 }
 
-.contact-item:hover {
-  transform: translateY(-4px);
-}
+  .contact-item {
+    position: relative;
+    background: transparent;
+    border-radius: 0.5rem;
+    padding: 0.6rem 1rem;
+    transition: box-shadow 0.3s ease, background 0.3s ease;
+  }
+
+  .contact-item:hover {
+    background: rgba(120, 140, 255, 0.04);
+    box-shadow:
+      0 0 6px rgba(120, 140, 255, 0.3),
+      0 0 12px rgba(120, 140, 255, 0.2),
+      inset 0 0 6px rgba(120, 140, 255, 0.08);
+  }
+
 #preloader {
   position: fixed;
   top: 0; left: 0;
@@ -669,6 +682,61 @@
     50% { opacity: 1; }
     100% { opacity: 0; }
   }
+.copy-btn {
+  background: none;
+  border: none;
+  color: #6b8cff;
+  font-size: 0.9rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+.copy-btn:hover {
+  opacity: 1;
+}
+
+.contact-value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.copy-btn::after {
+  content: 'Copié ✔';
+  position: absolute;
+  top: -1.5rem;
+  right: 0;
+  background: rgba(0,0,0,0.8);
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.4rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.copy-btn.copied::after {
+  opacity: 1;
+}
+.copy-btn {
+  background: none;
+  border: none;
+  color: #6b8cff;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+.copy-btn:hover {
+  opacity: 1;
+}
+
+.copy-btn svg {
+  display: block;
+}
 
   </style>
 </head>
@@ -691,10 +759,10 @@
     opacity: 0;
     animation: fadeIn 1.2s ease-out forwards;
   ">
-    <h1 style="font-size: 1.8rem; margin-bottom: 3rem; letter-spacing: 1px;">ANTOINE PEZZULO</h1>
+    <h1 style="font-size: 1.8rem; margin-bottom: 4rem; letter-spacing: 1px;">ANTOINE PEZZULO</h1>
     <p style="font-size: 1rem; max-width: 400px; line-height: 1.6; opacity: 0.8; margin-bottom: 1.5rem;">
-      Portfolio pensé pour ordinateur uniquement<br><br>
-      Portfolio designed for desktop only.<br><br>
+      Conçu pour ordinateur<br><br>
+      Designed for desktop<br><br>
     </p>
     <img src="img/mobile-dead.png" alt="Mobile unsupported" style="
       width: 120px;
@@ -908,26 +976,55 @@
   <div class="contact-line">
     <div class="contact-item">
       <h4>Email</h4>
-      <a href="mailto:antoine.pezzulo@email.com">mpxkids2@gmail.com</a>
+      <div class="contact-value" data-copy="mpxkids2@gmail.com">
+        <a href="mailto:antoine.pezzulo@email.com">mpxkids2@gmail.com</a>
+        <button class="copy-btn" title="Copier">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+            <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v16h13a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 18H8V7h11v16z"/>
+          </svg>
+        </button>
+      </div>
     </div>
     <div class="contact-item">
       <h4>LinkedIn</h4>
-      <a href="https://www.linkedin.com/in/antoinepezzulo" target="_blank">linkedin.com/in/antoinepezzulo</a>
+      <div class="contact-value" data-copy="linkedin.com/in/antoinepezzulo">
+        <a href="https://www.linkedin.com/in/antoinepezzulo" target="_blank">linkedin.com/in/antoinepezzulo</a>
+        <button class="copy-btn" title="Copier">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+            <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v16h13a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 18H8V7h11v16z"/>
+          </svg>
+        </button>
+      </div>
     </div>
     <div class="contact-item">
       <h4 data-i18n="phone">TÉLÉPHONE</h4>
-      <a href="tel:+33600000000">+33 6 95 69 10 82</a>
+      <div class="contact-value" data-copy="+33 6 95 69 10 82">
+        <a href="tel:+33695691082">+33 6 95 69 10 82</a>
+        <button class="copy-btn" title="Copier">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+            <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v16h13a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 18H8V7h11v16z"/>
+          </svg>
+        </button>
+      </div>
     </div>
     <div class="contact-item">
       <h4>Discord</h4>
-      <span>antiwis</span>
+      <div class="contact-value" data-copy="antiwis">
+        <span>antiwis</span>
+        <button class="copy-btn" title="Copier">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+            <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v16h13a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 18H8V7h11v16z"/>
+          </svg>
+        </button>
+      </div>
     </div>
   </div>
 </footer>
 
-  <script>
-const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
+
+  <script>
+const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 const translations = {
   fr: {
     name: "ANTOINE PEZZULO",
@@ -1144,6 +1241,17 @@ document.body.addEventListener('click', e => {
 
 attachInstantDemo();
 
+</script>
+<script>
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const value = btn.parentElement.getAttribute('data-copy');
+      navigator.clipboard.writeText(value).then(() => {
+        btn.classList.add('copied');
+        setTimeout(() => btn.classList.remove('copied'), 1000);
+      });
+    });
+  });
 </script>
 
 </body>
