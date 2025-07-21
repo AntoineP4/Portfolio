@@ -678,7 +678,7 @@
     position: fixed;
     top: 0; left: 0;
     width: 100vw; height: 100vh;
-    background: linear-gradient(145deg, #111, #000);
+    background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
     color: white;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     display: flex;
@@ -691,35 +691,20 @@
     opacity: 0;
     animation: fadeIn 1.2s ease-out forwards;
   ">
-    <div style="font-size: 2rem; margin-bottom: 1rem; animation: float 3s ease-in-out infinite; opacity: 0.5;">
-      😢
-    </div>
-    <img src="img/mobile-dead.png" alt="Mobile unsupported" style="
-      width: 100px;
-      margin-bottom: 2rem;
-      opacity: 0.8;
-      animation: pulse 2.5s infinite ease-in-out;
-    " />
     <h1 style="font-size: 1.8rem; margin-bottom: 1rem; letter-spacing: 1px;">ANTOINE PEZZULO</h1>
-    <p style="font-size: 1rem; max-width: 400px; line-height: 1.6; opacity: 0.8;">
+    <p style="font-size: 1rem; max-width: 400px; line-height: 1.6; opacity: 0.8; margin-bottom: 2rem;">
       Portfolio pensé pour ordinateur uniquement<br><br>
       Portfolio designed for desktop only.<br><br>
     </p>
+    <img src="img/mobile-dead.png" alt="Mobile unsupported" style="
+      width: 100px;
+      opacity: 0.8;
+    " />
   </div>
 
   <style>
     @keyframes fadeIn {
       to { opacity: 1; }
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 0.8; }
-      50% { transform: scale(1.05); opacity: 1; }
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
     }
 
     @media (min-width: 769px) {
@@ -735,7 +720,7 @@
       document.body.style.overflow = 'hidden';
       const blocker = document.getElementById("mobile-blocker");
       blocker.style.display = "flex";
-      blocker.style.opacity = "1"; // Forcer l'affichage si animation fail
+      blocker.style.opacity = "1";
     }
   </script>
 
