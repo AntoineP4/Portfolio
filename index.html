@@ -5,8 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Antoine Pezzulo – Portfolio</title>
   <link rel="icon" type="image/png" href="img/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&display=swap" rel="stylesheet" />
+
+  <!-- Aperçu pour Discord, Twitter, LinkedIn, etc. -->
+  <meta property="og:title" content="Antoine Pezzulo – Portfolio" />
+  <meta property="og:description" content="Découvrez mes projets de Game Design réalisés à ISART Digital." />
+  <meta property="og:image" content="img/preview.jpg" />
+  <meta property="og:url" content="https://antoinep4.github.io/site-web/" />
+  <meta property="og:type" content="website" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Antoine Pezzulo – Portfolio" />
+  <meta name="twitter:description" content="Portfolio de Game Design – ISART Digital" />
+  <meta name="twitter:image" content="img/preview.jpg" />
+
+  <!-- Police Bruno Ace SC depuis fichier local -->
   <style>
+    @font-face {
+      font-family: 'Bruno Ace SC';
+      src: url('fonts/brunoacesc-regular-webfont.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
     :root {
       --radius: 1rem;
       --bg: radial-gradient(circle at 20% 20%, #1e1e2f, #0f0f0f 80%);
@@ -69,10 +90,12 @@
       animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
       animation-delay: 0.2s;
     }
+
     header h1 {
       font-size: 3rem;
       font-weight: 900;
     }
+
     header p {
       font-size: 1rem;
       color: #aaa;
@@ -83,7 +106,6 @@
       animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
       animation-delay: 0.4s;
     }
-
     #lang-switch {
       text-align: center;
       margin-bottom: 2rem;
