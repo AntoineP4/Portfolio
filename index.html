@@ -9,30 +9,42 @@
   <style>
     :root {
       --radius: 1rem;
-      --bg: linear-gradient(145deg, #0f0f0f, #1c1c1c);
+      --bg: radial-gradient(circle at 20% 20%, #1e1e2f, #0f0f0f 80%);
       --glass: rgba(255,255,255,0.05);
       --shadow: 0 20px 50px rgba(0,0,0,0.4);
       --text-color: #f2f2f2;
       --accent: #6b8cff;
       --modal-bg: rgba(0,0,0,0.8);
     }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
       background: var(--bg);
       color: var(--text-color);
       padding: 4rem 1rem 2rem;
       overflow-x: hidden;
+      background-attachment: fixed;
+      background-size: cover;
+      animation: pulseBackground 20s ease-in-out infinite;
       scrollbar-width: none;
       -ms-overflow-style: none;
     }
+
     html::-webkit-scrollbar,
     body::-webkit-scrollbar {
       display: none;
+    }
+
+    @keyframes pulseBackground {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     @keyframes slideFadeIn {
@@ -41,6 +53,7 @@
         transform: translateY(0);
       }
     }
+
     @keyframes slideFadeInUp {
       to {
         opacity: 1;
@@ -102,7 +115,7 @@
       font-size: 1.4rem;
       text-transform: uppercase;
       text-align: center;
-      margin: 4rem 0 2rem;
+      margin: 3rem 0 3rem;
       letter-spacing: 0.1em;
       color: #aaa;
       position: relative;
@@ -183,6 +196,25 @@
       height: 100%;
       object-fit: cover;
     }
+    .card-front {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+      box-shadow:
+        inset 0 0 20px rgba(255,255,255,0.02),
+        0 2px 25px rgba(0,0,0,0.3);
+      backdrop-filter: blur(22px) saturate(160%) brightness(1.05);
+      -webkit-backdrop-filter: blur(22px) saturate(160%) brightness(1.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+      transform-style: preserve-3d;
+      z-index: 1;
+    }
+
+
     .card-front h3 {
       position: absolute;
       bottom: 0;
@@ -471,9 +503,115 @@
     }
   }
 
+  .card-front h3 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #ffffffcc; /* blanc un peu transparent */
+    background: rgba(255, 255, 255, 0.06); /* très léger fond */
+    backdrop-filter: blur(16px); /* flou doux */
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    transform: translateY(100%);
+    opacity: 0;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    border-radius: 0 0 var(--radius) var(--radius);
+    z-index: 2;
+  }
+
+  
+  .project.featured .card-back {
+    transform: rotateX(180deg);
+  }
+  .card-back {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.02) 100%
+    );
+    backdrop-filter: blur(28px) saturate(190%) contrast(110%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(110%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius);
+    box-shadow:
+      inset 0 0 20px rgba(255, 255, 255, 0.03),
+      0 4px 30px rgba(0, 0, 0, 0.4);
+    transition: all 0.5s ease;
+    overflow: hidden;
+    position: relative;
+  }
+  .contact-line {
+    margin: -5rem auto 0 auto; /* 👈 4rem en haut, auto gauche/droite, 0 en bas */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4rem;
+    max-width: 1100px;
+    padding: 2.5rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius);
+    box-shadow: 0 0 30px rgba(0,0,0,0.25);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+  }
+
+  .contact-line .contact-item {
+    min-width: 160px;
+  }
+
+  .contact-item h4 {
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+  }
+
+  .contact-item a,
+  .contact-item span {
+    font-size: 0.95rem;
+    color: #ddd;
+    text-decoration: none;
+    word-break: break-word;
+    transition: color 0.3s ease;
+  }
+
+  .contact-item a:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+  .contact-title {
+    margin-top: 8rem;
+    margin-bottom: 5rem;
+    letter-spacing: 0.14em;
+    color: #bbb;
+    font-weight: 500;
+    filter: drop-shadow(0 0 6px rgba(107, 140, 255, 0.15));
+  }
+  .contact-item {
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform;
+}
+
+.contact-item:hover {
+  transform: translateY(-4px);
+}
+
   </style>
 </head>
 <body>
+
+  <div id="mobile-warning" style="display:none; padding:2rem; text-align:center; background:#111; color:#fff; font-size:1rem;">
+  ⚠️ Ce site est optimisé pour ordinateur. Pour une meilleure expérience, consultez-le sur un PC ou un grand écran.
+</div>
 
   <header>
     <h1 data-i18n="name">ANTOINE PEZZULO</h1>
@@ -647,53 +785,71 @@
 
   </div>
 
-  <div class="section-title" data-i18n="contact">Contact</div>
-  <footer>
-    <span data-i18n="email">Email : antoine.pezzulo@email.com</span><br />
-    <span data-i18n="linkedin">LinkedIn : @antoinepezzulo
-    </span>
-  </footer>
+<div class="section-title" data-i18n="contact">Contact</div>
+<footer>
+  <div class="contact-line">
+    <div class="contact-item">
+      <h4>Email</h4>
+      <a href="mailto:antoine.pezzulo@email.com">mpxkids2@gmail.com</a>
+    </div>
+    <div class="contact-item">
+      <h4>LinkedIn</h4>
+      <a href="https://www.linkedin.com/in/antoinepezzulo" target="_blank">linkedin.com/in/antoinepezzulo</a>
+    </div>
+    <div class="contact-item">
+      <h4 data-i18n="phone">TÉLÉPHONE</h4>
+      <a href="tel:+33600000000">+33 6 95 69 10 82</a>
+    </div>
+    <div class="contact-item">
+      <h4>Discord</h4>
+      <span>antiwis</span>
+    </div>
+  </div>
+</footer>
 
   <script>
-    const isMobile = window.matchMedia("(max-width: 768px)").matches;
-    const translations = {
-      fr: {
-        name: "ANTOINE PEZZULO",
-        subtitle: "Étudiant Game Design à ISART Digital",
-        projects: "Mes Projets",
-        contact: "Contact",
-        email: "Email : antoine.pezzulo@email.com",
-        linkedin: "LinkedIn : @antoinepezzulo",
-        metro_team: "Solo",
-        metro_desc: "Un jeu de vitesse dans un tunnel néon en vue arrière. Évitez les obstacles et surfez sur la musique.",
-        chalk_team: "Solo",
-        chalk_desc: "Un puzzle narratif poétique basé sur la mémoire, le mouvement et les traces laissées au sol.",
-        mar_team: "Équipe de 8",
-        mar_desc: "Un platformer 2.5D où le personnage avance uniquement grâce au recul d’un lance-roquettes. Zéro saut, 100% action.",
-        vor_team: "Équipe de 8",
-        vor_desc: "Un jeu de plateau stratégique où des arbres maléfiques s’étendent autour d’un village pour dévorer la vie humaine.",
-        ref_team: "Équipe de 2",
-        ref_desc: "Un jeu développé par Ludo… et depuis, il est parti randonner.",
-      },
-      en: {
-        name: "ANTOINE PEZZULO",
-        subtitle: "Game Design Student at ISART Digital",
-        projects: "My Projects",
-        contact: "Contact",
-        email: "Email: antoine.pezzulo@email.com",
-        linkedin: "LinkedIn: @antoinepezzulo",
-        metro_team: "Solo",
-        metro_desc: "A fast‑paced neon tunnel runner in third‑person view. Dodge obstacles and ride the music.",
-        chalk_team: "Solo",
-        chalk_desc: "A poetic narrative puzzle about memory, movement and chalk traces.",
-        mar_team: "Team of 8",
-        mar_desc: "A 2.5D platformer where the character moves only via rocket recoil. No jump, 100% action.",
-        vor_team: "Team of 8",
-        vor_desc: "A strategic board‑game where evil trees spread around a village to devour human life.",
-        ref_team: "Team of 2",
-        ref_desc: "A game made by Ludo… and then he went hiking, so nothing moved since.",
-      }
-    };
+const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+const translations = {
+  fr: {
+    name: "ANTOINE PEZZULO",
+    subtitle: "Étudiant Game Design à ISART Digital",
+    projects: "Mes Projets",
+    contact: "Contact",
+    email: "Email : antoine.pezzulo@email.com",
+    linkedin: "LinkedIn : @antoinepezzulo",
+    phone: "Téléphone",
+    metro_team: "Solo",
+    metro_desc: "Un jeu de vitesse dans un tunnel néon en vue arrière. Évitez les obstacles et surfez sur la musique.",
+    chalk_team: "Solo",
+    chalk_desc: "Un puzzle narratif poétique basé sur la mémoire, le mouvement et les traces laissées au sol.",
+    mar_team: "Équipe de 8",
+    mar_desc: "Un platformer 2.5D où le personnage avance uniquement grâce au recul d’un lance-roquettes. Zéro saut, 100% action.",
+    vor_team: "Équipe de 8",
+    vor_desc: "Un jeu de plateau stratégique où des arbres maléfiques s’étendent autour d’un village pour dévorer la vie humaine.",
+    ref_team: "Équipe de 2",
+    ref_desc: "Un jeu développé par Ludo… et depuis, il est parti randonner.",
+  },
+  en: {
+    name: "ANTOINE PEZZULO",
+    subtitle: "Game Design Student at ISART Digital",
+    projects: "My Projects",
+    contact: "Contact",
+    email: "Email: antoine.pezzulo@email.com",
+    linkedin: "LinkedIn: @antoinepezzulo",
+    phone: "Phone",
+    metro_team: "Solo",
+    metro_desc: "A fast‑paced neon tunnel runner in third‑person view. Dodge obstacles and ride the music.",
+    chalk_team: "Solo",
+    chalk_desc: "A poetic narrative puzzle about memory, movement and chalk traces.",
+    mar_team: "Team of 8",
+    mar_desc: "A 2.5D platformer where the character moves only via rocket recoil. No jump, 100% action.",
+    vor_team: "Team of 8",
+    vor_desc: "A strategic board‑game where evil trees spread around a village to devour human life.",
+    ref_team: "Team of 2",
+    ref_desc: "A game made by Ludo… and then he went hiking, so nothing moved since.",
+  }
+};
 
   function switchLanguage(lang) {
     document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -704,6 +860,7 @@
       .forEach(btn => btn.classList.toggle('selected', btn.dataset.lang === lang));
     localStorage.setItem('lang', lang);
   }
+
   const savedLang = localStorage.getItem('lang') || 'fr';
   switchLanguage(savedLang);
   document.querySelectorAll('#lang-switch button')
@@ -714,62 +871,84 @@
     btn.addEventListener('click', e => e.stopPropagation())
   );
 
-if (!isMobile) {
-  // ——————————————————————————————————————
-  // Rotation / Parallaxe des cartes
-  document.querySelectorAll('.project').forEach(project => {
-    const inner = project.querySelector('.card-inner');
-    let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
-    let isFlipping = false;
-    const maxRotation = project.classList.contains('featured') ? 6 : 12;
-    const friction = 0.06;
+  if (!isMobile) {
+    // ——————————————————————————————————————
+    // Rotation / Parallaxe des cartes
+    document.querySelectorAll('.project').forEach(project => {
+      const inner = project.querySelector('.card-inner');
+      let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
+      let isFlipping = false;
+      const maxRotation = project.classList.contains('featured') ? 6 : 12;
+      const friction = 0.06;
 
-    function update() {
-      if (!isFlipping && project.dataset.disabled !== 'true') {
-        currentX += (targetX - currentX) * friction;
-        currentY += (targetY - currentY) * friction;
-        const baseY = inner.classList.contains('flipped') ? 180 : 0;
-        inner.style.transform = `rotateX(${currentY}deg) rotateY(${currentX + baseY}deg)`;
+      function update() {
+        if (!isFlipping && project.dataset.disabled !== 'true') {
+          currentX += (targetX - currentX) * friction;
+          currentY += (targetY - currentY) * friction;
+
+          const isMetro = project.classList.contains('featured');
+          const isFlipped = inner.classList.contains('flipped');
+
+          let rx = currentY;
+          let ry = currentX;
+
+          if (isMetro && isFlipped) {
+            // ⚠️ On inverse UNIQUEMENT ry car le repère visuel est vertical
+            rx = currentY;         // haut ↕ bas RESTE naturel
+            ry = -currentX;        // gauche ↔ droite corrigé
+            inner.style.transform = `rotateX(${180 + rx}deg) rotateY(${ry}deg)`;
+          } else if (isMetro) {
+            inner.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+          } else {
+            const base = isFlipped ? 180 : 0;
+            inner.style.transform = `rotateX(${rx}deg) rotateY(${ry + base}deg)`;
+          }
+        }
+        requestAnimationFrame(update);
       }
-      requestAnimationFrame(update);
-    }
-    update();
+      update();
 
-    project.addEventListener('mousemove', e => {
-      if (isFlipping || project.dataset.disabled === 'true') return;
-      const r = project.getBoundingClientRect();
-      targetX = ((e.clientX - r.left) / r.width - 0.5) * 2 * maxRotation;
-      targetY = (0.5 - (e.clientY - r.top) / r.height) * 2 * maxRotation;
+      project.addEventListener('mousemove', e => {
+        if (isFlipping || project.dataset.disabled === 'true') return;
+        const r = project.getBoundingClientRect();
+        targetX = ((e.clientX - r.left) / r.width - 0.5) * 2 * maxRotation;
+        targetY = (0.5 - (e.clientY - r.top) / r.height) * 2 * maxRotation;
+      });
+
+      project.addEventListener('mouseleave', () => {
+        if (!isFlipping) targetX = targetY = 0;
+      });
+
+      project.addEventListener('click', () => {
+        if (isFlipping || project.dataset.disabled === 'true') return;
+        isFlipping = true;
+        inner.style.transition = 'transform 0.8s ease';
+        const now = inner.classList.toggle('flipped');
+
+        const isMetro = project.classList.contains('featured');
+        const baseRotation = now ? 180 : 0;
+        const transform = isMetro
+          ? `rotateX(${baseRotation}deg) rotateY(0deg)`
+          : `rotateX(0deg) rotateY(${baseRotation}deg)`;
+
+        inner.style.transform = transform;
+
+        setTimeout(() => {
+          isFlipping = false;
+          inner.style.transition = '';
+          targetX = targetY = currentX = currentY = 0;
+        }, 800);
+      });
     });
-
-    project.addEventListener('mouseleave', () => {
-      if (!isFlipping) targetX = targetY = 0;
+  } else {
+    // SIMPLIFIED VERSION: remove flipping + hide buttons
+    document.querySelectorAll('.card-inner').forEach(inner => inner.style.transform = 'none');
+    document.querySelectorAll('.project').forEach(p => p.style.cursor = 'default');
+    document.querySelectorAll('.card-inner').forEach(c => c.classList.remove('flipped'));
+    document.querySelectorAll('.action-button.instant-demo, .action-button.download-only, .action-button[href*="itch.io"]').forEach(btn => {
+      btn.style.display = 'none';
     });
-
-    project.addEventListener('click', () => {
-      if (isFlipping) return;
-      isFlipping = true;
-      inner.style.transition = 'transform 0.8s ease';
-      const now = inner.classList.toggle('flipped');
-      const baseY = now ? 180 : 0;
-      inner.style.transform = `rotateX(0deg) rotateY(${baseY}deg)`;
-      setTimeout(() => {
-        isFlipping = false;
-        inner.style.transition = '';
-        targetX = targetY = currentX = currentY = 0;
-      }, 800);
-    });
-  });
-} else {
-  // SIMPLIFIED VERSION: remove flipping + hide buttons
-  document.querySelectorAll('.card-inner').forEach(inner => inner.style.transform = 'none');
-  document.querySelectorAll('.project').forEach(p => p.style.cursor = 'default');
-  document.querySelectorAll('.card-inner').forEach(c => c.classList.remove('flipped'));
-  document.querySelectorAll('.action-button.instant-demo, .action-button.download-only, .action-button[href*="itch.io"]').forEach(btn => {
-    btn.style.display = 'none';
-  });
-}
-
+  }
 
 // ——————————————————————————————————————
 // INSTANT DEMO + QUITTER DEMO
@@ -796,22 +975,27 @@ function attachInstantDemo() {
     metroCard.classList.add('glow-effect','active-demo');
     metroCard.dataset.disabled = 'true';
     inner.classList.add('flipped');
-    inner.style.transform = 'rotateX(0deg) rotateY(180deg)';
+    inner.style.transform = 'rotateX(180deg) rotateY(0deg)';
 
     cardBack.innerHTML = `
-  <div class="demo-container" style="display:flex; flex-direction:column; height:100%;">
-    <div class="demo-header" style="text-align:center; padding:0.5rem;">
-      <button id="exit-demo-btn" class="action-button instant-demo">Close Instant Demo</button>
-    </div>
-    <iframe src="demo/index.html" allowfullscreen
-      style="flex:1; width:100%; height:100%; border:none; border-radius:var(--radius);
-      box-shadow:0 0 60px rgba(107,140,255,0.4); display:block;">
-    </iframe>
-  </div>
-`;
+      <div class="demo-container" style="display:flex; flex-direction:column; height:100%;">
+        <div class="demo-header" style="text-align:center; padding:0.5rem;">
+          <button id="exit-demo-btn" class="action-button instant-demo">Fermer la démo</button>
+        </div>
+        <div id="demo-loader" style="flex:1; display:flex; align-items:center; justify-content:center; font-weight:600; color:#ccc;">
+          Chargement de la démo...
+        </div>
+        <iframe src="demo/index.html" allowfullscreen onload="document.getElementById('demo-loader').style.display='none'" 
+          style="flex:1; width:100%; height:100%; border:none; border-radius:var(--radius); display:block;">
+        </iframe>
+      </div>
+    `;
 
-    // smoothing CSS pour fermer
     setTimeout(() => {
+      cardBack.querySelectorAll('.action-button').forEach(btn =>
+        btn.addEventListener('click', e => e.stopPropagation())
+      );
+
       const exitBtn = document.getElementById('exit-demo-btn');
       exitBtn?.addEventListener('click', e => {
         e.stopPropagation();
@@ -822,13 +1006,17 @@ function attachInstantDemo() {
         window.resetParallaxSmooth = setTimeout(()=>{
           metroCard.classList.remove('glow-effect','active-demo');
           metroCard.removeAttribute('data-disabled');
-          // reset parallax slope
           inner.style.transition = 'transform 0.5s ease-out';
           inner.style.transform = 'rotateX(0deg) rotateY(0deg)';
           setTimeout(()=>{ inner.style.transition = ''; }, 500);
 
           cardBack.innerHTML = originalHTML;
           attachInstantDemo();
+
+          // ⬇️ Important : re-bloquer les boutons du verso METRO
+          cardBack.querySelectorAll('.action-button').forEach(btn =>
+            btn.addEventListener('click', e => e.stopPropagation())
+          );
         }, 300);
       });
     },0);
@@ -841,7 +1029,9 @@ document.body.addEventListener('click', e => {
 
 attachInstantDemo();
 
-
+if (isMobile) {
+  document.getElementById("mobile-warning").style.display = "block";
+}
 
 </script>
 
