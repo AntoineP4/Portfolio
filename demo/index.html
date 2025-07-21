@@ -11,9 +11,52 @@
       #unity-footer {
         display: none !important;
       }
+
+      /* Preloader fullscreen */
+      #preloader {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        background: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 1;
+        transition: opacity 0.5s ease;
+      }
+
+      #preloader.fade-out {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      /* Barre de chargement clean */
+      .progress-container {
+        width: 60%;
+        max-width: 400px;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: white;
+        transition: width 0.2s ease;
+      }
     </style>
   </head>
   <body>
+    <!-- Écran de chargement -->
+    <div id="preloader">
+      <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+    </div>
+
     <div id="unity-container" class="unity-desktop">
       <canvas id="unity-canvas" tabindex="-1"></canvas>
       <div id="unity-loading-bar">
@@ -23,15 +66,6 @@
         </div>
       </div>
       <div id="unity-warning"> </div>
-
-      <!-- Suppression du footer Unity ici -->
-      <!--
-      <div id="unity-footer">
-        <div id="unity-webgl-logo"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">METRO</div>
-      </div>
-      -->
     </div>
 
     <script>
@@ -40,6 +74,8 @@
       var loadingBar = document.querySelector("#unity-loading-bar");
       var progressBarFull = document.querySelector("#unity-progress-bar-full");
       var warningBanner = document.querySelector("#unity-warning");
+      var preloader = document.getElementById("preloader");
+      var progressBar = document.getElementById("progress-bar");
 
       function unityShowBanner(msg, type) {
         function updateBannerVisibility() {
@@ -51,7 +87,7 @@
         if (type == 'error') div.style = 'background: red; padding: 10px;';
         else {
           if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
+          setTimeout(function () {
             warningBanner.removeChild(div);
             updateBannerVisibility();
           }, 5000);
@@ -91,8 +127,13 @@
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
           progressBarFull.style.width = 100 * progress + "%";
+          progressBar.style.width = Math.round(progress * 100) + "%";
         }).then((unityInstance) => {
           loadingBar.style.display = "none";
+          preloader.classList.add("fade-out");
+          setTimeout(() => {
+            preloader.style.display = "none";
+          }, 500);
         }).catch((message) => {
           alert(message);
         });
