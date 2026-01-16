@@ -534,6 +534,8 @@
       will-change: transform, left, top, width, height;
       --panel-h: 0px;
       --toggle-y: 50%;
+      max-width: none !important;
+      margin: 0 !important;
     }
 
     .project.expanded.is-animating { pointer-events: none; }
@@ -827,7 +829,7 @@
   </header>
 
   <div id="lang-switch">
-    <button data-lang="fr">Francais</button>
+    <button data-lang="fr">Français</button>
     <button data-lang="en">English</button>
   </div>
 
@@ -1488,11 +1490,15 @@ A simple idea that unfolds into surprising situations.
     }
 
     function computeExpandedTargetRect() {
+      const vw = document.documentElement.clientWidth || window.innerWidth;
+      const vh = document.documentElement.clientHeight || window.innerHeight;
+
       const pad = 24;
-      const targetW = Math.min(1100, window.innerWidth - (pad * 2));
-      const targetH = Math.min(920, window.innerHeight * 0.90);
-      const targetLeft = (window.innerWidth - targetW) / 2;
-      const targetTop = (window.innerHeight - targetH) / 2;
+      const targetW = Math.min(1100, vw - (pad * 2));
+      const targetH = Math.min(920, vh - (pad * 2));
+
+      const targetLeft = (vw - targetW) / 2;
+      const targetTop = (vh - targetH) / 2;
       return { left: targetLeft, top: targetTop, width: targetW, height: targetH };
     }
 
@@ -1613,16 +1619,18 @@ A simple idea that unfolds into surprising situations.
       expandedSource = sourceProject;
       hardResetParallax(sourceProject);
 
+      overlay.classList.remove('closing');
+      overlay.classList.add('active');
+      document.body.classList.add('has-expanded');
+
+      document.documentElement.clientWidth;
+
       const srcRect = sourceProject.getBoundingClientRect();
       const target = computeExpandedTargetRect();
 
       const clone = buildExpandedClone(sourceProject);
       expandedProject = clone;
       expandedLayer.appendChild(clone);
-
-      overlay.classList.remove('closing');
-      overlay.classList.add('active');
-      document.body.classList.add('has-expanded');
 
       clone.classList.add('is-animating');
 
