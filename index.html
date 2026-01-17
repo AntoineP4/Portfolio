@@ -556,7 +556,7 @@
       opacity: 0;
       pointer-events: none;
       z-index: 2;
-      transition: opacity 140ms cubic-bezier(0.22, 1, 0.36, 1);
+      transition: opacity 140ms cubic-bezier(z0.22, 1, 0.36, 1);
     }
 
     .expanded-video {
@@ -572,6 +572,9 @@
       background: rgba(0,0,0,0.25);
       opacity: 1;
       transition: opacity 160ms cubic-bezier(0.22, 1, 0.36, 1);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
 
     .expanded-video video {
@@ -580,7 +583,12 @@
       object-fit: cover;
       display: block;
       filter: saturate(1.02) contrast(1.03);
+      opacity: 0;
+      transition: opacity 220ms cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity;
     }
+
+    .expanded-video.is-ready video { opacity: 1; }
 
     .project.expanded .card-back {
       opacity: 1;
@@ -1372,6 +1380,95 @@ A simple idea that unfolds into surprising situations.
       if (state.inner) state.inner.style.transform = 'rotateX(0deg) rotateY(0deg)';
     }
 
+    function normalizeSrc(src) {
+      try { return new URL(src, location.href).href; } catch (_) { return src || ''; }
+    }
+
+    const warmCache = new Map();
+    const WARM_LIMIT = 2;
+
+    function touchWarm(key) {
+      const e = warmCache.get(key);
+      if (!e) return;
+      e.t = performance.now();
+      warmCache.set(key, e);
+    }
+
+    function evictWarmIfNeeded(lockedKey) {
+      if (warmCache.size <= WARM_LIMIT) return;
+      let lruKey = null;
+      let lruT = Infinity;
+      warmCache.forEach((v, k) => {
+        if (k === lockedKey) return;
+        if (v.locked) return;
+        if (v.t < lruT) { lruT = v.t; lruKey = k; }
+      });
+      if (!lruKey) return;
+      const entry = warmCache.get(lruKey);
+      if (entry && entry.video) {
+        try { entry.video.pause(); } catch (_) {}
+        try { entry.video.removeAttribute('src'); entry.video.load(); } catch (_) {}
+      }
+      warmCache.delete(lruKey);
+    }
+
+    function warmVideo(src) {
+      const key = normalizeSrc(src);
+      if (!key) return;
+      if (warmCache.has(key)) { touchWarm(key); return; }
+
+      const v = document.createElement('video');
+      v.src = key;
+      v.muted = true;
+      v.loop = true;
+      v.playsInline = true;
+      v.preload = 'auto';
+      v.autoplay = false;
+      v.setAttribute('playsinline', '');
+      v.setAttribute('muted', '');
+      try { v.load(); } catch (_) {}
+
+      warmCache.set(key, { video: v, t: performance.now(), locked: false });
+      evictWarmIfNeeded(null);
+    }
+
+    function lockWarm(src) {
+      const key = normalizeSrc(src);
+      const e = warmCache.get(key);
+      if (!e) return;
+      e.locked = true;
+      e.t = performance.now();
+      warmCache.set(key, e);
+    }
+
+    function unlockWarm(src) {
+      const key = normalizeSrc(src);
+      const e = warmCache.get(key);
+      if (!e) return;
+      e.locked = false;
+      e.t = performance.now();
+      warmCache.set(key, e);
+      evictWarmIfNeeded(null);
+    }
+
+    function getPosterFromProject(project) {
+      const img = project.querySelector('.card-front img');
+      const p = img ? img.getAttribute('src') : '';
+      return p || '';
+    }
+
+    function setVideoReadyState(wrap, vid) {
+      if (!wrap || !vid) return;
+      wrap.classList.remove('is-ready');
+      const onReady = () => {
+        wrap.classList.add('is-ready');
+        vid.removeEventListener('loadeddata', onReady);
+        vid.removeEventListener('canplay', onReady);
+      };
+      vid.addEventListener('loadeddata', onReady, { once: true });
+      vid.addEventListener('canplay', onReady, { once: true });
+    }
+
     function ensureExpandedVideo(project) {
       const existing = project.querySelector('.expanded-video');
       if (existing) return existing;
@@ -1379,19 +1476,41 @@ A simple idea that unfolds into surprising situations.
       const videoWrap = document.createElement('div');
       videoWrap.className = 'expanded-video';
 
-      const vid = document.createElement('video');
-      const src = project.getAttribute('data-video') || '';
-      vid.src = src;
-      vid.muted = true;
-      vid.loop = true;
-      vid.playsInline = true;
-      vid.autoplay = true;
-      vid.preload = 'metadata';
+      const srcRaw = project.getAttribute('data-video') || '';
+      const src = normalizeSrc(srcRaw);
+      const poster = getPosterFromProject(project);
+
+      if (poster) videoWrap.style.backgroundImage = `url("${poster}")`;
+
+      let vid = null;
+      const warm = src ? warmCache.get(src) : null;
+
+      if (warm && warm.video) {
+        vid = warm.video;
+        touchWarm(src);
+        lockWarm(src);
+      } else {
+        vid = document.createElement('video');
+        if (src) vid.src = src;
+        vid.muted = true;
+        vid.loop = true;
+        vid.playsInline = true;
+        vid.autoplay = true;
+        vid.preload = 'auto';
+        vid.setAttribute('playsinline', '');
+        vid.setAttribute('muted', '');
+        if (poster) vid.poster = poster;
+        try { vid.load(); } catch (_) {}
+      }
+
+      if (poster && !vid.poster) vid.poster = poster;
 
       videoWrap.appendChild(vid);
 
       const inner = project.querySelector('.card-inner');
       inner.insertBefore(videoWrap, inner.firstChild);
+
+      setVideoReadyState(videoWrap, vid);
 
       return videoWrap;
     }
@@ -1400,6 +1519,7 @@ A simple idea that unfolds into surprising situations.
       const wrap = ensureExpandedVideo(project);
       const vid = wrap.querySelector('video');
       if (!vid) return;
+      try { vid.muted = true; } catch (_) {}
       const p = vid.play();
       if (p && typeof p.catch === 'function') p.catch(() => {});
     }
@@ -1407,12 +1527,23 @@ A simple idea that unfolds into surprising situations.
     function stopAndRemoveExpandedVideo(project) {
       const wrap = project.querySelector('.expanded-video');
       if (!wrap) return;
+
       const vid = wrap.querySelector('video');
       if (vid) {
+        let src = '';
+        try { src = normalizeSrc(vid.currentSrc || vid.src || ''); } catch (_) { src = ''; }
+
         try { vid.pause(); } catch (_) {}
-        try { vid.currentTime = 0; } catch (_) {}
+
+        if (src && warmCache.has(src) && warmCache.get(src).video === vid) {
+          wrap.remove();
+          unlockWarm(src);
+          return;
+        }
+
         try { vid.removeAttribute('src'); vid.load(); } catch (_) {}
       }
+
       wrap.remove();
     }
 
@@ -1619,6 +1750,9 @@ A simple idea that unfolds into surprising situations.
       expandedSource = sourceProject;
       hardResetParallax(sourceProject);
 
+      const srcToWarm = sourceProject.getAttribute('data-video') || '';
+      warmVideo(srcToWarm);
+
       overlay.classList.remove('closing');
       overlay.classList.add('active');
       document.body.classList.add('has-expanded');
@@ -1758,12 +1892,30 @@ A simple idea that unfolds into surprising situations.
           }
         });
 
+        project.addEventListener('mouseenter', () => {
+          const src = project.getAttribute('data-video') || '';
+          warmVideo(src);
+        });
+
+        project.addEventListener('focusin', () => {
+          const src = project.getAttribute('data-video') || '';
+          warmVideo(src);
+        });
+
         project.addEventListener('click', () => {
           if (isTransitioning) return;
           if (expandedSource === project && expandedProject) closeExpanded();
           else openExpanded(project);
         });
       });
+
+      const first = document.querySelector('.project');
+      if (first) {
+        const src = first.getAttribute('data-video') || '';
+        const runWarm = () => warmVideo(src);
+        if ('requestIdleCallback' in window) requestIdleCallback(runWarm, { timeout: 1200 });
+        else setTimeout(runWarm, 600);
+      }
     } else {
       document.querySelectorAll('.card-inner').forEach(inner => inner.style.transform = 'none');
       document.querySelectorAll('.project').forEach(p => p.style.cursor = 'default');
