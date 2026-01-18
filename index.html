@@ -725,6 +725,23 @@
       filter: saturate(1.02) contrast(1.03);
     }
 
+    .expanded-video .video-cover {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 1;
+      transform: translate3d(0,0,0);
+      will-change: opacity;
+      transition: opacity 180ms cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .expanded-video.is-ready .video-cover { opacity: 0; }
+
     .project.expanded .card-back {
       opacity: 1;
       pointer-events: auto;
@@ -1743,6 +1760,292 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       if (state.inner) state.inner.style.transform = 'rotateX(0deg) rotateY(0deg)';
     }
 
+    const WarmVideo = (() => {
+      const items = [];
+      const bySrc = new Map();
+      const visible = new Set();
+      const warmed = new Set();
+      const active = { el: null, src: null, timer: 0, aborted: false };
+      let started = false;
+      let stopped = false;
+      let io = null;
+      let hiddenHost = null;
+
+      const idle = (fn, timeout = 900) => {
+        if (typeof requestIdleCallback === 'function') {
+          return requestIdleCallback(fn, { timeout });
+        }
+        return setTimeout(() => fn({ timeRemaining: () => 0, didTimeout: true }), 60);
+      };
+
+      const cancelIdle = (id) => {
+        if (typeof cancelIdleCallback === 'function') cancelIdleCallback(id);
+        else clearTimeout(id);
+      };
+
+      const makeHost = () => {
+        if (hiddenHost) return hiddenHost;
+        hiddenHost = document.createElement('div');
+        hiddenHost.style.position = 'fixed';
+        hiddenHost.style.left = '-9999px';
+        hiddenHost.style.top = '0';
+        hiddenHost.style.width = '1px';
+        hiddenHost.style.height = '1px';
+        hiddenHost.style.opacity = '0';
+        hiddenHost.style.pointerEvents = 'none';
+        hiddenHost.style.overflow = 'hidden';
+        document.body.appendChild(hiddenHost);
+        return hiddenHost;
+      };
+
+      const register = () => {
+        document.querySelectorAll('.project[data-video]').forEach((p) => {
+          const src = p.getAttribute('data-video') || '';
+          if (!src || bySrc.has(src)) return;
+          const img = p.querySelector('.card-front img');
+          const coverSrc = img ? (img.getAttribute('src') || '') : '';
+          const item = { project: p, src, coverSrc };
+          items.push(item);
+          bySrc.set(src, item);
+        });
+      };
+
+      const setupIO = () => {
+        if (io) return;
+        io = new IntersectionObserver((entries) => {
+          for (const e of entries) {
+            const p = e.target;
+            const src = p.getAttribute('data-video') || '';
+            if (!src) continue;
+            if (e.isIntersecting) visible.add(src);
+            else visible.delete(src);
+          }
+        }, { root: null, threshold: 0.15 });
+        items.forEach(it => io.observe(it.project));
+      };
+
+      const abortActive = () => {
+        active.aborted = true;
+        if (active.timer) { clearTimeout(active.timer); active.timer = 0; }
+        if (active.el) {
+          try { active.el.pause(); } catch (_) {}
+          try { active.el.removeAttribute('src'); active.el.load(); } catch (_) {}
+          try { active.el.remove(); } catch (_) {}
+        }
+        active.el = null;
+        active.src = null;
+      };
+
+      const stop = () => {
+        stopped = true;
+        abortActive();
+        if (io) { try { io.disconnect(); } catch (_) {} io = null; }
+      };
+
+      const pickNext = () => {
+        const visibles = items.filter(it => visible.has(it.src) && !warmed.has(it.src));
+        if (visibles.length) return visibles[0];
+        const rest = items.filter(it => !warmed.has(it.src));
+        return rest[0] || null;
+      };
+
+      const waitEvent = (el, name, ms) => new Promise((resolve) => {
+        let done = false;
+        const finish = () => {
+          if (done) return;
+          done = true;
+          el.removeEventListener(name, on, { passive: true });
+          resolve(true);
+        };
+        const on = () => finish();
+        el.addEventListener(name, on, { passive: true });
+        if (ms > 0) {
+          setTimeout(() => {
+            if (done) return;
+            try { el.removeEventListener(name, on, { passive: true }); } catch (_) {}
+            resolve(false);
+          }, ms);
+        }
+      });
+
+      const tryWarmVideo = async (src) => {
+        if (!src || warmed.has(src) || stopped) return;
+
+        active.aborted = false;
+        active.src = src;
+
+        const host = makeHost();
+        const v = document.createElement('video');
+        active.el = v;
+
+        v.muted = true;
+        v.playsInline = true;
+        v.loop = true;
+        v.preload = 'auto';
+        v.autoplay = false;
+        v.src = src;
+        v.setAttribute('playsinline', '');
+        v.setAttribute('muted', '');
+        v.setAttribute('preload', 'auto');
+
+        host.appendChild(v);
+
+        const bailAfter = 2600;
+        active.timer = setTimeout(() => {
+          if (active.src === src) abortActive();
+        }, bailAfter);
+
+        const okMeta = await waitEvent(v, 'loadedmetadata', 1400);
+        if (stopped || active.aborted || active.src !== src) return;
+
+        if (!okMeta) {
+          warmed.add(src);
+          abortActive();
+          return;
+        }
+
+        let played = false;
+        try {
+          const p = v.play();
+          if (p && typeof p.then === 'function') await p.then(() => {}).catch(() => {});
+          played = true;
+        } catch (_) {
+          played = false;
+        }
+
+        if (stopped || active.aborted || active.src !== src) return;
+
+        const markDone = () => {
+          warmed.add(src);
+          try { v.pause(); } catch (_) {}
+          abortActive();
+        };
+
+        if (!played) {
+          const ok = await waitEvent(v, 'loadeddata', 1200);
+          if (stopped || active.aborted || active.src !== src) return;
+          if (ok) markDone();
+          else { warmed.add(src); abortActive(); }
+          return;
+        }
+
+        if (typeof v.requestVideoFrameCallback === 'function') {
+          let resolved = false;
+          await new Promise((resolve) => {
+            const finish = () => {
+              if (resolved) return;
+              resolved = true;
+              resolve();
+            };
+            try {
+              v.requestVideoFrameCallback(() => finish());
+              setTimeout(() => finish(), 1100);
+            } catch (_) {
+              setTimeout(() => finish(), 450);
+            }
+          });
+          if (stopped || active.aborted || active.src !== src) return;
+          markDone();
+          return;
+        }
+
+        const ok = await waitEvent(v, 'timeupdate', 900);
+        if (stopped || active.aborted || active.src !== src) return;
+        if (ok) markDone();
+        else { warmed.add(src); abortActive(); }
+      };
+
+      let loopId = 0;
+      const loop = () => {
+        if (stopped) return;
+        loopId = idle(async (deadline) => {
+          if (stopped) return;
+          if (document.visibilityState !== 'visible') { loop(); return; }
+          if (expandedProject) { loop(); return; }
+
+          const next = pickNext();
+          if (!next) return;
+
+          if (!deadline.didTimeout && deadline.timeRemaining && deadline.timeRemaining() < 18) { loop(); return; }
+
+          await tryWarmVideo(next.src);
+          if (stopped) return;
+
+          setTimeout(() => loop(), 160);
+        }, 1000);
+      };
+
+      const start = () => {
+        if (started || stopped) return;
+        started = true;
+        register();
+        setupIO();
+        loop();
+      };
+
+      const interruptOnUser = () => {
+        if (stopped) return;
+        stop();
+      };
+
+      return { start, stop: interruptOnUser, isWarmed: (src) => warmed.has(src) };
+    })();
+
+    function getProjectCoverSrc(project) {
+      const img = project ? project.querySelector('.card-front img') : null;
+      return img ? (img.getAttribute('src') || '') : '';
+    }
+
+    function markWrapReady(wrap) {
+      if (!wrap) return;
+      wrap.classList.add('is-ready');
+    }
+
+    function armFirstFrameGate(vid, wrap) {
+      if (!vid || !wrap) return;
+
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        markWrapReady(wrap);
+        cleanup();
+      };
+
+      const cleanup = () => {
+        try { vid.removeEventListener('loadeddata', onLoadedData); } catch (_) {}
+        try { vid.removeEventListener('timeupdate', onTimeUpdate); } catch (_) {}
+        try { vid.removeEventListener('playing', onPlaying); } catch (_) {}
+      };
+
+      const onLoadedData = () => {
+        requestAnimationFrame(() => requestAnimationFrame(() => finish()));
+      };
+
+      const onTimeUpdate = () => {
+        requestAnimationFrame(() => finish());
+      };
+
+      const onPlaying = () => {
+        if (typeof vid.requestVideoFrameCallback === 'function') {
+          try {
+            vid.requestVideoFrameCallback(() => finish());
+            setTimeout(() => finish(), 1400);
+            return;
+          } catch (_) {}
+        }
+        setTimeout(() => finish(), 220);
+      };
+
+      vid.addEventListener('loadeddata', onLoadedData, { passive: true });
+      vid.addEventListener('timeupdate', onTimeUpdate, { passive: true });
+      vid.addEventListener('playing', onPlaying, { passive: true });
+
+      if (vid.readyState >= 2) {
+        requestAnimationFrame(() => requestAnimationFrame(() => finish()));
+      }
+    }
+
     function ensureExpandedVideo(project) {
       const existing = project.querySelector('.expanded-video');
       if (existing) return existing;
@@ -1759,10 +2062,20 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       vid.autoplay = true;
       vid.preload = 'metadata';
 
+      const cover = document.createElement('img');
+      cover.className = 'video-cover';
+      cover.alt = '';
+      cover.decoding = 'async';
+      cover.loading = 'eager';
+      cover.src = getProjectCoverSrc(project) || '';
       videoWrap.appendChild(vid);
+      videoWrap.appendChild(cover);
 
       const inner = project.querySelector('.card-inner');
       inner.insertBefore(videoWrap, inner.firstChild);
+
+      videoWrap.classList.remove('is-ready');
+      armFirstFrameGate(vid, videoWrap);
 
       return videoWrap;
     }
@@ -1771,6 +2084,13 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       const wrap = ensureExpandedVideo(project);
       const vid = wrap.querySelector('video');
       if (!vid) return;
+
+      wrap.classList.remove('is-ready');
+      const cover = wrap.querySelector('.video-cover');
+      if (cover) cover.src = getProjectCoverSrc(project) || cover.src || '';
+
+      armFirstFrameGate(vid, wrap);
+
       const p = vid.play();
       if (p && typeof p.catch === 'function') p.catch(() => {});
     }
@@ -2138,6 +2458,28 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
     } else {
       document.querySelectorAll('.card-inner').forEach(inner => inner.style.transform = 'none');
       document.querySelectorAll('.project').forEach(p => p.style.cursor = 'default');
+    }
+
+    if (!isMobile) {
+      let warmupStarted = false;
+      const kickWarmup = () => {
+        if (warmupStarted) return;
+        warmupStarted = true;
+        WarmVideo.start();
+
+        const stopOnUser = () => WarmVideo.stop();
+        const opts = { passive: true, capture: true };
+        window.addEventListener('pointerdown', stopOnUser, opts);
+        window.addEventListener('wheel', stopOnUser, opts);
+        window.addEventListener('scroll', stopOnUser, opts);
+        window.addEventListener('keydown', stopOnUser, opts);
+      };
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setTimeout(() => kickWarmup(), 0);
+        });
+      });
     }
   </script>
 
