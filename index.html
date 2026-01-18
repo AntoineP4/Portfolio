@@ -87,7 +87,7 @@
       display: flex;
       justify-content: center;
       gap: 1rem;
-      margin: 2rem auto 3rem auto;
+      margin: 2rem auto 1.25rem auto;
       animation: slideFadeIn 0.6s forwards;
       animation-delay: 0.6s;
       opacity: 0;
@@ -138,6 +138,33 @@
       box-shadow:
         0 2px 5px rgba(107, 140, 255, 0.12),
         inset 0 0 4px rgba(107, 140, 255, 0.08);
+    }
+
+    .intro-card {
+      max-width: 980px;
+      margin: 0 auto 2.2rem auto;
+      padding: 1.15rem 1.35rem;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(18px) saturate(160%) brightness(1.02);
+      -webkit-backdrop-filter: blur(18px) saturate(160%) brightness(1.02);
+      box-shadow:
+        inset 0 0 20px rgba(255,255,255,0.02),
+        0 12px 40px rgba(0,0,0,0.28);
+      text-align: center;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      animation-delay: 0.72s;
+    }
+
+    .intro-card p {
+      white-space: pre-line;
+      line-height: 1.7;
+      font-size: 1.03rem;
+      color: rgba(255,255,255,0.86);
+      letter-spacing: 0.01em;
     }
 
     .section-title {
@@ -197,6 +224,7 @@
     .project:nth-child(3) { animation-delay: 1.2s; }
     .project:nth-child(4) { animation-delay: 1.3s; }
     .project:nth-child(5) { animation-delay: 1.4s; }
+    .project:nth-child(6) { animation-delay: 1.5s; }
 
     @media (max-width: 700px) {
       .project { flex: 1 1 100%; max-width: 100%; }
@@ -321,26 +349,127 @@
     }
 
     .action-button {
-      background: #e2e2e2;
-      color: #000;
+      position: relative;
+      isolation: isolate;
+      background: rgba(214,214,218,0.92);
+      color: #0b0b0c;
       padding: 0.6rem 1.2rem;
       font-size: 0.95rem;
-      font-weight: 500;
+      font-weight: 650;
       border-radius: 1.5rem;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
-      transition: background 0.3s ease, transform 0.2s ease;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      border: none;
+      gap: 0.4rem;
+      border: 1px solid rgba(0,0,0,0.10);
       cursor: pointer;
       user-select: none;
       -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+
+      transform: translate3d(0,0,0) scale(1);
+      transform-origin: center;
+      backface-visibility: hidden;
+      will-change: transform, box-shadow, background, border-color, filter;
+
+      box-shadow:
+        0 10px 22px rgba(0,0,0,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.62);
+
+      transition:
+        transform 560ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 1800ms cubic-bezier(0.22, 1, 0.36, 1),
+        background 2600ms cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 2600ms cubic-bezier(0.22, 1, 0.36, 1),
+        filter 2600ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .action-button:hover { background: #f5f5f5; transform: scale(1.05); }
+    .action-button::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate3d(-18%, 0, 0);
+      background: linear-gradient(
+        115deg,
+        rgba(255,255,255,0.0) 0%,
+        rgba(255,255,255,0.55) 35%,
+        rgba(255,255,255,0.0) 70%
+      );
+      mix-blend-mode: soft-light;
+      transition:
+        opacity 2200ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 1600ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
 
-    .action-button img { display: block; height: 1rem; margin-right: 0.4rem; }
+    .action-button::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: 0;
+      background: radial-gradient(120% 140% at 20% 0%, rgba(107,140,255,0.32), rgba(107,140,255,0.0) 62%);
+      transition: opacity 2200ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .action-button:hover {
+        background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(239,244,255,0.92) 100%);
+        border-color: rgba(107,140,255,0.52);
+        transform: translate3d(0, 0, 0) scale(1.075);
+        filter: brightness(1.03);
+
+        box-shadow:
+          0 22px 54px rgba(0,0,0,0.30),
+          0 0 0 5px rgba(107,140,255,0.16),
+          inset 0 1px 0 rgba(255,255,255,0.86);
+      }
+
+      .action-button:hover::before { opacity: 0.95; transform: translate3d(18%, 0, 0); }
+      .action-button:hover::after { opacity: 0.95; }
+    }
+
+    .action-button:active {
+      transform: translate3d(0, 0, 0) scale(1.02);
+      transition:
+        transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 700ms cubic-bezier(0.22, 1, 0.36, 1),
+        background 1400ms cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 1400ms cubic-bezier(0.22, 1, 0.36, 1),
+        filter 1400ms cubic-bezier(0.22, 1, 0.36, 1);
+      filter: brightness(1.01);
+      box-shadow:
+        0 12px 28px rgba(0,0,0,0.26),
+        inset 0 1px 0 rgba(255,255,255,0.58);
+    }
+
+    .action-button:focus-visible {
+      outline: none;
+      border-color: rgba(107,140,255,0.68);
+      box-shadow:
+        0 22px 54px rgba(0,0,0,0.30),
+        0 0 0 6px rgba(107,140,255,0.22),
+        inset 0 1px 0 rgba(255,255,255,0.86);
+    }
+
+    .action-button img {
+      display: block;
+      height: 1rem;
+      margin: 0;
+      pointer-events: none;
+      transform: translate3d(0,0,0) scale(1);
+      will-change: transform, opacity;
+      transition:
+        transform 560ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 900ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .action-button:hover img { transform: translate3d(0,0,0) scale(1.10); }
+    }
 
     .action-button.download-only {
       border-radius: 50%;
@@ -351,7 +480,20 @@
       align-items: center;
       justify-content: center;
     }
-    .action-button.download-only img { width: 1.3rem; height: 1.3rem; margin: 0; }
+
+    .action-button.download-only img { width: 1.3rem; height: 1.3rem; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .action-button,
+      .action-button img,
+      .action-button::before,
+      .action-button::after {
+        transition: none !important;
+      }
+      .action-button:hover { transform: none !important; }
+      .action-button::before { transform: none !important; opacity: 0 !important; }
+      .action-button::after { opacity: 0 !important; }
+    }
 
     footer {
       margin-top: 6rem;
@@ -465,6 +607,7 @@
       .card-inner { transform: none !important; }
       .project { cursor: default !important; }
       .action-button.download-only,
+      .action-button.itch-link,
       .action-button[href*="itch.io"] { display: none !important; }
       .details-toggle { display: none !important; }
     }
@@ -556,7 +699,7 @@
       opacity: 0;
       pointer-events: none;
       z-index: 2;
-      transition: opacity 140ms cubic-bezier(z0.22, 1, 0.36, 1);
+      transition: opacity 140ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .expanded-video {
@@ -572,9 +715,6 @@
       background: rgba(0,0,0,0.25);
       opacity: 1;
       transition: opacity 160ms cubic-bezier(0.22, 1, 0.36, 1);
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
     }
 
     .expanded-video video {
@@ -583,12 +723,7 @@
       object-fit: cover;
       display: block;
       filter: saturate(1.02) contrast(1.03);
-      opacity: 0;
-      transition: opacity 220ms cubic-bezier(0.22, 1, 0.36, 1);
-      will-change: opacity;
     }
-
-    .expanded-video.is-ready video { opacity: 1; }
 
     .project.expanded .card-back {
       opacity: 1;
@@ -655,6 +790,8 @@
     .normal-view { display: flex; flex-direction: column; gap: 1rem; height: 100%; }
     .details-view { display: none; flex-direction: column; gap: 1rem; height: 100%; }
 
+    .normal-view p[data-i18n$="_desc"] { white-space: pre-line; }
+
     .details-header {
       display: flex;
       align-items: flex-start;
@@ -671,7 +808,7 @@
 
     .details-title h4 {
       font-size: 1.25rem;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: 0.02em;
       color: #fff;
       line-height: 1.1;
@@ -690,16 +827,62 @@
 
     .details-text {
       flex: 1 1 auto;
-      overflow: auto;
+      overflow-y: auto;
+      overflow-x: hidden;
       scrollbar-width: none;
       -ms-overflow-style: none;
       line-height: 1.65;
       font-size: 1.02rem;
       color: rgba(255,255,255,0.9);
-      white-space: pre-wrap;
+      white-space: normal;
       padding-right: 0.2rem;
+      overscroll-behavior: contain;
+      scroll-behavior: smooth;
     }
     .details-text::-webkit-scrollbar { display: none; }
+
+    .details-rt h5 {
+      margin: 0.9rem 0 0.35rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.86);
+      font-weight: 900;
+    }
+
+    .details-rt h5:first-child { margin-top: 0; }
+
+    .details-rt p {
+      margin: 0 0 0.75rem;
+      color: rgba(255,255,255,0.88);
+      font-weight: 400;
+    }
+
+    .details-rt ul {
+      margin: 0 0 0.85rem;
+      padding-left: 1.05rem;
+    }
+
+    .details-rt li {
+      margin: 0.25rem 0;
+      color: rgba(255,255,255,0.88);
+      font-weight: 400;
+    }
+
+    .details-rt .pill {
+      display: inline-block;
+      margin-left: 0.5rem;
+      padding: 0.12rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      color: rgba(255,255,255,0.9);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
 
     .details-toggle {
       position: absolute;
@@ -833,12 +1016,17 @@
       animation-delay: 0.4s;
     ">Portfolio</h2>
     <h1 data-i18n="name">ANTOINE PEZZULO</h1>
-    <p data-i18n="subtitle">Étudiant Game Design à ISART Digital</p>
+    <p data-i18n="subtitle">Junior Game Designer</p>
   </header>
 
   <div id="lang-switch">
     <button data-lang="fr">Français</button>
     <button data-lang="en">English</button>
+  </div>
+
+  <div class="intro-card">
+    <p data-i18n="bio">Étudiant à ISART Digital, j’ai une appétence particulière pour la tutorialisation, l’UX et la recherche de gamefeel.
+J’aime travailler par itération dans le moteur, les mains dans le cambouis, afin de confronter rapidement les idées au jeu et d’affiner les intentions de design.</p>
   </div>
 
   <div class="section-title" data-i18n="projects">Mes Projets</div>
@@ -870,6 +1058,9 @@
                     <img src="img/ytb logo.png" alt="" />Trailer
                   </a>
                   <a href="#" class="action-button">
+                    <img src="img/ytb logo.png" alt="" />Walkthrough
+                  </a>
+                  <a href="#" class="action-button itch-link">
                     <img src="img/itch logo.png" alt="" />Itch.io
                   </a>
                   <a href="files/METRO.zip" download class="action-button download-only">
@@ -879,7 +1070,9 @@
               </div>
 
               <p data-i18n="metro_desc">
-                Un jeu de vitesse dans un tunnel néon en vue arrière. Évitez les obstacles et surfez sur la musique.
+METRO est un runner rythmé, réalisé en solo.
+La contrainte était de concevoir un jeu jouable avec un seul bouton.
+Vous incarnez une moto sans pilote lancée à vive allure dans un tunnel de néon ; l’unique bouton vous sert à orienter votre trajectoire.
               </p>
 
               <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
@@ -892,14 +1085,14 @@
                   <span data-i18n="metro_team">Solo</span>
                 </div>
               </div>
-              <div class="details-text" data-i18n="metro_more"></div>
+              <div class="details-text" data-i18n="metro_more" data-i18n-html></div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="project" data-video="videos/pleasant_chalk.mp4">
+    <div class="project" data-video="videos/mouse_knight.mp4">
       <div class="card-inner">
         <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -908,8 +1101,8 @@
         </button>
 
         <div class="card-face card-front">
-          <img src="img/pleasant chalk.png" alt="Pleasant Chalk screenshot" />
-          <h3>Pleasant Chalk</h3>
+          <img src="img/mouse knight.png" alt="Mouse Knight screenshot" />
+          <h3>Mouse Knight</h3>
         </div>
 
         <div class="card-face card-back">
@@ -917,69 +1110,29 @@
             <div class="normal-view">
               <div class="top-row">
                 <div>
-                  <h4>Pleasant Chalk</h4>
-                  <span data-i18n="chalk_team">Solo</span>
+                  <h4>Mouse Knight</h4>
+                  <span data-i18n="mouse_team">Équipe de 5</span>
                 </div>
                 <div class="buttons">
-                  <a href="#" class="action-button"><img src="img/ytb logo.png" alt="" />Trailer</a>
-                  <a href="#" class="action-button"><img src="img/itch logo.png" alt="" />Itch.io</a>
-                  <a href="files/Pleasant Chalk.zip" download class="action-button download-only"><img src="img/dl logo.png" alt="" /></a>
-                </div>
-              </div>
-
-              <p data-i18n="chalk_desc">
-                Un puzzle narratif poétique basé sur la mémoire, le mouvement et les traces laissées au sol.
-              </p>
-
-              <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
-            </div>
-
-            <div class="details-view">
-              <div class="details-header">
-                <div class="details-title">
-                  <h4>Pleasant Chalk</h4>
-                  <span data-i18n="chalk_team">Solo</span>
-                </div>
-              </div>
-              <div class="details-text" data-i18n="chalk_more"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="project" data-video="videos/muscles_rockets.mp4">
-      <div class="card-inner">
-        <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M6 14l6-6 6 6"></path>
-          </svg>
-        </button>
-
-        <div class="card-face card-front">
-          <img src="img/muscles & rockets.png" alt="Muscles & Rockets screenshot" />
-          <h3>Muscles & Rockets</h3>
-        </div>
-
-        <div class="card-face card-back">
-          <div class="card-back-content">
-            <div class="normal-view">
-              <div class="top-row">
-                <div>
-                  <h4>Muscles & Rockets</h4>
-                  <span data-i18n="mar_team">Équipe de 8</span>
-                </div>
-                <div class="buttons">
-                  <a href="https://youtu.be/cdR5du5tKaw" target="_blank" rel="noopener noreferrer" class="action-button">
+                  <a href="#" class="action-button">
                     <img src="img/ytb logo.png" alt="" />Trailer
                   </a>
-                  <a href="#" class="action-button"><img src="img/itch logo.png" alt="" />Itch.io</a>
-                  <a href="files/Muscles & Rockets.zip" download class="action-button download-only"><img src="img/dl logo.png" alt="" /></a>
+                  <a href="#" class="action-button">
+                    <img src="img/ytb logo.png" alt="" />Walkthrough
+                  </a>
+                  <a href="#" class="action-button itch-link">
+                    <img src="img/itch logo.png" alt="" />Itch.io
+                  </a>
+                  <a href="#" class="action-button download-only">
+                    <img src="img/dl logo.png" alt="Download Mouse Knight" />
+                  </a>
                 </div>
               </div>
 
-              <p data-i18n="mar_desc">
-                Un platformer 2.5D où le personnage avance uniquement grâce au recul d’un lance-roquettes. Zéro saut, 100% action.
+              <p data-i18n="mouse_desc">
+Mouse Knight est un brawler-platformer en 3D à la troisième personne.
+J’ai participé au projet en tant que game designer, programmeur et level designer.
+Le jeu propose d’incarner une petite souris chevalier qui rebondit sur ses ennemis pour se déplacer et combattre.
               </p>
 
               <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
@@ -988,11 +1141,11 @@
             <div class="details-view">
               <div class="details-header">
                 <div class="details-title">
-                  <h4>Muscles & Rockets</h4>
-                  <span data-i18n="mar_team">Équipe de 8</span>
+                  <h4>Mouse Knight</h4>
+                  <span data-i18n="mouse_team">Équipe de 5</span>
                 </div>
               </div>
-              <div class="details-text" data-i18n="mar_more"></div>
+              <div class="details-text" data-i18n="mouse_more" data-i18n-html></div>
             </div>
           </div>
         </div>
@@ -1024,11 +1177,13 @@
                   <a href="https://youtu.be/bdllN41GYCA" target="_blank" rel="noopener noreferrer" class="action-button">
                     <img src="img/ytb logo.png" alt="" />Trailer
                   </a>
+                  <a href="#" class="action-button">Livret de règle</a>
                 </div>
               </div>
 
               <p data-i18n="vor_desc">
-                Un jeu de plateau stratégique où des arbres maléfiques s’étendent autour d’un village pour dévorer la vie humaine.
+Voracines est un jeu de plateau tactique de 2 à 4 joueurs.
+J’ai participé au projet en tant que game designer, avec une contribution principale sur l’écriture du livret de règles et l’organisation des playtests.
               </p>
 
               <img src="img/no engine logo.png" class="engine-logo" alt="No engine logo" />
@@ -1041,7 +1196,7 @@
                   <span data-i18n="vor_team">Équipe de 8</span>
                 </div>
               </div>
-              <div class="details-text" data-i18n="vor_more"></div>
+              <div class="details-text" data-i18n="vor_more" data-i18n-html></div>
             </div>
           </div>
         </div>
@@ -1067,17 +1222,19 @@
               <div class="top-row">
                 <div>
                   <h4>Reflect</h4>
-                  <span data-i18n="ref_team">Équipe de 2</span>
+                  <span data-i18n="ref_team">Équipe de 3</span>
                 </div>
                 <div class="buttons">
-                  <a href="#" class="action-button"><img src="img/ytb logo.png" alt="" />Trailer</a>
-                  <a href="#" class="action-button"><img src="img/itch logo.png" alt="" />Itch.io</a>
+                  <a href="#" class="action-button"><img src="img/ytb logo.png" alt="" />Walkthrough</a>
+                  <a href="#" class="action-button itch-link"><img src="img/itch logo.png" alt="" />Itch.io</a>
                   <a href="#" class="action-button download-only"><img src="img/dl logo.png" alt="" /></a>
                 </div>
               </div>
 
               <p data-i18n="ref_desc">
-                Un jeu développé par Ludo… et depuis, il est parti randonner.
+Reflect est un die and retry 2D en vue top-down, avec des mécaniques inspirées des bullet hell.
+J’ai assuré l’intégralité du level design et apporté quelques retours et suggestions sur le game design.
+Dans ce jeu, le joueur doit exploiter les attaques de ses ennemis grâce à une mécanique centrale de parade, permettant de renvoyer leurs projectiles.
               </p>
 
               <img src="img/godot logo.png" class="engine-logo" alt="Godot Logo" />
@@ -1087,10 +1244,117 @@
               <div class="details-header">
                 <div class="details-title">
                   <h4>Reflect</h4>
-                  <span data-i18n="ref_team">Équipe de 2</span>
+                  <span data-i18n="ref_team">Équipe de 3</span>
                 </div>
               </div>
-              <div class="details-text" data-i18n="ref_more"></div>
+              <div class="details-text" data-i18n="ref_more" data-i18n-html></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="project" data-video="videos/pleasant_chalk.mp4">
+      <div class="card-inner">
+        <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 14l6-6 6 6"></path>
+          </svg>
+        </button>
+
+        <div class="card-face card-front">
+          <img src="img/pleasant chalk.png" alt="Pleasant Chalk screenshot" />
+          <h3>Pleasant Chalk</h3>
+        </div>
+
+        <div class="card-face card-back">
+          <div class="card-back-content">
+            <div class="normal-view">
+              <div class="top-row">
+                <div>
+                  <h4>Pleasant Chalk</h4>
+                  <span data-i18n="chalk_team">Solo</span>
+                </div>
+                <div class="buttons">
+                  <a href="#" class="action-button"><img src="img/ytb logo.png" alt="" />Walkthrough</a>
+                  <a href="#" class="action-button itch-link"><img src="img/itch logo.png" alt="" />Itch.io</a>
+                  <a href="files/Pleasant Chalk.zip" download class="action-button download-only"><img src="img/dl logo.png" alt="" /></a>
+                </div>
+              </div>
+
+              <p data-i18n="chalk_desc">
+Pleasant Chalk est un chill game, réalisé en solo.
+L’objectif était de partir d’une version volontairement fade et impersonnelle du jeu Asteroids, afin de la transformer en une expérience juicy et satisfaisante.
+J’ai choisi de reskin le jeu pour offrir une expérience chill et lo-fi.
+              </p>
+
+              <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
+            </div>
+
+            <div class="details-view">
+              <div class="details-header">
+                <div class="details-title">
+                  <h4>Pleasant Chalk</h4>
+                  <span data-i18n="chalk_team">Solo</span>
+                </div>
+              </div>
+              <div class="details-text" data-i18n="chalk_more" data-i18n-html></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="project" data-video="videos/muscles_rockets.mp4">
+      <div class="card-inner">
+        <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 14l6-6 6 6"></path>
+          </svg>
+        </button>
+
+        <div class="card-face card-front">
+          <img src="img/muscles & rockets.png" alt="Muscles & Rockets screenshot" />
+          <h3>Muscles & Rockets</h3>
+        </div>
+
+        <div class="card-face card-back">
+          <div class="card-back-content">
+            <div class="normal-view">
+              <div class="top-row">
+                <div>
+                  <h4>Muscles & Rockets</h4>
+                  <span data-i18n="mar_team">Équipe de 8</span>
+                </div>
+                <div class="buttons">
+                  <a href="https://youtu.be/cdR5du5tKaw" target="_blank" rel="noopener noreferrer" class="action-button">
+                    <img src="img/ytb logo.png" alt="" />Trailer
+                  </a>
+                  <a href="#" class="action-button">
+                    <img src="img/ytb logo.png" alt="" />Walkthrough
+                  </a>
+                  <a href="#" class="action-button itch-link"><img src="img/itch logo.png" alt="" />Itch.io</a>
+                  <a href="files/Muscles & Rockets.zip" download class="action-button download-only"><img src="img/dl logo.png" alt="" /></a>
+                </div>
+              </div>
+
+              <p data-i18n="mar_desc">
+Muscles & Rockets est un jeu d’action-platformer en 2.5D.
+J’ai été game designer et level designer, en charge de l’intégralité du niveau 1.
+Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquettes pour combattre les ennemis et vous propulser grâce au recul.
+              </p>
+
+              <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
+            </div>
+
+            <div class="details-view">
+              <div class="details-header">
+                <div class="details-title">
+                  <h4>Muscles & Rockets</h4>
+                  <span data-i18n="mar_team">Équipe de 8</span>
+                </div>
+              </div>
+              <div class="details-text" data-i18n="mar_more" data-i18n-html></div>
             </div>
           </div>
         </div>
@@ -1158,175 +1422,270 @@
     const translations = {
       fr: {
         name: "ANTOINE PEZZULO",
-        subtitle: "Étudiant Game Design à ISART Digital",
+        subtitle: "Junior Game Designer",
+        bio: "Étudiant à ISART Digital, j’ai une appétence particulière pour la tutorialisation, l’UX et la recherche de gamefeel.\nJ’aime travailler par itération dans le moteur, les mains dans le cambouis, afin de confronter rapidement les idées au jeu et d’affiner les intentions de design.",
         projects: "Mes Projets",
         contact: "Contact",
         phone: "Téléphone",
 
         metro_team: "Solo",
-        metro_desc: "Un jeu de vitesse dans un tunnel néon en vue arrière. Évitez les obstacles et surfez sur la musique.",
+        metro_desc: "METRO est un runner rythmé, réalisé en solo.\nLa contrainte était de concevoir un jeu jouable avec un seul bouton.\nVous incarnez une moto sans pilote lancée à vive allure dans un tunnel de néon ; l’unique bouton vous sert à orienter votre trajectoire.",
         metro_more:
-`METRO — Détails
+`<div class="details-rt">
+  <h5>Contexte</h5>
+  <p>Ce projet scolaire avait pour contrainte la conception d’un jeu jouable avec un seul bouton, en deux mois. Je cherchais une idée élégante qui serais techniquement économique, car je débutais en programmation.</p>
 
-• Concept
-Runner de vitesse dans un tunnel infini, où la lisibilité des blocs et le “flow” musical sont centraux.
+  <h5>Pitch</h5>
+  <p>METRO est un runner rythmé où l’on contrôle une moto qui fonce à toute allure dans un tunnel parsemé d’obstacles, la musique prend une place importante.</p>
 
-• Intention
-Créer une expérience très sensorielle : vitesse, tension, et micro-décisions en continu.
+  <h5>Design</h5>
+  <p>METRO s’inspire fortement de Super Hexagon, notamment dans sa capacité à pousser le joueur à relancer instantanément après un échec. La mort est très rapide, lisible, et la relance apparaît immédiatement, afin de créer un réflexe de retry machinal.</p>
 
-• Notes de design
-- Lecture à grande vitesse : formes simples, contrastes, rythme.
-- Progression par niveaux (8 couleurs), puis un sentiment d’infini à la fin.
-- Travail sur le “gamefeel” (caméra, inertie, feedback visuel/sonore).`,
+  <h5>Problème rencontré</h5>
+  <p>Lors des premiers playtests, un problème est rapidement remonté : la motion sickness. J’ai identifié que la principale source venait du motif du tunnel. À très haute vitesse, un motif trop discret fait perdre la perception du tube et donc la sensation de vitesse, tandis qu’un motif trop prononcé provoque de la motion sickness.</p>
+  <p>J’ai longuement itéré sur le visuel du tunnel, testant de nombreuses variantes, jusqu’à trouver un compromis efficace : des bandes larges et fines qui se chevauchent, suffisamment visibles pour transmettre la vitesse, sans provoquer de malaise sur la durée.</p>
+
+  <h5>Défis UI/UX</h5>
+  <p>La contrainte du one button s’appliquait également aux menus, ce qui représentait un véritable défi d’UI/UX. J’ai itéré sur la structure des menus ainsi que sur les feedbacks visuels et sonores afin de garantir une navigation claire sans friction malgré le bouton unique. C’était très amusant.</p>
+</div>`,
 
         chalk_team: "Solo",
-        chalk_desc: "Un puzzle narratif poétique basé sur la mémoire, le mouvement et les traces laissées au sol.",
+        chalk_desc: "Pleasant Chalk est un chill game, réalisé en solo.\nL’objectif était de partir d’une version volontairement fade et impersonnelle du jeu Asteroids, afin de la transformer en une expérience juicy et satisfaisante.\nJ’ai choisi de reskin le jeu pour offrir une expérience chill et lo-fi.",
         chalk_more:
-`Pleasant Chalk — Détails
+`<div class="details-rt">
+  <h5>Contexte</h5>
+  <p>Ce jeu est le résultat du projet Juice It de première année, dans lequel une version très austère du jeu Asteroids nous a été fournie, avec pour objectif de la rendre plus juicy en seulement deux semaines.</p>
 
-• Concept
-Puzzle narratif où la “trace” devient une mécanique : mémoriser, revenir, recomposer.
+  <h5>Pitch</h5>
+  <p>Dans Pleasant Chalk, le joueur incarne une craie qui chasse des chiffres dans une ambiance chill et lo-fi.</p>
 
-• Intention
-Mettre le joueur dans une vibe contemplative, avec une logique de découverte plutôt que de performance.
+  <h5>Design</h5>
+  <p>La version d’Asteroids fournie pour le projet proposait des contrôles très inertiels et peu précis. Je trouvais cette sensation frustrante et incompatible avec une expérience agréable dans son contexte initial.</p>
+  <p>Plutôt que de corriger directement ce manque de contrôle, j’ai choisi de le détourner. J’ai reskinné le jeu afin de transformer cette inertie en intention de design. Le déplacement imprécis de la craie devient alors un moyen de dessiner involontairement en jouant.</p>
 
-• Notes de design
-- La lisibilité des traces est le coeur du puzzle.
-- Rythme calme, feedback doux, et progression par petites révélations.`,
+  <h5>Problème rencontré</h5>
+  <p>Je me suis rapidement rendu compte qu’un tableau et une craie constituaient un contexte, par nature, moins juicy qu’un vaisseau spatial dans l’espace. Pour compenser cela, j’ai orienté la direction artistique vers une ambiance lo-fi et apaisante.</p>
+  <p>Plutôt que d’accumuler des effets visuels nerveux et colorés, j’ai cherché à proposer une expérience douce et agréable, où le juice passe par l’ambiance, le son et le feeling général, plutôt que par la surenchère visuelle.</p>
+</div>`,
 
         mar_team: "Équipe de 8",
-        mar_desc: "Un platformer 2.5D où le personnage avance uniquement grâce au recul d’un lance-roquettes. Zéro saut, 100% action.",
+        mar_desc: "Muscles & Rockets est un jeu d’action-platformer en 2.5D.\nJ’ai été game designer et level designer, en charge de l’intégralité du niveau 1.\nVous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquettes pour combattre les ennemis et vous propulser grâce au recul.",
         mar_more:
-`Muscles & Rockets — Détails
+`<div class="details-rt">
+  <h5>Contexte</h5>
+  <p>Ce projet scolaire s’est déroulé sur une durée de deux mois, au sein d’une équipe composée de six game designers, d’un programmeur et d’un music &amp; sound designer. L’objectif était de concevoir un action-platformer en 2.5D.</p>
 
-• Concept
-Plateformer 2.5D où le déplacement est un “coût” : chaque action est un recul.
+  <h5>Pitch</h5>
+  <p>Dans Muscles &amp; Rockets, le joueur est équipé d’un lance-roquettes surpuissant. Le recul de l’arme est si intense qu’il propulse le personnage en arrière à chaque tir. Le joueur doit exploiter ce recul pour progresser à travers six niveaux mêlant défis de plateforme et combats.</p>
 
-• Intention
-Transformer une contrainte (pas de saut) en identité forte et en variété de situations.
+  <h5>Contribution</h5>
+  <p>J’ai participé au projet en tant que game designer et level designer du niveau 1. J’ai pris en charge la tutorialisation, un aspect que j’aime particulièrement soigner dans mes projets.</p>
+  <p>J’ai également beaucoup itéré sur le gamefeel. Chaque tir de roquette devait transmettre une sensation de puissance marquée. Or, le joueur tire en continu tout au long du jeu : les feedbacks devaient donc rester percutants sans nuire à la lisibilité ni provoquer d’inconfort. Trouver cet équilibre a constitué un défi central du gamefeel.</p>
 
-• Notes de design
-- Level design pensé autour de trajectoires et d’angles.
-- Combat / déplacement fusionnés (tir = mouvement).
-- Progression par apprentissage des timings et du contrôle.`,
+  <h5>Design</h5>
+  <p>Le gameplay est entièrement centré sur le lance-roquettes, permettant de fusionner combat et plateforming autour d’une seule USP forte. L’impossibilité de sauter renforce cette identité et oblige le joueur à penser chacun de ses tirs comme un moyen de déplacement autant que d’attaque.</p>
+
+  <h5>Problèmes rencontrés</h5>
+  <p>En début de production, l’équipe comptait deux programmeurs. Au bout de deux semaines, l’un d’eux a quitté l’équipe de manière inattendue.</p>
+  <p>Nous avons donc dû réduire rapidement le scope afin de nous adapter à cette perte. J’ai pris en charge une grande partie de la communication entre les designers et le programmeur restant afin de faciliter cette transition et d’assurer la finalisation du projet.</p>
+</div>`,
+
+        mouse_team: "Équipe de 5",
+        mouse_desc: "Mouse Knight est un brawler-platformer en 3D à la troisième personne.\nJ’ai participé au projet en tant que game designer, programmeur et level designer.\nLe jeu propose d’incarner une petite souris chevalier qui rebondit sur ses ennemis pour se déplacer et combattre.",
+        mouse_more:
+`<div class="details-rt">
+  <h5>Contexte</h5>
+  <p>Ce projet scolaire s’est déroulé sur une durée de deux mois, au sein d’une équipe composée de six game designers et de deux music &amp; sound designers. L’objectif était de concevoir un brawler en 3D à la troisième personne.</p>
+
+  <h5>Pitch</h5>
+  <p>Vous incarnez une petite souris chevalier dans une aventure d’environ quinze minutes. Trop petite pour manier une épée, elle n’a qu’un seul moyen de se défendre&nbsp;: sauter et rebondir violemment sur la tête de ses adversaires.</p>
+
+  <h5>Contribution</h5>
+  <p>L’équipe était composée de cinq game designers, dont deux ont également assuré la programmation, moi compris. J’ai programmé l’ensemble du jeu à l’exception des ennemis et du boss, avec une attention particulière portée au gamefeel.</p>
+  <p>J’ai contribué au game design, au level design ainsi qu’à l’UI/UX.</p>
+  <p>J’ai également été responsable de l’identité visuelle du projet&nbsp;: animations, juiciness, recherche d’assets et intégration en jeu, post-traitement.</p>
+  <p>J’ai enfin pris en charge la mise en place et la maintenance du repository Git, ainsi que la conception et l’implémentation de la FTUE.</p>
+
+  <h5>Apprentissages</h5>
+  <p>Ce projet a été particulièrement riche en apprentissages, aussi bien en hard skills qu’en soft skills. J’y ai découvert et approfondi le terraformage de terrain sous Unity, l’intégration de FMOD, ainsi que la gestion de caméras à la troisième personne, un aspect bien plus complexe qu’il n’y paraît lorsqu’il s’agit d’obtenir un rendu qualitatif.</p>
+  <p>J’ai également progressé dans l’utilisation de Git, le travail sur les animations, ainsi que dans ma capacité à formuler et recevoir des critiques de manière constructive.</p>
+  <p>Ce projet m’a surtout permis de comprendre que la valeur principale d’un projet non commercial ne réside pas dans la qualité du jeu final, mais dans les apprentissages qu’il permet.</p>
+
+  <h5>Problèmes rencontrés</h5>
+  <p>Un problème majeur est apparu lors des premiers playtests. Le joueur saute très fréquemment et doit se positionner en l’air au-dessus de ses ennemis pour leur rebondir dessus. Or, lorsque le joueur sautait, la caméra le suivait vers le haut, lui faisant perdre de vue le sol, pourtant essentiel pour viser correctement en dessous de lui.</p>
+  <p>J’ai pris en charge ce problème en menant un important travail d’itération sur la caméra. J’ai conçu un système d’auto-caméra qui ne s’active que lorsque nécessaire&nbsp;: celle-ci effectue une plongée afin d’aider le joueur à viser lors des sauts. Un offset vertical a également été ajouté pour placer le point d’impact au centre de l’écran lorsque le joueur est en l’air.</p>
+</div>`,
 
         vor_team: "Équipe de 8",
-        vor_desc: "Un jeu de plateau stratégique où des arbres maléfiques s’étendent autour d’un village pour dévorer la vie humaine.",
+        vor_desc: "Voracines est un jeu de plateau tactique de 2 à 4 joueurs.\nJ’ai participé au projet en tant que game designer, avec une contribution principale sur l’écriture du livret de règles et l’organisation des playtests.",
         vor_more:
-`Voracines — Détails
+`<div class="details-rt">
+  <h5>Contexte</h5>
+  <p>L’objectif de ce projet scolaire était de réaliser un jeu de plateau sur le thème de la malédiction en trois mois, au sein d’une équipe composée de six game designers et deux artistes.</p>
 
-• Concept
-Jeu de plateau stratégique : expansion, contrôle de zone, pression autour d’un village.
+  <h5>Pitch</h5>
+  <p>Dans Voracines, les joueurs propagent les racines d’une forêt affamée afin de détruire un village et de récolter les âmes de ses habitants. Les joueurs doivent faire preuve de tactique pour voler les proies des autres joueurs, le plus meurtrier remporte la partie.</p>
 
-• Intention
-Créer une tension permanente : se développer vite, mais sans s’exposer.
+  <h5>Contribution</h5>
+  <p>J’ai participé au projet en tant que game designer, avec une implication particulière sur la rédaction du livret de règles et l’organisation des playtests. J’ai travaillé à la clarification des mécaniques, à la structuration des règles et à leur reformulation afin de garantir une compréhension rapide et sans ambiguïté. L’organisation et l’analyse des playtests m’ont permis d’identifier les points de friction, d’ajuster l’équilibrage et d’améliorer la lisibilité globale de l’expérience.</p>
 
-• Notes de design
-- Interaction directe entre joueurs (blocage, opportunisme).
-- Progression “organique” : la map dicte les choix.
-- Importance de la lecture globale du plateau.`,
+  <h5>Design</h5>
+  <p>Notre mot d’ordre a rapidement été « easy to learn, hard to master ». Nous souhaitions proposer une expérience accessible, tout en offrant une réelle profondeur de jeu. Pour cela, nous avons opté pour un jeu de tactique reposant sur des règles simples et peu nombreuses.</p>
 
-        ref_team: "Équipe de 2",
-        ref_desc: "Un jeu développé par Ludo… et depuis, il est parti randonner.",
+  <h5>Problème rencontré</h5>
+  <p>Lors des playtests, le temps accordé par les testeurs était très précieux. Or, bien que le jeu soit accessible, la lecture du livret de règles prenait trop de temps avant de pouvoir commencer une partie.</p>
+  <p>J’ai donc mis en place une version très concise des règles, sous la forme d’une fiche légère, afin de réduire considérablement le temps nécessaire avant d’entrer en jeu.</p>
+</div>`,
+
+        ref_team: "Équipe de 3",
+        ref_desc: "Reflect est un die and retry 2D en vue top-down, avec des mécaniques inspirées des bullet hell.\nJ’ai assuré l’intégralité du level design et apporté quelques retours et suggestions sur le game design.\nDans ce jeu, le joueur doit exploiter les attaques de ses ennemis grâce à une mécanique centrale de parade, permettant de renvoyer leurs projectiles.",
         ref_more:
-`Reflect — Détails
+`<div class="details-rt">
+  <h5>Contexte</h5>
+  <p>Ce projet a été mené en dehors du cadre scolaire. Il a été initialement commencé par un ami programmeur, qui en assurait également le game design. Je me suis ensuite joint au projet pour prendre en charge le level design. Un autre ami nous a rejoints par la suite pour s’occuper de la partie son et musique.</p>
+  <p>Le jeu a été entièrement développé sur le moteur Godot Engine, ce qui m’a demandé de m’adapter à un nouvel environnement de travail pour le level design.</p>
 
-• Concept
-Prototype à deux, centré sur une mécanique “gimmick” (réflexion / miroir) et son exploitation en puzzle.
+  <h5>Pitch</h5>
+  <p>Vous incarnez un cube affrontant des méchants triangles qui vous attaquent à distance. Le joueur ne dispose d’aucune attaque directe, mais peut renvoyer les projectiles ennemis grâce à une mécanique de parade.</p>
 
-• Intention
-Une idée simple, mais qui se déplie en situations surprenantes.
-
-• Notes de design
-- Itérations rapides sur la règle principale.
-- Focus sur des niveaux courts mais “smart”.
-- Gros potentiel d’extension si on le reprend.`,
+  <h5>Contribution</h5>
+  <p>L’équipe était composée d’un chef de projet assurant à la fois le game design et la programmation, d’un compositeur, et de moi-même en tant que level designer.</p>
+  <p>J’ai conçu 40 niveaux, en cherchant à proposer une grande variété de situations de jeu. Chaque niveau fonctionne comme un mini-défi à part entière, me permettant d’explorer en profondeur le level design de die and retry, un exercice très différent des approches de level design plus classiques.</p>
+</div>`,
       },
+
       en: {
         name: "ANTOINE PEZZULO",
-        subtitle: "Game Design Student at ISART Digital",
+        subtitle: "Junior Game Designer",
+        bio: "Game design student at ISART Digital, with a strong interest in tutorial design, UX, and gamefeel research.\nI like working through iteration directly in the engine, hands-on, to quickly confront ideas with the game and refine design intentions.",
         projects: "My Projects",
         contact: "Contact",
         phone: "Phone",
 
         metro_team: "Solo",
-        metro_desc: "A fast-paced neon tunnel runner in third-person view. Dodge obstacles and ride the music.",
+        metro_desc: "METRO is a rhythm-driven runner made solo.\nThe constraint was to design a game playable with a single button.\nYou play as a riderless bike speeding through a neon tunnel; the only button steers your trajectory.",
         metro_more:
-`METRO — Details
+`<div class="details-rt">
+  <h5>Context</h5>
+  <p>This school project’s constraint was to design a game playable with a single button in two months. I was looking for an elegant idea that would be technically “cost-efficient”, since I was just getting started with programming.</p>
 
-• Concept
-A high-speed tunnel runner where readability and musical “flow” are the core.
+  <h5>Pitch</h5>
+  <p>METRO is a rhythm-driven runner where you control a bike racing at full speed through a tunnel filled with obstacles, with music playing a major role.</p>
 
-• Intent
-A sensory experience: speed, tension, constant micro-decisions.
+  <h5>Design</h5>
+  <p>METRO is strongly inspired by Super Hexagon, especially in its ability to push players to instantly retry after a failure. Death is very fast and readable, and the restart appears immediately, creating a mechanical retry reflex.</p>
 
-• Design notes
-- High-speed readability: simple shapes, contrast, rhythm.
-- Level progression (8 colors), then an “endless” feeling at the end.
-- Strong focus on gamefeel (camera, inertia, visual/audio feedback).`,
+  <h5>Problem encountered</h5>
+  <p>During early playtests, one issue came up quickly: motion sickness. I identified the main source as the tunnel pattern. At very high speed, a pattern that’s too subtle makes the tube hard to perceive and weakens the sense of speed, while a pattern that’s too strong can trigger motion sickness.</p>
+  <p>I iterated for a long time on the tunnel visuals, testing many variants, until I found an effective compromise: wide and thin bands overlapping each other—visible enough to convey speed without causing discomfort over time.</p>
+
+  <h5>UI/UX challenges</h5>
+  <p>The one-button constraint also applied to menus, which created a real UI/UX challenge. I iterated on the menu structure as well as visual and audio feedback to ensure clear, frictionless navigation despite the single button. It was a lot of fun.</p>
+</div>`,
 
         chalk_team: "Solo",
-        chalk_desc: "A poetic narrative puzzle about memory, movement and chalk traces.",
+        chalk_desc: "Pleasant Chalk is a chill game made solo.\nThe goal was to start from a deliberately bland Asteroids base and turn it into a juicy, satisfying experience.\nI reskinned the game to deliver a chill, lo-fi vibe.",
         chalk_more:
-`Pleasant Chalk — Details
+`<div class="details-rt">
+  <h5>Context</h5>
+  <p>This game is the result of the first-year “Juice It” project, where we were given a very austere version of Asteroids and had to make it juicier in only two weeks.</p>
 
-• Concept
-A narrative puzzle where “traces” are the mechanic: remember, return, reconstruct.
+  <h5>Pitch</h5>
+  <p>In Pleasant Chalk, you play as a piece of chalk hunting numbers in a chill lo-fi atmosphere.</p>
 
-• Intent
-A contemplative vibe, centered on discovery rather than performance.
+  <h5>Design</h5>
+  <p>The provided Asteroids version had very inertial, imprecise controls. I found that feeling frustrating and incompatible with a pleasant experience in its initial context.</p>
+  <p>Instead of directly fixing the lack of control, I chose to reframe it. By reskinning the game, I turned inertia into a design intention: the imprecise movement of the chalk becomes a way to accidentally draw while playing.</p>
 
-• Design notes
-- Trace readability is the heart of the puzzle.
-- Soft feedback, calm pacing, small reveals over time.`,
+  <h5>Problem encountered</h5>
+  <p>I quickly realized that a blackboard and a piece of chalk are, by nature, less “juicy” than a spaceship in space. To compensate, I pushed the art direction toward a soothing lo-fi vibe.</p>
+  <p>Rather than stacking flashy, nervous visual effects, I aimed for a soft and enjoyable experience where the “juice” comes from ambience, sound, and overall feel, instead of visual overkill.</p>
+</div>`,
 
         mar_team: "Team of 8",
-        mar_desc: "A 2.5D platformer where the character moves only via rocket recoil. No jump, 100% action.",
+        mar_desc: "Muscles & Rockets is a 2.5D action platformer.\nI worked as game designer and level designer, responsible for the entirety of level 1.\nYou play a character who can’t jump; you use a rocket launcher to fight enemies and move through recoil.",
         mar_more:
-`Muscles & Rockets — Details
+`<div class="details-rt">
+  <h5>Context</h5>
+  <p>This school project took place over two months, within a team of six game designers, one programmer, and one music &amp; sound designer. The goal was to create a 2.5D action platformer.</p>
 
-• Concept
-A 2.5D platformer where movement has a “cost”: each shot creates recoil.
+  <h5>Pitch</h5>
+  <p>In Muscles &amp; Rockets, the player wields an overpowered rocket launcher. Its recoil is so intense that each shot throws the character backward. The player must use that recoil to progress through six levels mixing platforming challenges and combat.</p>
 
-• Intent
-Turn a constraint (no jump) into a strong identity and varied situations.
+  <h5>Contribution</h5>
+  <p>I contributed as a game designer and as the level designer for level 1. I also handled the tutorialization, an aspect I especially like to polish in my projects.</p>
+  <p>I iterated a lot on gamefeel as well. Each rocket shot needed to communicate a strong sense of power. However, the player shoots continuously throughout the game: feedback had to stay impactful without hurting readability or causing discomfort. Finding that balance was a central gamefeel challenge.</p>
 
-• Design notes
-- Level design built around trajectories and angles.
-- Combat and movement are fused (shooting = moving).
-- Skill grows through timing and control mastery.`,
+  <h5>Design</h5>
+  <p>The gameplay is entirely centered around the rocket launcher, merging combat and platforming into a single strong USP. The inability to jump reinforces that identity and forces the player to think of every shot as both movement and attack.</p>
+
+  <h5>Problems encountered</h5>
+  <p>At the beginning of production, the team had two programmers. After two weeks, one of them unexpectedly left the team.</p>
+  <p>We had to quickly reduce scope to adapt. I took on a large part of the communication between designers and the remaining programmer to smooth the transition and ensure the project could be finalized.</p>
+</div>`,
+
+        mouse_team: "Team of 5",
+        mouse_desc: "Mouse Knight is a third-person 3D brawler-platformer.\nI contributed as a game designer, programmer, and level designer.\nYou play as a small mouse knight who bounces on enemies to move and fight.",
+        mouse_more:
+`<div class="details-rt">
+  <h5>Context</h5>
+  <p>This school project took place over two months, within a team of six game designers and two music &amp; sound designers. The goal was to design a third-person 3D brawler.</p>
+
+  <h5>Pitch</h5>
+  <p>You play as a small mouse knight in an adventure of about fifteen minutes. Too small to wield a sword, it has only one way to defend itself: jumping and violently bouncing on enemies’ heads.</p>
+
+  <h5>Contribution</h5>
+  <p>The team consisted of five game designers, two of whom also handled programming (including me). I programmed the entire game except for the enemies and the boss, with a strong focus on gamefeel.</p>
+  <p>I contributed to game design, level design, and UI/UX.</p>
+  <p>I was also responsible for the project’s visual identity: animations, juiciness, asset research and in-game integration, and post-processing.</p>
+  <p>Finally, I set up and maintained the Git repository, and designed and implemented the FTUE.</p>
+
+  <h5>Learnings</h5>
+  <p>This project was especially rich in learning, both in hard skills and soft skills. I discovered and deepened Unity terrain sculpting, FMOD integration, and third-person camera management—far more complex than it seems when you aim for a high-quality result.</p>
+  <p>I also improved my use of Git, my animation workflow, and my ability to formulate and receive feedback constructively.</p>
+  <p>Most importantly, this project helped me understand that the main value of a non-commercial project lies less in the final game’s quality than in the learning it enables.</p>
+
+  <h5>Problems encountered</h5>
+  <p>A major issue appeared during early playtests. The player jumps very frequently and must position themselves above enemies to bounce on them. However, when the player jumped, the camera followed upward, making them lose sight of the ground—essential for aiming correctly below.</p>
+  <p>I addressed this by doing extensive iteration on the camera. I designed an auto-camera system that activates only when needed: it dives downward to help the player aim during jumps. A vertical offset was also added so the impact point sits at the center of the screen while the player is in the air.</p>
+</div>`,
 
         vor_team: "Team of 8",
-        vor_desc: "A strategic board-game where evil trees spread around a village to devour human life.",
+        vor_desc: "Voracines is a tactical board game for 2 to 4 players.\nI contributed as a game designer, mainly focusing on writing the rulebook and organizing playtests.",
         vor_more:
-`Voracines — Details
+`<div class="details-rt">
+  <h5>Context</h5>
+  <p>The goal of this school project was to create a board game themed around a curse in three months, within a team of six game designers and two artists.</p>
 
-• Concept
-A strategic board game: expansion, area control, pressure around a village.
+  <h5>Pitch</h5>
+  <p>In Voracines, players spread the roots of a starving forest to destroy a village and harvest the souls of its inhabitants. Players must use tactics to steal prey from other players. The most lethal player wins.</p>
 
-• Intent
-Constant tension: grow fast, but don’t overexpose yourself.
+  <h5>Contribution</h5>
+  <p>I contributed as a game designer, with a strong focus on writing the rulebook and organizing playtests. I clarified mechanics, structured the rules, and rewrote them to ensure fast and unambiguous understanding. Organizing and analyzing playtests helped me identify friction points, adjust balance, and improve overall readability of the experience.</p>
 
-• Design notes
-- Direct player interaction (blocking, opportunism).
-- “Organic” growth: the map shapes your decisions.
-- Strong importance of board reading.`,
+  <h5>Design</h5>
+  <p>Our guiding motto quickly became “easy to learn, hard to master”. We wanted an accessible experience while still offering real depth. To achieve this, we designed a tactical game based on simple and few rules.</p>
 
-        ref_team: "Team of 2",
-        ref_desc: "A game made by Ludo… and then he went hiking, so nothing moved since.",
+  <h5>Problem encountered</h5>
+  <p>During playtests, the time testers could allocate was very precious. Even though the game was accessible, reading the rulebook took too long before being able to start a game.</p>
+  <p>I therefore created a very concise version of the rules in the form of a lightweight sheet, significantly reducing the time needed before jumping into play.</p>
+</div>`,
+
+        ref_team: "Team of 3",
+        ref_desc: "Reflect is a top-down 2D die-and-retry, with mechanics inspired by bullet hell.\nI handled all level design and provided a few suggestions on game design.\nIn this game, the player must exploit enemies’ attacks using a central parry mechanic that reflects projectiles.",
         ref_more:
-`Reflect — Details
+`<div class="details-rt">
+  <h5>Context</h5>
+  <p>This project was developed outside of school. It was initially started by a programmer friend, who also handled game design. I later joined to take charge of level design. Another friend joined afterwards to handle sound and music.</p>
+  <p>The game was fully developed in Godot Engine, which required me to adapt to a new working environment for level design.</p>
 
-• Concept
-A 2-person prototype built around a reflection/mirror mechanic and puzzle uses.
+  <h5>Pitch</h5>
+  <p>You play as a cube fighting evil triangles that attack from a distance. The player has no direct attack, but can send enemy projectiles back thanks to a parry mechanic.</p>
 
-• Intent
-A simple idea that unfolds into surprising situations.
-
-• Design notes
-- Fast iteration on the core rule.
-- Short but “smart” levels.
-- High extension potential if we pick it back up.`,
+  <h5>Contribution</h5>
+  <p>The team consisted of a project lead handling both game design and programming, a composer, and me as the level designer.</p>
+  <p>I designed 40 levels, aiming to offer a wide variety of gameplay situations. Each level functions as its own mini-challenge, allowing me to deeply explore die-and-retry level design—very different from more traditional level design approaches.</p>
+</div>`,
       }
     };
 
@@ -1334,8 +1693,12 @@ A simple idea that unfolds into surprising situations.
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         const val = translations[lang][key];
-        if (typeof val === 'string') el.textContent = val;
+        if (typeof val !== 'string') return;
+
+        if (el.hasAttribute('data-i18n-html')) el.innerHTML = val;
+        else el.textContent = val;
       });
+
       document.querySelectorAll('#lang-switch button')
         .forEach(btn => btn.classList.toggle('selected', btn.dataset.lang === lang));
       localStorage.setItem('lang', lang);
@@ -1380,95 +1743,6 @@ A simple idea that unfolds into surprising situations.
       if (state.inner) state.inner.style.transform = 'rotateX(0deg) rotateY(0deg)';
     }
 
-    function normalizeSrc(src) {
-      try { return new URL(src, location.href).href; } catch (_) { return src || ''; }
-    }
-
-    const warmCache = new Map();
-    const WARM_LIMIT = 2;
-
-    function touchWarm(key) {
-      const e = warmCache.get(key);
-      if (!e) return;
-      e.t = performance.now();
-      warmCache.set(key, e);
-    }
-
-    function evictWarmIfNeeded(lockedKey) {
-      if (warmCache.size <= WARM_LIMIT) return;
-      let lruKey = null;
-      let lruT = Infinity;
-      warmCache.forEach((v, k) => {
-        if (k === lockedKey) return;
-        if (v.locked) return;
-        if (v.t < lruT) { lruT = v.t; lruKey = k; }
-      });
-      if (!lruKey) return;
-      const entry = warmCache.get(lruKey);
-      if (entry && entry.video) {
-        try { entry.video.pause(); } catch (_) {}
-        try { entry.video.removeAttribute('src'); entry.video.load(); } catch (_) {}
-      }
-      warmCache.delete(lruKey);
-    }
-
-    function warmVideo(src) {
-      const key = normalizeSrc(src);
-      if (!key) return;
-      if (warmCache.has(key)) { touchWarm(key); return; }
-
-      const v = document.createElement('video');
-      v.src = key;
-      v.muted = true;
-      v.loop = true;
-      v.playsInline = true;
-      v.preload = 'auto';
-      v.autoplay = false;
-      v.setAttribute('playsinline', '');
-      v.setAttribute('muted', '');
-      try { v.load(); } catch (_) {}
-
-      warmCache.set(key, { video: v, t: performance.now(), locked: false });
-      evictWarmIfNeeded(null);
-    }
-
-    function lockWarm(src) {
-      const key = normalizeSrc(src);
-      const e = warmCache.get(key);
-      if (!e) return;
-      e.locked = true;
-      e.t = performance.now();
-      warmCache.set(key, e);
-    }
-
-    function unlockWarm(src) {
-      const key = normalizeSrc(src);
-      const e = warmCache.get(key);
-      if (!e) return;
-      e.locked = false;
-      e.t = performance.now();
-      warmCache.set(key, e);
-      evictWarmIfNeeded(null);
-    }
-
-    function getPosterFromProject(project) {
-      const img = project.querySelector('.card-front img');
-      const p = img ? img.getAttribute('src') : '';
-      return p || '';
-    }
-
-    function setVideoReadyState(wrap, vid) {
-      if (!wrap || !vid) return;
-      wrap.classList.remove('is-ready');
-      const onReady = () => {
-        wrap.classList.add('is-ready');
-        vid.removeEventListener('loadeddata', onReady);
-        vid.removeEventListener('canplay', onReady);
-      };
-      vid.addEventListener('loadeddata', onReady, { once: true });
-      vid.addEventListener('canplay', onReady, { once: true });
-    }
-
     function ensureExpandedVideo(project) {
       const existing = project.querySelector('.expanded-video');
       if (existing) return existing;
@@ -1476,41 +1750,19 @@ A simple idea that unfolds into surprising situations.
       const videoWrap = document.createElement('div');
       videoWrap.className = 'expanded-video';
 
-      const srcRaw = project.getAttribute('data-video') || '';
-      const src = normalizeSrc(srcRaw);
-      const poster = getPosterFromProject(project);
-
-      if (poster) videoWrap.style.backgroundImage = `url("${poster}")`;
-
-      let vid = null;
-      const warm = src ? warmCache.get(src) : null;
-
-      if (warm && warm.video) {
-        vid = warm.video;
-        touchWarm(src);
-        lockWarm(src);
-      } else {
-        vid = document.createElement('video');
-        if (src) vid.src = src;
-        vid.muted = true;
-        vid.loop = true;
-        vid.playsInline = true;
-        vid.autoplay = true;
-        vid.preload = 'auto';
-        vid.setAttribute('playsinline', '');
-        vid.setAttribute('muted', '');
-        if (poster) vid.poster = poster;
-        try { vid.load(); } catch (_) {}
-      }
-
-      if (poster && !vid.poster) vid.poster = poster;
+      const vid = document.createElement('video');
+      const src = project.getAttribute('data-video') || '';
+      vid.src = src;
+      vid.muted = true;
+      vid.loop = true;
+      vid.playsInline = true;
+      vid.autoplay = true;
+      vid.preload = 'metadata';
 
       videoWrap.appendChild(vid);
 
       const inner = project.querySelector('.card-inner');
       inner.insertBefore(videoWrap, inner.firstChild);
-
-      setVideoReadyState(videoWrap, vid);
 
       return videoWrap;
     }
@@ -1519,7 +1771,6 @@ A simple idea that unfolds into surprising situations.
       const wrap = ensureExpandedVideo(project);
       const vid = wrap.querySelector('video');
       if (!vid) return;
-      try { vid.muted = true; } catch (_) {}
       const p = vid.play();
       if (p && typeof p.catch === 'function') p.catch(() => {});
     }
@@ -1527,23 +1778,12 @@ A simple idea that unfolds into surprising situations.
     function stopAndRemoveExpandedVideo(project) {
       const wrap = project.querySelector('.expanded-video');
       if (!wrap) return;
-
       const vid = wrap.querySelector('video');
       if (vid) {
-        let src = '';
-        try { src = normalizeSrc(vid.currentSrc || vid.src || ''); } catch (_) { src = ''; }
-
         try { vid.pause(); } catch (_) {}
-
-        if (src && warmCache.has(src) && warmCache.get(src).video === vid) {
-          wrap.remove();
-          unlockWarm(src);
-          return;
-        }
-
+        try { vid.currentTime = 0; } catch (_) {}
         try { vid.removeAttribute('src'); vid.load(); } catch (_) {}
       }
-
       wrap.remove();
     }
 
@@ -1750,9 +1990,6 @@ A simple idea that unfolds into surprising situations.
       expandedSource = sourceProject;
       hardResetParallax(sourceProject);
 
-      const srcToWarm = sourceProject.getAttribute('data-video') || '';
-      warmVideo(srcToWarm);
-
       overlay.classList.remove('closing');
       overlay.classList.add('active');
       document.body.classList.add('has-expanded');
@@ -1892,30 +2129,12 @@ A simple idea that unfolds into surprising situations.
           }
         });
 
-        project.addEventListener('mouseenter', () => {
-          const src = project.getAttribute('data-video') || '';
-          warmVideo(src);
-        });
-
-        project.addEventListener('focusin', () => {
-          const src = project.getAttribute('data-video') || '';
-          warmVideo(src);
-        });
-
         project.addEventListener('click', () => {
           if (isTransitioning) return;
           if (expandedSource === project && expandedProject) closeExpanded();
           else openExpanded(project);
         });
       });
-
-      const first = document.querySelector('.project');
-      if (first) {
-        const src = first.getAttribute('data-video') || '';
-        const runWarm = () => warmVideo(src);
-        if ('requestIdleCallback' in window) requestIdleCallback(runWarm, { timeout: 1200 });
-        else setTimeout(runWarm, 600);
-      }
     } else {
       document.querySelectorAll('.card-inner').forEach(inner => inner.style.transform = 'none');
       document.querySelectorAll('.project').forEach(p => p.style.cursor = 'default');
