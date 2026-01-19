@@ -37,6 +37,70 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* LOADER STYLES - AJOUT "EXTRÊME" */
+    #game-loader {
+      position: fixed;
+      inset: 0;
+      background: #050505;
+      z-index: 100000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bruno Ace SC', 'Courier New', Courier, monospace; /* Police un peu "Tech" */
+      color: white;
+      transition: opacity 0.8s ease-in-out, visibility 0.8s;
+    }
+
+    #game-loader.loaded {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-content {
+      width: 300px;
+      text-align: center;
+    }
+
+    .loader-title {
+      font-size: 1.2rem;
+      letter-spacing: 0.2em;
+      margin-bottom: 2rem;
+      color: #888;
+      text-transform: uppercase;
+      animation: blink 2s infinite;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+      transition: width 0.2s linear;
+    }
+
+    .loader-stats {
+      font-size: 0.8rem;
+      color: #666;
+      display: flex;
+      justify-content: space-between;
+      font-family: monospace;
+    }
+
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    /* FIN LOADER STYLES */
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
       background: var(--bg);
@@ -48,13 +112,14 @@
       animation: pulseBackground 20s ease-in-out infinite;
       scrollbar-width: none;
       -ms-overflow-style: none;
+      /* On empêche le scroll tant que ça charge via JS, mais par défaut on cache */
     }
 
     html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
 
     @keyframes pulseBackground {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
+      0%    { background-position: 0% 50%; }
+      50%   { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
@@ -66,9 +131,28 @@
       margin-bottom: 2rem;
       opacity: 0;
       transform: translateY(-20px);
-      animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-      animation-delay: 0.2s;
+      /* Animation déclenchée par JS après le load */
     }
+    
+    body.loading header, 
+    body.loading .intro-card,
+    body.loading .section-title,
+    body.loading .project,
+    body.loading footer,
+    body.loading #lang-switch {
+        animation: none !important;
+        opacity: 0 !important;
+    }
+
+    /* Classes d'animation actives une fois le loader parti */
+    body.loaded header { animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; animation-delay: 0.2s; }
+    body.loaded header p { animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; animation-delay: 0.4s; }
+    body.loaded #lang-switch { animation: slideFadeIn 0.6s forwards; animation-delay: 0.6s; }
+    body.loaded .intro-card { animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; animation-delay: 0.72s; }
+    body.loaded .section-title { animation: slideFadeIn 0.6s forwards; animation-delay: 0.8s; }
+    body.loaded .project { animation: slideFadeInUp 0.6s forwards; }
+    body.loaded footer { animation: slideFadeIn 0.6s forwards; animation-delay: 1.6s; }
+
 
     header h1 { font-size: 3rem; font-weight: 900; }
 
@@ -79,8 +163,6 @@
       margin-top: 0.5rem;
       opacity: 0;
       transform: translateY(20px);
-      animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-      animation-delay: 0.4s;
     }
 
     #lang-switch {
@@ -88,8 +170,6 @@
       justify-content: center;
       gap: 1rem;
       margin: 2rem auto 1.25rem auto;
-      animation: slideFadeIn 0.6s forwards;
-      animation-delay: 0.6s;
       opacity: 0;
       transform: translateY(-20px);
     }
@@ -155,8 +235,6 @@
       text-align: center;
       opacity: 0;
       transform: translateY(18px);
-      animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-      animation-delay: 0.72s;
     }
 
     .intro-card p {
@@ -177,8 +255,6 @@
       position: relative;
       opacity: 0;
       transform: translateY(30px);
-      animation: slideFadeIn 0.6s forwards;
-      animation-delay: 0.8s;
     }
 
     .section-title::before,
@@ -212,19 +288,20 @@
       max-width: calc(50% - 2rem);
       opacity: 0;
       transform: translateY(30px);
-      animation: slideFadeInUp 0.6s forwards;
       position: relative;
       z-index: 1;
       will-change: transform;
       transition: filter 0.25s ease, opacity 0.25s ease;
     }
 
-    .project:nth-child(1) { animation-delay: 1s; }
-    .project:nth-child(2) { animation-delay: 1.1s; }
-    .project:nth-child(3) { animation-delay: 1.2s; }
-    .project:nth-child(4) { animation-delay: 1.3s; }
-    .project:nth-child(5) { animation-delay: 1.4s; }
-    .project:nth-child(6) { animation-delay: 1.5s; }
+    /* Les délais sont gérés via JS ou CSS conditionnel selon loaded */
+    body.loaded .project:nth-child(1) { animation-delay: 1s; }
+    body.loaded .project:nth-child(2) { animation-delay: 1.1s; }
+    body.loaded .project:nth-child(3) { animation-delay: 1.2s; }
+    body.loaded .project:nth-child(4) { animation-delay: 1.3s; }
+    body.loaded .project:nth-child(5) { animation-delay: 1.4s; }
+    body.loaded .project:nth-child(6) { animation-delay: 1.5s; }
+
 
     @media (max-width: 700px) {
       .project { flex: 1 1 100%; max-width: 100%; }
@@ -503,8 +580,6 @@
       color: #888;
       opacity: 0;
       transform: translateY(30px);
-      animation: slideFadeIn 0.6s forwards;
-      animation-delay: 1.6s;
     }
 
     .contact-line {
@@ -724,23 +799,6 @@
       display: block;
       filter: saturate(1.02) contrast(1.03);
     }
-
-    .expanded-video .video-cover {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      opacity: 1;
-      transform: translate3d(0,0,0);
-      will-change: opacity;
-      transition: opacity 180ms cubic-bezier(0.22, 1, 0.36, 1);
-      z-index: 5;
-      pointer-events: none;
-    }
-
-    .expanded-video.is-ready .video-cover { opacity: 0; }
 
     .project.expanded .card-back {
       opacity: 1;
@@ -971,7 +1029,102 @@
   </style>
 </head>
 
-<body>
+<body class="loading">
+  <div id="game-loader">
+    <div class="loader-content">
+      <div class="loader-title">ANTOINE PEZZULO</div>
+      <div class="progress-track">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div class="loader-stats">
+        <span id="loader-status">INITIALIZING ASSETS...</span>
+        <span id="loader-percentage">0%</span>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // SCRIPT DE CHARGEMENT EXTRÊME
+    (async function() {
+      const loader = document.getElementById('game-loader');
+      const bar = document.getElementById('progress-bar');
+      const perc = document.getElementById('loader-percentage');
+      const status = document.getElementById('loader-status');
+      
+      // On bloque le scroll
+      document.body.style.overflow = 'hidden';
+
+      // 1. Récupération de tous les assets
+      const images = Array.from(document.querySelectorAll('img')).map(img => img.src).filter(src => src);
+      // Récupération des data-video (pour pré-charger les vidéos en BLOB)
+      const videoElements = Array.from(document.querySelectorAll('[data-video]'));
+      const videoUrls = videoElements.map(el => el.getAttribute('data-video')).filter(url => url);
+
+      // On ajoute quelques délais fake pour l'effet "scan" si peu d'assets
+      const totalAssets = images.length + videoUrls.length;
+      let loadedCount = 0;
+
+      const updateProgress = () => {
+        loadedCount++;
+        const p = Math.min(100, Math.round((loadedCount / totalAssets) * 100));
+        bar.style.width = p + '%';
+        perc.innerText = p + '%';
+      };
+
+      status.innerText = "LOADING IMAGES...";
+      
+      // Chargement Images
+      const imagePromises = images.map(src => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => { updateProgress(); resolve(); };
+          img.onerror = () => { updateProgress(); resolve(); }; // On continue même si erreur
+          img.src = src;
+        });
+      });
+
+      // Chargement Vidéos (Le mode "EXTRÊME")
+      // On fetch les vidéos, on crée un BLOB URL, et on remplace le data-video original
+      // Cela garantit que la vidéo est en RAM et ne buffera JAMAIS.
+      const videoPromises = videoElements.map(el => {
+        const url = el.getAttribute('data-video');
+        if(!url) return Promise.resolve();
+        
+        return fetch(url)
+          .then(response => response.blob())
+          .then(blob => {
+            const blobUrl = URL.createObjectURL(blob);
+            el.setAttribute('data-video', blobUrl); // Remplacement "Magique"
+            updateProgress();
+            status.innerText = "CACHING VIDEO MEMORY...";
+          })
+          .catch(err => {
+            console.warn("Failed to preload video", url, err);
+            updateProgress();
+          });
+      });
+
+      try {
+        await Promise.all([...imagePromises, ...videoPromises]);
+      } catch (e) {
+        console.error("Loader error", e);
+      }
+
+      // Finition
+      status.innerText = "READY.";
+      bar.style.width = '100%';
+      perc.innerText = '100%';
+      
+      // Petit délai pour admirer le 100%
+      setTimeout(() => {
+        loader.classList.add('loaded');
+        document.body.classList.remove('loading');
+        document.body.classList.add('loaded');
+        document.body.style.overflow = ''; // Restaure le scroll
+      }, 500);
+
+    })();
+  </script>
   <div id="overlay"></div>
   <div id="expanded-layer" aria-hidden="true"></div>
 
@@ -1029,8 +1182,6 @@
       text-transform: uppercase;
       opacity: 0;
       transform: translateY(10px);
-      animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-      animation-delay: 0.4s;
     ">Portfolio</h2>
     <h1 data-i18n="name">ANTOINE PEZZULO</h1>
     <p data-i18n="subtitle">Junior Game Designer</p>
@@ -1567,7 +1718,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
 
   <h5>Contribution</h5>
   <p>L’équipe était composée d’un chef de projet assurant à la fois le game design et la programmation, d’un compositeur, et de moi-même en tant que level designer.</p>
-  <p>J’ai conçu 40 niveaux, en cherchant à proposer une grande variété de situations de jeu. Chaque niveau fonctionne comme un mini-défi à part entière, me permettant d’explorer en profondeur le level design de die and retry, un exercice très différent des approches de level design plus classiques.</p>
+  <p>I designed 40 levels, aiming to offer a wide variety of gameplay situations. Each level functions as its own mini-challenge, allowing me to deeply explore die-and-retry level design—very different from more traditional level design approaches.</p>
 </div>`,
       },
 
@@ -1760,292 +1911,6 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       if (state.inner) state.inner.style.transform = 'rotateX(0deg) rotateY(0deg)';
     }
 
-    const WarmVideo = (() => {
-      const items = [];
-      const bySrc = new Map();
-      const visible = new Set();
-      const warmed = new Set();
-      const active = { el: null, src: null, timer: 0, aborted: false };
-      let started = false;
-      let stopped = false;
-      let io = null;
-      let hiddenHost = null;
-
-      const idle = (fn, timeout = 900) => {
-        if (typeof requestIdleCallback === 'function') {
-          return requestIdleCallback(fn, { timeout });
-        }
-        return setTimeout(() => fn({ timeRemaining: () => 0, didTimeout: true }), 60);
-      };
-
-      const cancelIdle = (id) => {
-        if (typeof cancelIdleCallback === 'function') cancelIdleCallback(id);
-        else clearTimeout(id);
-      };
-
-      const makeHost = () => {
-        if (hiddenHost) return hiddenHost;
-        hiddenHost = document.createElement('div');
-        hiddenHost.style.position = 'fixed';
-        hiddenHost.style.left = '-9999px';
-        hiddenHost.style.top = '0';
-        hiddenHost.style.width = '1px';
-        hiddenHost.style.height = '1px';
-        hiddenHost.style.opacity = '0';
-        hiddenHost.style.pointerEvents = 'none';
-        hiddenHost.style.overflow = 'hidden';
-        document.body.appendChild(hiddenHost);
-        return hiddenHost;
-      };
-
-      const register = () => {
-        document.querySelectorAll('.project[data-video]').forEach((p) => {
-          const src = p.getAttribute('data-video') || '';
-          if (!src || bySrc.has(src)) return;
-          const img = p.querySelector('.card-front img');
-          const coverSrc = img ? (img.getAttribute('src') || '') : '';
-          const item = { project: p, src, coverSrc };
-          items.push(item);
-          bySrc.set(src, item);
-        });
-      };
-
-      const setupIO = () => {
-        if (io) return;
-        io = new IntersectionObserver((entries) => {
-          for (const e of entries) {
-            const p = e.target;
-            const src = p.getAttribute('data-video') || '';
-            if (!src) continue;
-            if (e.isIntersecting) visible.add(src);
-            else visible.delete(src);
-          }
-        }, { root: null, threshold: 0.15 });
-        items.forEach(it => io.observe(it.project));
-      };
-
-      const abortActive = () => {
-        active.aborted = true;
-        if (active.timer) { clearTimeout(active.timer); active.timer = 0; }
-        if (active.el) {
-          try { active.el.pause(); } catch (_) {}
-          try { active.el.removeAttribute('src'); active.el.load(); } catch (_) {}
-          try { active.el.remove(); } catch (_) {}
-        }
-        active.el = null;
-        active.src = null;
-      };
-
-      const stop = () => {
-        stopped = true;
-        abortActive();
-        if (io) { try { io.disconnect(); } catch (_) {} io = null; }
-      };
-
-      const pickNext = () => {
-        const visibles = items.filter(it => visible.has(it.src) && !warmed.has(it.src));
-        if (visibles.length) return visibles[0];
-        const rest = items.filter(it => !warmed.has(it.src));
-        return rest[0] || null;
-      };
-
-      const waitEvent = (el, name, ms) => new Promise((resolve) => {
-        let done = false;
-        const finish = () => {
-          if (done) return;
-          done = true;
-          el.removeEventListener(name, on, { passive: true });
-          resolve(true);
-        };
-        const on = () => finish();
-        el.addEventListener(name, on, { passive: true });
-        if (ms > 0) {
-          setTimeout(() => {
-            if (done) return;
-            try { el.removeEventListener(name, on, { passive: true }); } catch (_) {}
-            resolve(false);
-          }, ms);
-        }
-      });
-
-      const tryWarmVideo = async (src) => {
-        if (!src || warmed.has(src) || stopped) return;
-
-        active.aborted = false;
-        active.src = src;
-
-        const host = makeHost();
-        const v = document.createElement('video');
-        active.el = v;
-
-        v.muted = true;
-        v.playsInline = true;
-        v.loop = true;
-        v.preload = 'auto';
-        v.autoplay = false;
-        v.src = src;
-        v.setAttribute('playsinline', '');
-        v.setAttribute('muted', '');
-        v.setAttribute('preload', 'auto');
-
-        host.appendChild(v);
-
-        const bailAfter = 2600;
-        active.timer = setTimeout(() => {
-          if (active.src === src) abortActive();
-        }, bailAfter);
-
-        const okMeta = await waitEvent(v, 'loadedmetadata', 1400);
-        if (stopped || active.aborted || active.src !== src) return;
-
-        if (!okMeta) {
-          warmed.add(src);
-          abortActive();
-          return;
-        }
-
-        let played = false;
-        try {
-          const p = v.play();
-          if (p && typeof p.then === 'function') await p.then(() => {}).catch(() => {});
-          played = true;
-        } catch (_) {
-          played = false;
-        }
-
-        if (stopped || active.aborted || active.src !== src) return;
-
-        const markDone = () => {
-          warmed.add(src);
-          try { v.pause(); } catch (_) {}
-          abortActive();
-        };
-
-        if (!played) {
-          const ok = await waitEvent(v, 'loadeddata', 1200);
-          if (stopped || active.aborted || active.src !== src) return;
-          if (ok) markDone();
-          else { warmed.add(src); abortActive(); }
-          return;
-        }
-
-        if (typeof v.requestVideoFrameCallback === 'function') {
-          let resolved = false;
-          await new Promise((resolve) => {
-            const finish = () => {
-              if (resolved) return;
-              resolved = true;
-              resolve();
-            };
-            try {
-              v.requestVideoFrameCallback(() => finish());
-              setTimeout(() => finish(), 1100);
-            } catch (_) {
-              setTimeout(() => finish(), 450);
-            }
-          });
-          if (stopped || active.aborted || active.src !== src) return;
-          markDone();
-          return;
-        }
-
-        const ok = await waitEvent(v, 'timeupdate', 900);
-        if (stopped || active.aborted || active.src !== src) return;
-        if (ok) markDone();
-        else { warmed.add(src); abortActive(); }
-      };
-
-      let loopId = 0;
-      const loop = () => {
-        if (stopped) return;
-        loopId = idle(async (deadline) => {
-          if (stopped) return;
-          if (document.visibilityState !== 'visible') { loop(); return; }
-          if (expandedProject) { loop(); return; }
-
-          const next = pickNext();
-          if (!next) return;
-
-          if (!deadline.didTimeout && deadline.timeRemaining && deadline.timeRemaining() < 18) { loop(); return; }
-
-          await tryWarmVideo(next.src);
-          if (stopped) return;
-
-          setTimeout(() => loop(), 160);
-        }, 1000);
-      };
-
-      const start = () => {
-        if (started || stopped) return;
-        started = true;
-        register();
-        setupIO();
-        loop();
-      };
-
-      const interruptOnUser = () => {
-        if (stopped) return;
-        stop();
-      };
-
-      return { start, stop: interruptOnUser, isWarmed: (src) => warmed.has(src) };
-    })();
-
-    function getProjectCoverSrc(project) {
-      const img = project ? project.querySelector('.card-front img') : null;
-      return img ? (img.getAttribute('src') || '') : '';
-    }
-
-    function markWrapReady(wrap) {
-      if (!wrap) return;
-      wrap.classList.add('is-ready');
-    }
-
-    function armFirstFrameGate(vid, wrap) {
-      if (!vid || !wrap) return;
-
-      let done = false;
-      const finish = () => {
-        if (done) return;
-        done = true;
-        markWrapReady(wrap);
-        cleanup();
-      };
-
-      const cleanup = () => {
-        try { vid.removeEventListener('loadeddata', onLoadedData); } catch (_) {}
-        try { vid.removeEventListener('timeupdate', onTimeUpdate); } catch (_) {}
-        try { vid.removeEventListener('playing', onPlaying); } catch (_) {}
-      };
-
-      const onLoadedData = () => {
-        requestAnimationFrame(() => requestAnimationFrame(() => finish()));
-      };
-
-      const onTimeUpdate = () => {
-        requestAnimationFrame(() => finish());
-      };
-
-      const onPlaying = () => {
-        if (typeof vid.requestVideoFrameCallback === 'function') {
-          try {
-            vid.requestVideoFrameCallback(() => finish());
-            setTimeout(() => finish(), 1400);
-            return;
-          } catch (_) {}
-        }
-        setTimeout(() => finish(), 220);
-      };
-
-      vid.addEventListener('loadeddata', onLoadedData, { passive: true });
-      vid.addEventListener('timeupdate', onTimeUpdate, { passive: true });
-      vid.addEventListener('playing', onPlaying, { passive: true });
-
-      if (vid.readyState >= 2) {
-        requestAnimationFrame(() => requestAnimationFrame(() => finish()));
-      }
-    }
-
     function ensureExpandedVideo(project) {
       const existing = project.querySelector('.expanded-video');
       if (existing) return existing;
@@ -2062,20 +1927,10 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       vid.autoplay = true;
       vid.preload = 'metadata';
 
-      const cover = document.createElement('img');
-      cover.className = 'video-cover';
-      cover.alt = '';
-      cover.decoding = 'async';
-      cover.loading = 'eager';
-      cover.src = getProjectCoverSrc(project) || '';
       videoWrap.appendChild(vid);
-      videoWrap.appendChild(cover);
 
       const inner = project.querySelector('.card-inner');
       inner.insertBefore(videoWrap, inner.firstChild);
-
-      videoWrap.classList.remove('is-ready');
-      armFirstFrameGate(vid, videoWrap);
 
       return videoWrap;
     }
@@ -2084,13 +1939,6 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       const wrap = ensureExpandedVideo(project);
       const vid = wrap.querySelector('video');
       if (!vid) return;
-
-      wrap.classList.remove('is-ready');
-      const cover = wrap.querySelector('.video-cover');
-      if (cover) cover.src = getProjectCoverSrc(project) || cover.src || '';
-
-      armFirstFrameGate(vid, wrap);
-
       const p = vid.play();
       if (p && typeof p.catch === 'function') p.catch(() => {});
     }
@@ -2458,28 +2306,6 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
     } else {
       document.querySelectorAll('.card-inner').forEach(inner => inner.style.transform = 'none');
       document.querySelectorAll('.project').forEach(p => p.style.cursor = 'default');
-    }
-
-    if (!isMobile) {
-      let warmupStarted = false;
-      const kickWarmup = () => {
-        if (warmupStarted) return;
-        warmupStarted = true;
-        WarmVideo.start();
-
-        const stopOnUser = () => WarmVideo.stop();
-        const opts = { passive: true, capture: true };
-        window.addEventListener('pointerdown', stopOnUser, opts);
-        window.addEventListener('wheel', stopOnUser, opts);
-        window.addEventListener('scroll', stopOnUser, opts);
-        window.addEventListener('keydown', stopOnUser, opts);
-      };
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setTimeout(() => kickWarmup(), 0);
-        });
-      });
     }
   </script>
 
