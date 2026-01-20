@@ -981,7 +981,7 @@
     .pre-card {
       width: min(720px, 92vw);
       border-radius: 1.25rem;
-      padding: 1.6rem 1.6rem 1.3rem;
+      padding: 1.7rem 1.7rem 1.4rem;
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.10);
       box-shadow:
@@ -993,36 +993,56 @@
 
     .pre-top {
       display: flex;
-      align-items: baseline;
+      align-items: flex-start;
       justify-content: space-between;
       gap: 1rem;
-      margin-bottom: 0.9rem;
+      margin-bottom: 0.85rem;
     }
 
     .pre-title {
       font-family: 'Bruno Ace SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.10em;
       text-transform: uppercase;
-      font-size: 1.05rem;
-      color: rgba(255,255,255,0.92);
+      font-size: 1.45rem;
+      color: rgba(255,255,255,0.94);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      line-height: 1.1;
+    }
+
+    .pre-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.25rem;
+      min-width: 130px;
     }
 
     .pre-percent {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
       font-weight: 900;
-      font-size: 1.05rem;
-      color: rgba(255,255,255,0.94);
+      font-size: 1.15rem;
+      color: rgba(255,255,255,0.96);
+      line-height: 1;
+    }
+
+    .pre-eta {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+      font-weight: 650;
+      font-size: 0.86rem;
+      color: rgba(255,255,255,0.72);
+      white-space: nowrap;
+      line-height: 1;
     }
 
     .pre-sub {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-      color: rgba(255,255,255,0.78);
-      line-height: 1.5;
+      color: rgba(255,255,255,0.80);
+      line-height: 1.55;
       font-size: 0.98rem;
       margin-bottom: 1.1rem;
+      max-width: 62ch;
     }
 
     .pre-bar {
@@ -1052,6 +1072,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
       color: rgba(255,255,255,0.72);
       font-size: 0.88rem;
+      align-items: center;
     }
 
     .pre-current {
@@ -1065,14 +1086,6 @@
     .pre-count {
       white-space: nowrap;
       opacity: 0.85;
-    }
-
-    .pre-hint {
-      margin-top: 0.9rem;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-      color: rgba(255,255,255,0.60);
-      font-size: 0.86rem;
-      line-height: 1.45;
     }
 
     .pre-warn {
@@ -1092,23 +1105,40 @@
       display: flex;
       justify-content: flex-end;
       gap: 0.7rem;
-      margin-top: 1rem;
-      display: none;
+      margin-top: 1.05rem;
     }
 
     .pre-skip {
-      background: rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.92);
-      border: 1px solid rgba(255,255,255,0.14);
-      padding: 0.6rem 1rem;
-      border-radius: 0.9rem;
+      background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.10));
+      color: rgba(255,255,255,0.96);
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 0.78rem 1.05rem;
+      border-radius: 1.0rem;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-      font-weight: 800;
+      font-weight: 900;
       cursor: pointer;
-      transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), background 260ms ease;
+      transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), background 260ms ease, border-color 260ms ease, box-shadow 260ms ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 220px;
+      box-shadow:
+        0 18px 46px rgba(0,0,0,0.42),
+        inset 0 1px 0 rgba(255,255,255,0.10);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
     }
 
-    .pre-skip:hover { transform: scale(1.03); background: rgba(255,255,255,0.16); }
+    .pre-skip:hover {
+      transform: scale(1.03);
+      background: linear-gradient(180deg, rgba(255,255,255,0.24), rgba(255,255,255,0.12));
+      border-color: rgba(107,140,255,0.42);
+      box-shadow:
+        0 22px 56px rgba(0,0,0,0.50),
+        0 0 0 6px rgba(107,140,255,0.14),
+        inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+
     .pre-skip:active { transform: scale(1.01); }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1123,19 +1153,21 @@
   <div id="preloader" aria-live="polite" aria-label="Chargement">
     <div class="pre-card">
       <div class="pre-top">
-        <div class="pre-title">Chargement des assets</div>
-        <div class="pre-percent" id="prePercent">0%</div>
+        <div class="pre-title">CHARGEMENT</div>
+        <div class="pre-right">
+          <div class="pre-percent" id="prePercent">0%</div>
+          <div class="pre-eta" id="preEta">Temps restant : estimation…</div>
+        </div>
       </div>
-      <div class="pre-sub" id="preSub">Téléchargement complet (images + vidéos) pour une expérience instantanée.</div>
+      <div class="pre-sub" id="preSub">Ce téléchargement permet de garantir une expérience fluide et confortable pendant la visite.</div>
       <div class="pre-bar"><div class="pre-fill" id="preFill"></div></div>
       <div class="pre-meta">
         <div class="pre-current" id="preCurrent">Initialisation…</div>
         <div class="pre-count" id="preCount">0 / 0</div>
       </div>
-      <div class="pre-hint">Mode extrême : toutes les vidéos sont téléchargées avant d’afficher le site.</div>
       <div class="pre-warn" id="preWarn"></div>
       <div class="pre-actions" id="preActions">
-        <button class="pre-skip" id="preSkip" type="button">Continuer quand même</button>
+        <button class="pre-skip" id="preSkip" type="button">Accéder au site</button>
       </div>
     </div>
   </div>
@@ -2359,6 +2391,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       const preloader = document.getElementById('preloader');
       const preFill = document.getElementById('preFill');
       const prePercent = document.getElementById('prePercent');
+      const preEta = document.getElementById('preEta');
       const preCurrent = document.getElementById('preCurrent');
       const preCount = document.getElementById('preCount');
       const preWarn = document.getElementById('preWarn');
@@ -2367,6 +2400,15 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
 
       window.__ASSET_URLS__ = new Map();
       const objectURLs = [];
+
+      const abortCtrl = new AbortController();
+      let skipped = false;
+
+      let bytesKnownTotal = 0;
+      let bytesKnownLoaded = 0;
+
+      let speedEMA = 0;
+      let lastSpeedT = performance.now();
 
       function toAbs(u) {
         try { return new URL(u, window.location.href).toString(); } catch (_) { return u; }
@@ -2381,22 +2423,48 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
         }
       }
 
+      function fmtTime(sec) {
+        if (!isFinite(sec) || sec <= 0) return "00:00";
+        const s = Math.max(0, Math.round(sec));
+        const m = Math.floor(s / 60);
+        const r = s % 60;
+        return String(m).padStart(2, '0') + ":" + String(r).padStart(2, '0');
+      }
+
+      function updateEtaUI() {
+        if (!preEta) return;
+        if (bytesKnownTotal > 0 && speedEMA > 0) {
+          const remain = Math.max(0, bytesKnownTotal - bytesKnownLoaded);
+          const etaSec = remain / speedEMA;
+          if (isFinite(etaSec) && etaSec >= 0) {
+            preEta.textContent = `Temps restant : ${fmtTime(etaSec)}`;
+            return;
+          }
+        }
+        preEta.textContent = 'Temps restant : estimation…';
+      }
+
       function setUI(done, total, currentLabel) {
         const pct = total ? Math.min(100, Math.round((done / total) * 100)) : 0;
         preFill.style.width = pct + '%';
         prePercent.textContent = pct + '%';
         preCount.textContent = `${done} / ${total}`;
         if (currentLabel) preCurrent.textContent = currentLabel;
+        updateEtaUI();
       }
 
       async function fetchAsBlob(url, onProgress) {
-        const res = await fetch(url, { cache: 'force-cache' });
+        const res = await fetch(url, { cache: 'force-cache', signal: abortCtrl.signal });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
         const len = Number(res.headers.get('content-length') || 0);
+        if (len > 0) bytesKnownTotal += len;
+
         if (!res.body || !res.body.getReader) {
           const b = await res.blob();
+          if (len > 0) bytesKnownLoaded += b.size;
           if (onProgress) onProgress(b.size, b.size, len || b.size);
+          updateEtaUI();
           return b;
         }
 
@@ -2408,8 +2476,22 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
           if (done) break;
           chunks.push(value);
           received += value.byteLength;
+
+          if (len > 0) {
+            bytesKnownLoaded += value.byteLength;
+            const now = performance.now();
+            const dt = (now - lastSpeedT) / 1000;
+            if (dt > 0) {
+              const inst = value.byteLength / dt;
+              speedEMA = speedEMA ? (speedEMA * 0.90 + inst * 0.10) : inst;
+              lastSpeedT = now;
+            }
+          }
+
           if (onProgress) onProgress(received, len ? len : 0, len);
+          updateEtaUI();
         }
+        updateEtaUI();
         return new Blob(chunks);
       }
 
@@ -2459,6 +2541,8 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
         setUI(0, total, 'Préparation…');
 
         for (const abs of all) {
+          if (skipped) break;
+
           const name = basename(abs);
           const isVid = isVideo(abs);
 
@@ -2470,12 +2554,14 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
                 preFill.style.width = pct + '%';
                 prePercent.textContent = pct + '%';
                 preCount.textContent = `${done} / ${total}`;
+
                 const mb = (received / (1024 * 1024)).toFixed(1);
                 const suffix = declared ? ` (${mb} MB / ${(declared / (1024 * 1024)).toFixed(1)} MB)` : ` (${mb} MB)`;
                 preCurrent.textContent = `Vidéo : ${name}${suffix}`;
+
+                updateEtaUI();
               });
 
-              const rel = abs.startsWith(window.location.origin) ? abs.slice(window.location.origin.length + (abs.includes('/Portfolio/') ? 0 : 0)) : abs;
               const rawCandidates = [
                 abs,
                 abs.replace(window.location.origin + '/', ''),
@@ -2500,6 +2586,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
                 window.__ASSET_URLS__.set(path.slice(path.indexOf('/Portfolio/') + 10), urlObj);
               }
             } catch (e) {
+              if (skipped) break;
               failures.push(`${name} (vidéo)`);
             }
           } else {
@@ -2508,6 +2595,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
               await fetchAsBlob(abs).catch(() => null);
               await warmImage(abs).catch(() => {});
             } catch (e) {
+              if (skipped) break;
               failures.push(`${name}`);
             }
           }
@@ -2517,26 +2605,33 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
           await new Promise(r => requestAnimationFrame(r));
         }
 
+        if (skipped) return;
+
         if (failures.length) {
           preWarn.style.display = 'block';
           preWarn.textContent = `Certains assets n’ont pas pu être chargés : ${failures.slice(0, 6).join(', ')}${failures.length > 6 ? '…' : ''}`;
-          preActions.style.display = 'flex';
-          preSkip.style.display = 'inline-flex';
         } else {
           preWarn.style.display = 'none';
-          preActions.style.display = 'none';
         }
       }
 
       function finish() {
         document.body.classList.remove('is-loading');
         preloader.classList.add('hidden');
+        if (preEta) preEta.textContent = 'Temps restant : 00:00';
         setTimeout(() => {
           if (preloader && preloader.parentNode) preloader.parentNode.removeChild(preloader);
         }, 520);
       }
 
-      preSkip.addEventListener('click', () => finish());
+      function skipNow() {
+        if (skipped) return;
+        skipped = true;
+        try { abortCtrl.abort(); } catch (_) {}
+        finish();
+      }
+
+      preSkip.addEventListener('click', () => skipNow());
 
       window.addEventListener('pagehide', () => {
         try {
@@ -2548,12 +2643,11 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
         requestAnimationFrame(async () => {
           try {
             await runPreload();
-            finish();
+            if (!skipped) finish();
           } catch (e) {
+            if (skipped) return;
             preWarn.style.display = 'block';
             preWarn.textContent = `Chargement interrompu : ${String(e && e.message ? e.message : e)}.`;
-            preActions.style.display = 'flex';
-            preSkip.style.display = 'inline-flex';
           }
         });
       });
