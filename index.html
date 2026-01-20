@@ -37,70 +37,6 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* LOADER STYLES - AJOUT "EXTRÊME" */
-    #game-loader {
-      position: fixed;
-      inset: 0;
-      background: #050505;
-      z-index: 100000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Bruno Ace SC', 'Courier New', Courier, monospace; /* Police un peu "Tech" */
-      color: white;
-      transition: opacity 0.8s ease-in-out, visibility 0.8s;
-    }
-
-    #game-loader.loaded {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .loader-content {
-      width: 300px;
-      text-align: center;
-    }
-
-    .loader-title {
-      font-size: 1.2rem;
-      letter-spacing: 0.2em;
-      margin-bottom: 2rem;
-      color: #888;
-      text-transform: uppercase;
-      animation: blink 2s infinite;
-    }
-
-    .progress-track {
-      width: 100%;
-      height: 4px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 2px;
-      overflow: hidden;
-      margin-bottom: 1rem;
-      position: relative;
-    }
-
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: var(--accent);
-      box-shadow: 0 0 10px var(--accent);
-      transition: width 0.2s linear;
-    }
-
-    .loader-stats {
-      font-size: 0.8rem;
-      color: #666;
-      display: flex;
-      justify-content: space-between;
-      font-family: monospace;
-    }
-
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    /* FIN LOADER STYLES */
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
       background: var(--bg);
@@ -112,14 +48,13 @@
       animation: pulseBackground 20s ease-in-out infinite;
       scrollbar-width: none;
       -ms-overflow-style: none;
-      /* On empêche le scroll tant que ça charge via JS, mais par défaut on cache */
     }
 
     html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
 
     @keyframes pulseBackground {
-      0%    { background-position: 0% 50%; }
-      50%   { background-position: 100% 50%; }
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
@@ -131,28 +66,9 @@
       margin-bottom: 2rem;
       opacity: 0;
       transform: translateY(-20px);
-      /* Animation déclenchée par JS après le load */
+      animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      animation-delay: 0.2s;
     }
-    
-    body.loading header, 
-    body.loading .intro-card,
-    body.loading .section-title,
-    body.loading .project,
-    body.loading footer,
-    body.loading #lang-switch {
-        animation: none !important;
-        opacity: 0 !important;
-    }
-
-    /* Classes d'animation actives une fois le loader parti */
-    body.loaded header { animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; animation-delay: 0.2s; }
-    body.loaded header p { animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; animation-delay: 0.4s; }
-    body.loaded #lang-switch { animation: slideFadeIn 0.6s forwards; animation-delay: 0.6s; }
-    body.loaded .intro-card { animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; animation-delay: 0.72s; }
-    body.loaded .section-title { animation: slideFadeIn 0.6s forwards; animation-delay: 0.8s; }
-    body.loaded .project { animation: slideFadeInUp 0.6s forwards; }
-    body.loaded footer { animation: slideFadeIn 0.6s forwards; animation-delay: 1.6s; }
-
 
     header h1 { font-size: 3rem; font-weight: 900; }
 
@@ -163,6 +79,8 @@
       margin-top: 0.5rem;
       opacity: 0;
       transform: translateY(20px);
+      animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      animation-delay: 0.4s;
     }
 
     #lang-switch {
@@ -170,6 +88,8 @@
       justify-content: center;
       gap: 1rem;
       margin: 2rem auto 1.25rem auto;
+      animation: slideFadeIn 0.6s forwards;
+      animation-delay: 0.6s;
       opacity: 0;
       transform: translateY(-20px);
     }
@@ -235,6 +155,8 @@
       text-align: center;
       opacity: 0;
       transform: translateY(18px);
+      animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      animation-delay: 0.72s;
     }
 
     .intro-card p {
@@ -255,6 +177,8 @@
       position: relative;
       opacity: 0;
       transform: translateY(30px);
+      animation: slideFadeIn 0.6s forwards;
+      animation-delay: 0.8s;
     }
 
     .section-title::before,
@@ -288,20 +212,19 @@
       max-width: calc(50% - 2rem);
       opacity: 0;
       transform: translateY(30px);
+      animation: slideFadeInUp 0.6s forwards;
       position: relative;
       z-index: 1;
       will-change: transform;
       transition: filter 0.25s ease, opacity 0.25s ease;
     }
 
-    /* Les délais sont gérés via JS ou CSS conditionnel selon loaded */
-    body.loaded .project:nth-child(1) { animation-delay: 1s; }
-    body.loaded .project:nth-child(2) { animation-delay: 1.1s; }
-    body.loaded .project:nth-child(3) { animation-delay: 1.2s; }
-    body.loaded .project:nth-child(4) { animation-delay: 1.3s; }
-    body.loaded .project:nth-child(5) { animation-delay: 1.4s; }
-    body.loaded .project:nth-child(6) { animation-delay: 1.5s; }
-
+    .project:nth-child(1) { animation-delay: 1s; }
+    .project:nth-child(2) { animation-delay: 1.1s; }
+    .project:nth-child(3) { animation-delay: 1.2s; }
+    .project:nth-child(4) { animation-delay: 1.3s; }
+    .project:nth-child(5) { animation-delay: 1.4s; }
+    .project:nth-child(6) { animation-delay: 1.5s; }
 
     @media (max-width: 700px) {
       .project { flex: 1 1 100%; max-width: 100%; }
@@ -580,6 +503,8 @@
       color: #888;
       opacity: 0;
       transform: translateY(30px);
+      animation: slideFadeIn 0.6s forwards;
+      animation-delay: 1.6s;
     }
 
     .contact-line {
@@ -1026,107 +951,194 @@
     .project.expanded.closing .card-front h3 { opacity: 0; transform: translateY(100%); }
     .project.expanded.closing .card-back { opacity: 0; transition: opacity 140ms cubic-bezier(0.22, 1, 0.36, 1); }
     .project.expanded.closing .details-toggle { opacity: 0; pointer-events: none; }
+
+    body.is-loading #site-root { opacity: 0; pointer-events: none; }
+    body.is-loading { overflow: hidden; }
+
+    #preloader {
+      position: fixed;
+      inset: 0;
+      z-index: 100000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background:
+        radial-gradient(1200px 700px at 15% 15%, rgba(107,140,255,0.18), rgba(0,0,0,0)),
+        radial-gradient(1000px 700px at 85% 20%, rgba(180,120,255,0.14), rgba(0,0,0,0)),
+        rgba(0,0,0,0.72);
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1);
+      opacity: 1;
+    }
+
+    #preloader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .pre-card {
+      width: min(720px, 92vw);
+      border-radius: 1.25rem;
+      padding: 1.6rem 1.6rem 1.3rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow:
+        0 24px 70px rgba(0,0,0,0.65),
+        inset 0 1px 0 rgba(255,255,255,0.06);
+      backdrop-filter: blur(22px) saturate(160%);
+      -webkit-backdrop-filter: blur(22px) saturate(160%);
+    }
+
+    .pre-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .pre-title {
+      font-family: 'Bruno Ace SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.92);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .pre-percent {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+      font-weight: 900;
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.94);
+    }
+
+    .pre-sub {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+      color: rgba(255,255,255,0.78);
+      line-height: 1.5;
+      font-size: 0.98rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .pre-bar {
+      height: 12px;
+      width: 100%;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .pre-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, rgba(107,140,255,0.85), rgba(180,120,255,0.75));
+      box-shadow: 0 8px 18px rgba(107,140,255,0.12);
+      transition: width 180ms linear;
+    }
+
+    .pre-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-top: 0.9rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+      color: rgba(255,255,255,0.72);
+      font-size: 0.88rem;
+    }
+
+    .pre-current {
+      max-width: 75%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      opacity: 0.9;
+    }
+
+    .pre-count {
+      white-space: nowrap;
+      opacity: 0.85;
+    }
+
+    .pre-hint {
+      margin-top: 0.9rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+      color: rgba(255,255,255,0.60);
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+
+    .pre-warn {
+      margin-top: 0.85rem;
+      padding: 0.75rem 0.85rem;
+      border-radius: 0.9rem;
+      background: rgba(0,0,0,0.38);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.78);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      display: none;
+    }
+
+    .pre-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.7rem;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .pre-skip {
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.92);
+      border: 1px solid rgba(255,255,255,0.14);
+      padding: 0.6rem 1rem;
+      border-radius: 0.9rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), background 260ms ease;
+    }
+
+    .pre-skip:hover { transform: scale(1.03); background: rgba(255,255,255,0.16); }
+    .pre-skip:active { transform: scale(1.01); }
+
+    @media (prefers-reduced-motion: reduce) {
+      #preloader { transition: none !important; }
+      .pre-fill { transition: none !important; }
+      .pre-skip { transition: none !important; }
+    }
   </style>
 </head>
 
-<body class="loading">
-  <div id="game-loader">
-    <div class="loader-content">
-      <div class="loader-title">ANTOINE PEZZULO</div>
-      <div class="progress-track">
-        <div class="progress-bar" id="progress-bar"></div>
+<body class="is-loading">
+  <div id="preloader" aria-live="polite" aria-label="Chargement">
+    <div class="pre-card">
+      <div class="pre-top">
+        <div class="pre-title">Chargement des assets</div>
+        <div class="pre-percent" id="prePercent">0%</div>
       </div>
-      <div class="loader-stats">
-        <span id="loader-status">INITIALIZING ASSETS...</span>
-        <span id="loader-percentage">0%</span>
+      <div class="pre-sub" id="preSub">Téléchargement complet (images + vidéos) pour une expérience instantanée.</div>
+      <div class="pre-bar"><div class="pre-fill" id="preFill"></div></div>
+      <div class="pre-meta">
+        <div class="pre-current" id="preCurrent">Initialisation…</div>
+        <div class="pre-count" id="preCount">0 / 0</div>
+      </div>
+      <div class="pre-hint">Mode extrême : toutes les vidéos sont téléchargées avant d’afficher le site.</div>
+      <div class="pre-warn" id="preWarn"></div>
+      <div class="pre-actions" id="preActions">
+        <button class="pre-skip" id="preSkip" type="button">Continuer quand même</button>
       </div>
     </div>
   </div>
-  
-  <script>
-    // SCRIPT DE CHARGEMENT EXTRÊME
-    (async function() {
-      const loader = document.getElementById('game-loader');
-      const bar = document.getElementById('progress-bar');
-      const perc = document.getElementById('loader-percentage');
-      const status = document.getElementById('loader-status');
-      
-      // On bloque le scroll
-      document.body.style.overflow = 'hidden';
-
-      // 1. Récupération de tous les assets
-      const images = Array.from(document.querySelectorAll('img')).map(img => img.src).filter(src => src);
-      // Récupération des data-video (pour pré-charger les vidéos en BLOB)
-      const videoElements = Array.from(document.querySelectorAll('[data-video]'));
-      const videoUrls = videoElements.map(el => el.getAttribute('data-video')).filter(url => url);
-
-      // On ajoute quelques délais fake pour l'effet "scan" si peu d'assets
-      const totalAssets = images.length + videoUrls.length;
-      let loadedCount = 0;
-
-      const updateProgress = () => {
-        loadedCount++;
-        const p = Math.min(100, Math.round((loadedCount / totalAssets) * 100));
-        bar.style.width = p + '%';
-        perc.innerText = p + '%';
-      };
-
-      status.innerText = "LOADING IMAGES...";
-      
-      // Chargement Images
-      const imagePromises = images.map(src => {
-        return new Promise((resolve) => {
-          const img = new Image();
-          img.onload = () => { updateProgress(); resolve(); };
-          img.onerror = () => { updateProgress(); resolve(); }; // On continue même si erreur
-          img.src = src;
-        });
-      });
-
-      // Chargement Vidéos (Le mode "EXTRÊME")
-      // On fetch les vidéos, on crée un BLOB URL, et on remplace le data-video original
-      // Cela garantit que la vidéo est en RAM et ne buffera JAMAIS.
-      const videoPromises = videoElements.map(el => {
-        const url = el.getAttribute('data-video');
-        if(!url) return Promise.resolve();
-        
-        return fetch(url)
-          .then(response => response.blob())
-          .then(blob => {
-            const blobUrl = URL.createObjectURL(blob);
-            el.setAttribute('data-video', blobUrl); // Remplacement "Magique"
-            updateProgress();
-            status.innerText = "CACHING VIDEO MEMORY...";
-          })
-          .catch(err => {
-            console.warn("Failed to preload video", url, err);
-            updateProgress();
-          });
-      });
-
-      try {
-        await Promise.all([...imagePromises, ...videoPromises]);
-      } catch (e) {
-        console.error("Loader error", e);
-      }
-
-      // Finition
-      status.innerText = "READY.";
-      bar.style.width = '100%';
-      perc.innerText = '100%';
-      
-      // Petit délai pour admirer le 100%
-      setTimeout(() => {
-        loader.classList.add('loaded');
-        document.body.classList.remove('loading');
-        document.body.classList.add('loaded');
-        document.body.style.overflow = ''; // Restaure le scroll
-      }, 500);
-
-    })();
-  </script>
-  <div id="overlay"></div>
-  <div id="expanded-layer" aria-hidden="true"></div>
 
   <div id="mobile-blocker" style="
     position: fixed;
@@ -1172,417 +1184,424 @@
     }
   </script>
 
-  <header>
-    <h2 style="
-      font-size: 2rem;
-      font-weight: 700;
-      color: #d1d1d1;
-      margin-top: 0rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      opacity: 0;
-      transform: translateY(10px);
-    ">Portfolio</h2>
-    <h1 data-i18n="name">ANTOINE PEZZULO</h1>
-    <p data-i18n="subtitle">Junior Game Designer</p>
-  </header>
+  <div id="site-root">
+    <div id="overlay"></div>
+    <div id="expanded-layer" aria-hidden="true"></div>
 
-  <div id="lang-switch">
-    <button data-lang="fr">Français</button>
-    <button data-lang="en">English</button>
-  </div>
+    <header>
+      <h2 style="
+        font-size: 2rem;
+        font-weight: 700;
+        color: #d1d1d1;
+        margin-top: 0rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0;
+        transform: translateY(10px);
+        animation: slideFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        animation-delay: 0.4s;
+      ">Portfolio</h2>
+      <h1 data-i18n="name">ANTOINE PEZZULO</h1>
+      <p data-i18n="subtitle">Junior Game Designer</p>
+    </header>
 
-  <div class="intro-card">
-    <p data-i18n="bio">Étudiant à ISART Digital, j’ai une appétence particulière pour la tutorialisation, l’UX et la recherche de gamefeel.
+    <div id="lang-switch">
+      <button data-lang="fr">Français</button>
+      <button data-lang="en">English</button>
+    </div>
+
+    <div class="intro-card">
+      <p data-i18n="bio">Étudiant à ISART Digital, j’ai une appétence particulière pour la tutorialisation, l’UX et la recherche de gamefeel.
 J’aime travailler par itération dans le moteur, les mains dans le cambouis, afin de confronter rapidement les idées au jeu et d’affiner les intentions de design.</p>
-  </div>
+    </div>
 
-  <div class="section-title" data-i18n="projects">Mes Projets</div>
+    <div class="section-title" data-i18n="projects">Mes Projets</div>
 
-  <div class="projects">
-    <div class="project" data-video="videos/metro.mp4">
-      <div class="card-inner">
-        <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M6 14l6-6 6 6"></path>
-          </svg>
-        </button>
+    <div class="projects">
+      <div class="project" data-video="videos/metro.mp4">
+        <div class="card-inner">
+          <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 14l6-6 6 6"></path>
+            </svg>
+          </button>
 
-        <div class="card-face card-front">
-          <img src="img/metro.png" alt="METRO screenshot" />
-          <h3>METRO</h3>
-        </div>
+          <div class="card-face card-front">
+            <img src="img/metro.png" alt="METRO screenshot" />
+            <h3>METRO</h3>
+          </div>
 
-        <div class="card-face card-back">
-          <div class="card-back-content">
-            <div class="normal-view">
-              <div class="top-row">
-                <div>
-                  <h4>METRO</h4>
-                  <span data-i18n="metro_team">Solo</span>
+          <div class="card-face card-back">
+            <div class="card-back-content">
+              <div class="normal-view">
+                <div class="top-row">
+                  <div>
+                    <h4>METRO</h4>
+                    <span data-i18n="metro_team">Solo</span>
+                  </div>
+                  <div class="buttons">
+                    <a href="https://youtu.be/voMQWys06b8" target="_blank" rel="noopener noreferrer" class="action-button">
+                      <img src="img/ytb logo.png" alt="" />Trailer
+                    </a>
+                    <a href="#" class="action-button">
+                      <img src="img/ytb logo.png" alt="" />Walkthrough
+                    </a>
+                    <a href="#" class="action-button itch-link">
+                      <img src="img/itch logo.png" alt="" />Itch.io
+                    </a>
+                    <a href="files/METRO.zip" download class="action-button download-only">
+                      <img src="img/dl logo.png" alt="Download METRO" />
+                    </a>
+                  </div>
                 </div>
-                <div class="buttons">
-                  <a href="https://youtu.be/voMQWys06b8" target="_blank" rel="noopener noreferrer" class="action-button">
-                    <img src="img/ytb logo.png" alt="" />Trailer
-                  </a>
-                  <a href="#" class="action-button">
-                    <img src="img/ytb logo.png" alt="" />Walkthrough
-                  </a>
-                  <a href="#" class="action-button itch-link">
-                    <img src="img/itch logo.png" alt="" />Itch.io
-                  </a>
-                  <a href="files/METRO.zip" download class="action-button download-only">
-                    <img src="img/dl logo.png" alt="Download METRO" />
-                  </a>
-                </div>
-              </div>
 
-              <p data-i18n="metro_desc">
+                <p data-i18n="metro_desc">
 METRO est un runner rythmé, réalisé en solo.
 La contrainte était de concevoir un jeu jouable avec un seul bouton.
 Vous incarnez une moto sans pilote lancée à vive allure dans un tunnel de néon ; l’unique bouton vous sert à orienter votre trajectoire.
-              </p>
+                </p>
 
-              <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
-            </div>
-
-            <div class="details-view">
-              <div class="details-header">
-                <div class="details-title">
-                  <h4>METRO</h4>
-                  <span data-i18n="metro_team">Solo</span>
-                </div>
+                <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
               </div>
-              <div class="details-text" data-i18n="metro_more" data-i18n-html></div>
+
+              <div class="details-view">
+                <div class="details-header">
+                  <div class="details-title">
+                    <h4>METRO</h4>
+                    <span data-i18n="metro_team">Solo</span>
+                  </div>
+                </div>
+                <div class="details-text" data-i18n="metro_more" data-i18n-html></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="project" data-video="videos/mouse_knight.mp4">
-      <div class="card-inner">
-        <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M6 14l6-6 6 6"></path>
-          </svg>
-        </button>
+      <div class="project" data-video="videos/mouse_knight.mp4">
+        <div class="card-inner">
+          <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 14l6-6 6 6"></path>
+            </svg>
+          </button>
 
-        <div class="card-face card-front">
-          <img src="img/mouse knight.png" alt="Mouse Knight screenshot" />
-          <h3>Mouse Knight</h3>
-        </div>
+          <div class="card-face card-front">
+            <img src="img/mouse knight.png" alt="Mouse Knight screenshot" />
+            <h3>Mouse Knight</h3>
+          </div>
 
-        <div class="card-face card-back">
-          <div class="card-back-content">
-            <div class="normal-view">
-              <div class="top-row">
-                <div>
-                  <h4>Mouse Knight</h4>
-                  <span data-i18n="mouse_team">Équipe de 5</span>
+          <div class="card-face card-back">
+            <div class="card-back-content">
+              <div class="normal-view">
+                <div class="top-row">
+                  <div>
+                    <h4>Mouse Knight</h4>
+                    <span data-i18n="mouse_team">Équipe de 5</span>
+                  </div>
+                  <div class="buttons">
+                    <a href="#" class="action-button">
+                      <img src="img/ytb logo.png" alt="" />Trailer
+                    </a>
+                    <a href="#" class="action-button">
+                      <img src="img/ytb logo.png" alt="" />Walkthrough
+                    </a>
+                    <a href="#" class="action-button itch-link">
+                      <img src="img/itch logo.png" alt="" />Itch.io
+                    </a>
+                    <a href="#" class="action-button download-only">
+                      <img src="img/dl logo.png" alt="Download Mouse Knight" />
+                    </a>
+                  </div>
                 </div>
-                <div class="buttons">
-                  <a href="#" class="action-button">
-                    <img src="img/ytb logo.png" alt="" />Trailer
-                  </a>
-                  <a href="#" class="action-button">
-                    <img src="img/ytb logo.png" alt="" />Walkthrough
-                  </a>
-                  <a href="#" class="action-button itch-link">
-                    <img src="img/itch logo.png" alt="" />Itch.io
-                  </a>
-                  <a href="#" class="action-button download-only">
-                    <img src="img/dl logo.png" alt="Download Mouse Knight" />
-                  </a>
-                </div>
-              </div>
 
-              <p data-i18n="mouse_desc">
+                <p data-i18n="mouse_desc">
 Mouse Knight est un brawler-platformer en 3D à la troisième personne.
 J’ai participé au projet en tant que game designer, programmeur et level designer.
 Le jeu propose d’incarner une petite souris chevalier qui rebondit sur ses ennemis pour se déplacer et combattre.
-              </p>
+                </p>
 
-              <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
-            </div>
-
-            <div class="details-view">
-              <div class="details-header">
-                <div class="details-title">
-                  <h4>Mouse Knight</h4>
-                  <span data-i18n="mouse_team">Équipe de 5</span>
-                </div>
+                <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
               </div>
-              <div class="details-text" data-i18n="mouse_more" data-i18n-html></div>
+
+              <div class="details-view">
+                <div class="details-header">
+                  <div class="details-title">
+                    <h4>Mouse Knight</h4>
+                    <span data-i18n="mouse_team">Équipe de 5</span>
+                  </div>
+                </div>
+                <div class="details-text" data-i18n="mouse_more" data-i18n-html></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="project" data-video="videos/voracines.mp4">
-      <div class="card-inner">
-        <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M6 14l6-6 6 6"></path>
-          </svg>
-        </button>
+      <div class="project" data-video="videos/voracines.mp4">
+        <div class="card-inner">
+          <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 14l6-6 6 6"></path>
+            </svg>
+          </button>
 
-        <div class="card-face card-front">
-          <img src="img/voracines.png" alt="Voracines screenshot" />
-          <h3>Voracines</h3>
-        </div>
+          <div class="card-face card-front">
+            <img src="img/voracines.png" alt="Voracines screenshot" />
+            <h3>Voracines</h3>
+          </div>
 
-        <div class="card-face card-back">
-          <div class="card-back-content">
-            <div class="normal-view">
-              <div class="top-row">
-                <div>
-                  <h4>Voracines</h4>
-                  <span data-i18n="vor_team">Équipe de 8</span>
+          <div class="card-face card-back">
+            <div class="card-back-content">
+              <div class="normal-view">
+                <div class="top-row">
+                  <div>
+                    <h4>Voracines</h4>
+                    <span data-i18n="vor_team">Équipe de 8</span>
+                  </div>
+                  <div class="buttons">
+                    <a href="https://youtu.be/bdllN41GYCA" target="_blank" rel="noopener noreferrer" class="action-button">
+                      <img src="img/ytb logo.png" alt="" />Trailer
+                    </a>
+                    <a href="#" class="action-button">Livret de règle</a>
+                  </div>
                 </div>
-                <div class="buttons">
-                  <a href="https://youtu.be/bdllN41GYCA" target="_blank" rel="noopener noreferrer" class="action-button">
-                    <img src="img/ytb logo.png" alt="" />Trailer
-                  </a>
-                  <a href="#" class="action-button">Livret de règle</a>
-                </div>
-              </div>
 
-              <p data-i18n="vor_desc">
+                <p data-i18n="vor_desc">
 Voracines est un jeu de plateau tactique de 2 à 4 joueurs.
 J’ai participé au projet en tant que game designer, avec une contribution principale sur l’écriture du livret de règles et l’organisation des playtests.
-              </p>
+                </p>
 
-              <img src="img/no engine logo.png" class="engine-logo" alt="No engine logo" />
-            </div>
-
-            <div class="details-view">
-              <div class="details-header">
-                <div class="details-title">
-                  <h4>Voracines</h4>
-                  <span data-i18n="vor_team">Équipe de 8</span>
-                </div>
+                <img src="img/no engine logo.png" class="engine-logo" alt="No engine logo" />
               </div>
-              <div class="details-text" data-i18n="vor_more" data-i18n-html></div>
+
+              <div class="details-view">
+                <div class="details-header">
+                  <div class="details-title">
+                    <h4>Voracines</h4>
+                    <span data-i18n="vor_team">Équipe de 8</span>
+                  </div>
+                </div>
+                <div class="details-text" data-i18n="vor_more" data-i18n-html></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="project" data-video="videos/reflect.mp4">
-      <div class="card-inner">
-        <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M6 14l6-6 6 6"></path>
-          </svg>
-        </button>
+      <div class="project" data-video="videos/reflect.mp4">
+        <div class="card-inner">
+          <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 14l6-6 6 6"></path>
+            </svg>
+          </button>
 
-        <div class="card-face card-front">
-          <img src="img/reflect.png" alt="Reflect screenshot" />
-          <h3>Reflect</h3>
-        </div>
+          <div class="card-face card-front">
+            <img src="img/reflect.png" alt="Reflect screenshot" />
+            <h3>Reflect</h3>
+          </div>
 
-        <div class="card-face card-back">
-          <div class="card-back-content">
-            <div class="normal-view">
-              <div class="top-row">
-                <div>
-                  <h4>Reflect</h4>
-                  <span data-i18n="ref_team">Équipe de 3</span>
+          <div class="card-face card-back">
+            <div class="card-back-content">
+              <div class="normal-view">
+                <div class="top-row">
+                  <div>
+                    <h4>Reflect</h4>
+                    <span data-i18n="ref_team">Équipe de 3</span>
+                  </div>
+                  <div class="buttons">
+                    <a href="#" class="action-button"><img src="img/ytb logo.png" alt="" />Walkthrough</a>
+                    <a href="#" class="action-button itch-link"><img src="img/itch logo.png" alt="" />Itch.io</a>
+                    <a href="#" class="action-button download-only"><img src="img/dl logo.png" alt="" /></a>
+                  </div>
                 </div>
-                <div class="buttons">
-                  <a href="#" class="action-button"><img src="img/ytb logo.png" alt="" />Walkthrough</a>
-                  <a href="#" class="action-button itch-link"><img src="img/itch logo.png" alt="" />Itch.io</a>
-                  <a href="#" class="action-button download-only"><img src="img/dl logo.png" alt="" /></a>
-                </div>
-              </div>
 
-              <p data-i18n="ref_desc">
+                <p data-i18n="ref_desc">
 Reflect est un die and retry 2D en vue top-down, avec des mécaniques inspirées des bullet hell.
 J’ai assuré l’intégralité du level design et apporté quelques retours et suggestions sur le game design.
 Dans ce jeu, le joueur doit exploiter les attaques de ses ennemis grâce à une mécanique centrale de parade, permettant de renvoyer leurs projectiles.
-              </p>
+                </p>
 
-              <img src="img/godot logo.png" class="engine-logo" alt="Godot Logo" />
-            </div>
-
-            <div class="details-view">
-              <div class="details-header">
-                <div class="details-title">
-                  <h4>Reflect</h4>
-                  <span data-i18n="ref_team">Équipe de 3</span>
-                </div>
+                <img src="img/godot logo.png" class="engine-logo" alt="Godot Logo" />
               </div>
-              <div class="details-text" data-i18n="ref_more" data-i18n-html></div>
+
+              <div class="details-view">
+                <div class="details-header">
+                  <div class="details-title">
+                    <h4>Reflect</h4>
+                    <span data-i18n="ref_team">Équipe de 3</span>
+                  </div>
+                </div>
+                <div class="details-text" data-i18n="ref_more" data-i18n-html></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="project" data-video="videos/pleasant_chalk.mp4">
-      <div class="card-inner">
-        <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M6 14l6-6 6 6"></path>
-          </svg>
-        </button>
+      <div class="project" data-video="videos/pleasant_chalk.mp4">
+        <div class="card-inner">
+          <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 14l6-6 6 6"></path>
+            </svg>
+          </button>
 
-        <div class="card-face card-front">
-          <img src="img/pleasant chalk.png" alt="Pleasant Chalk screenshot" />
-          <h3>Pleasant Chalk</h3>
-        </div>
+          <div class="card-face card-front">
+            <img src="img/pleasant chalk.png" alt="Pleasant Chalk screenshot" />
+            <h3>Pleasant Chalk</h3>
+          </div>
 
-        <div class="card-face card-back">
-          <div class="card-back-content">
-            <div class="normal-view">
-              <div class="top-row">
-                <div>
-                  <h4>Pleasant Chalk</h4>
-                  <span data-i18n="chalk_team">Solo</span>
+          <div class="card-face card-back">
+            <div class="card-back-content">
+              <div class="normal-view">
+                <div class="top-row">
+                  <div>
+                    <h4>Pleasant Chalk</h4>
+                    <span data-i18n="chalk_team">Solo</span>
+                  </div>
+                  <div class="buttons">
+                    <a href="#" class="action-button"><img src="img/ytb logo.png" alt="" />Walkthrough</a>
+                    <a href="#" class="action-button itch-link"><img src="img/itch logo.png" alt="" />Itch.io</a>
+                    <a href="files/Pleasant Chalk.zip" download class="action-button download-only"><img src="img/dl logo.png" alt="" /></a>
+                  </div>
                 </div>
-                <div class="buttons">
-                  <a href="#" class="action-button"><img src="img/ytb logo.png" alt="" />Walkthrough</a>
-                  <a href="#" class="action-button itch-link"><img src="img/itch logo.png" alt="" />Itch.io</a>
-                  <a href="files/Pleasant Chalk.zip" download class="action-button download-only"><img src="img/dl logo.png" alt="" /></a>
-                </div>
-              </div>
 
-              <p data-i18n="chalk_desc">
+                <p data-i18n="chalk_desc">
 Pleasant Chalk est un chill game, réalisé en solo.
 L’objectif était de partir d’une version volontairement fade et impersonnelle du jeu Asteroids, afin de la transformer en une expérience juicy et satisfaisante.
 J’ai choisi de reskin le jeu pour offrir une expérience chill et lo-fi.
-              </p>
+                </p>
 
-              <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
-            </div>
-
-            <div class="details-view">
-              <div class="details-header">
-                <div class="details-title">
-                  <h4>Pleasant Chalk</h4>
-                  <span data-i18n="chalk_team">Solo</span>
-                </div>
+                <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
               </div>
-              <div class="details-text" data-i18n="chalk_more" data-i18n-html></div>
+
+              <div class="details-view">
+                <div class="details-header">
+                  <div class="details-title">
+                    <h4>Pleasant Chalk</h4>
+                    <span data-i18n="chalk_team">Solo</span>
+                  </div>
+                </div>
+                <div class="details-text" data-i18n="chalk_more" data-i18n-html></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="project" data-video="videos/muscles_rockets.mp4">
-      <div class="card-inner">
-        <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M6 14l6-6 6 6"></path>
-          </svg>
-        </button>
+      <div class="project" data-video="videos/muscles_rockets.mp4">
+        <div class="card-inner">
+          <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 14l6-6 6 6"></path>
+            </svg>
+          </button>
 
-        <div class="card-face card-front">
-          <img src="img/muscles & rockets.png" alt="Muscles & Rockets screenshot" />
-          <h3>Muscles & Rockets</h3>
-        </div>
+          <div class="card-face card-front">
+            <img src="img/muscles & rockets.png" alt="Muscles & Rockets screenshot" />
+            <h3>Muscles & Rockets</h3>
+          </div>
 
-        <div class="card-face card-back">
-          <div class="card-back-content">
-            <div class="normal-view">
-              <div class="top-row">
-                <div>
-                  <h4>Muscles & Rockets</h4>
-                  <span data-i18n="mar_team">Équipe de 8</span>
+          <div class="card-face card-back">
+            <div class="card-back-content">
+              <div class="normal-view">
+                <div class="top-row">
+                  <div>
+                    <h4>Muscles & Rockets</h4>
+                    <span data-i18n="mar_team">Équipe de 8</span>
+                  </div>
+                  <div class="buttons">
+                    <a href="https://youtu.be/cdR5du5tKaw" target="_blank" rel="noopener noreferrer" class="action-button">
+                      <img src="img/ytb logo.png" alt="" />Trailer
+                    </a>
+                    <a href="#" class="action-button">
+                      <img src="img/ytb logo.png" alt="" />Walkthrough
+                    </a>
+                    <a href="#" class="action-button itch-link"><img src="img/itch logo.png" alt="" />Itch.io</a>
+                    <a href="files/Muscles & Rockets.zip" download class="action-button download-only"><img src="img/dl logo.png" alt="" /></a>
+                  </div>
                 </div>
-                <div class="buttons">
-                  <a href="https://youtu.be/cdR5du5tKaw" target="_blank" rel="noopener noreferrer" class="action-button">
-                    <img src="img/ytb logo.png" alt="" />Trailer
-                  </a>
-                  <a href="#" class="action-button">
-                    <img src="img/ytb logo.png" alt="" />Walkthrough
-                  </a>
-                  <a href="#" class="action-button itch-link"><img src="img/itch logo.png" alt="" />Itch.io</a>
-                  <a href="files/Muscles & Rockets.zip" download class="action-button download-only"><img src="img/dl logo.png" alt="" /></a>
-                </div>
-              </div>
 
-              <p data-i18n="mar_desc">
+                <p data-i18n="mar_desc">
 Muscles & Rockets est un jeu d’action-platformer en 2.5D.
 J’ai été game designer et level designer, en charge de l’intégralité du niveau 1.
 Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquettes pour combattre les ennemis et vous propulser grâce au recul.
-              </p>
+                </p>
 
-              <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
-            </div>
-
-            <div class="details-view">
-              <div class="details-header">
-                <div class="details-title">
-                  <h4>Muscles & Rockets</h4>
-                  <span data-i18n="mar_team">Équipe de 8</span>
-                </div>
+                <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
               </div>
-              <div class="details-text" data-i18n="mar_more" data-i18n-html></div>
+
+              <div class="details-view">
+                <div class="details-header">
+                  <div class="details-title">
+                    <h4>Muscles & Rockets</h4>
+                    <span data-i18n="mar_team">Équipe de 8</span>
+                  </div>
+                </div>
+                <div class="details-text" data-i18n="mar_more" data-i18n-html></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="section-title" data-i18n="contact">Contact</div>
+
+    <footer>
+      <div class="contact-line">
+        <div class="contact-item">
+          <h4>Email</h4>
+          <div class="contact-value" data-copy="mpxkids2@gmail.com">
+            <a href="mailto:mpxkids2@gmail.com">mpxkids2@gmail.com</a>
+            <button class="copy-btn" title="Copier">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v16h13a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 18H8V7h11v16z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <h4>LinkedIn</h4>
+          <div class="contact-value" data-copy="linkedin.com/in/antoinepezzulo">
+            <a href="https://www.linkedin.com/in/antoinepezzulo" target="_blank" rel="noopener noreferrer">linkedin.com/in/antoinepezzulo</a>
+            <button class="copy-btn" title="Copier">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v16h13a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 18H8V7h11v16z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <h4 data-i18n="phone">TÉLÉPHONE</h4>
+          <div class="contact-value" data-copy="+33 6 95 69 10 82">
+            <a href="tel:+33695691082">+33 6 95 69 10 82</a>
+            <button class="copy-btn" title="Copier">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v16h13a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 18H8V7h11v16z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <h4>Discord</h4>
+          <div class="contact-value" data-copy="antiwis">
+            <span>antiwis</span>
+            <button class="copy-btn" title="Copier">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v16h13a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 18H8V7h11v16z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
-
-  <div class="section-title" data-i18n="contact">Contact</div>
-
-  <footer>
-    <div class="contact-line">
-      <div class="contact-item">
-        <h4>Email</h4>
-        <div class="contact-value" data-copy="mpxkids2@gmail.com">
-          <a href="mailto:mpxkids2@gmail.com">mpxkids2@gmail.com</a>
-          <button class="copy-btn" title="Copier">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-              <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v16h13a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 18H8V7h11v16z"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="contact-item">
-        <h4>LinkedIn</h4>
-        <div class="contact-value" data-copy="linkedin.com/in/antoinepezzulo">
-          <a href="https://www.linkedin.com/in/antoinepezzulo" target="_blank" rel="noopener noreferrer">linkedin.com/in/antoinepezzulo</a>
-          <button class="copy-btn" title="Copier">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-              <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v16h13a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 18H8V7h11v16z"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="contact-item">
-        <h4 data-i18n="phone">TÉLÉPHONE</h4>
-        <div class="contact-value" data-copy="+33 6 95 69 10 82">
-          <a href="tel:+33695691082">+33 6 95 69 10 82</a>
-          <button class="copy-btn" title="Copier">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-              <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v16h13a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 18H8V7h11v16z"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="contact-item">
-        <h4>Discord</h4>
-        <div class="contact-value" data-copy="antiwis">
-          <span>antiwis</span>
-          <button class="copy-btn" title="Copier">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-              <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v16h13a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 18H8V7h11v16z"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  </footer>
 
   <script>
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
@@ -1601,10 +1620,10 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
         metro_more:
 `<div class="details-rt">
   <h5>Contexte</h5>
-  <p>Ce projet scolaire avait pour contrainte la conception d’un jeu jouable avec un seul bouton, en deux mois. Je cherchais une idée élégante qui serais techniquement économique, car je débutais en programmation.</p>
+  <p>Ce projet scolaire avait pour contrainte la conception d’un jeu jouable avec un seul bouton, en deux mois. Je cherchais une idée élégante qui serait techniquement économique, car je débutais en programmation.</p>
 
   <h5>Pitch</h5>
-  <p>METRO est un runner rythmé où l’on contrôle une moto qui fonce à toute allure dans un tunnel parsemé d’obstacles, la musique prend une place importante.</p>
+  <p>METRO est un runner rythmé où l’on contrôle une moto qui fonce à toute allure dans un tunnel parsemé d’obstacles ; la musique prend une place importante.</p>
 
   <h5>Design</h5>
   <p>METRO s’inspire fortement de Super Hexagon, notamment dans sa capacité à pousser le joueur à relancer instantanément après un échec. La mort est très rapide, lisible, et la relance apparaît immédiatement, afin de créer un réflexe de retry machinal.</p>
@@ -1685,14 +1704,14 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
 </div>`,
 
         vor_team: "Équipe de 8",
-        vor_desc: "Voracines est un jeu de plateau tactique de 2 à 4 joueurs.\nJ’ai participé au projet en tant que game designer, avec une contribution principale sur l’écriture du livret de règles et l’organisation des playtests.",
+        vor_desc: "Voracines est un jeu de plateau tactique de 2 à 4 joueurs.\nJ’ai participé au projet en tant que game designer, avec une implication particulière sur la rédaction du livret de règles et l’organisation des playtests.",
         vor_more:
 `<div class="details-rt">
   <h5>Contexte</h5>
   <p>L’objectif de ce projet scolaire était de réaliser un jeu de plateau sur le thème de la malédiction en trois mois, au sein d’une équipe composée de six game designers et deux artistes.</p>
 
   <h5>Pitch</h5>
-  <p>Dans Voracines, les joueurs propagent les racines d’une forêt affamée afin de détruire un village et de récolter les âmes de ses habitants. Les joueurs doivent faire preuve de tactique pour voler les proies des autres joueurs, le plus meurtrier remporte la partie.</p>
+  <p>Dans Voracines, les joueurs propagent les racines d’une forêt affamée afin de détruire un village et de récolter les âmes de ses habitants. Les joueurs doivent faire preuve de tactique pour voler les proies des autres joueurs ; le plus meurtrier remporte la partie.</p>
 
   <h5>Contribution</h5>
   <p>J’ai participé au projet en tant que game designer, avec une implication particulière sur la rédaction du livret de règles et l’organisation des playtests. J’ai travaillé à la clarification des mécaniques, à la structuration des règles et à leur reformulation afin de garantir une compréhension rapide et sans ambiguïté. L’organisation et l’analyse des playtests m’ont permis d’identifier les points de friction, d’ajuster l’équilibrage et d’améliorer la lisibilité globale de l’expérience.</p>
@@ -1718,7 +1737,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
 
   <h5>Contribution</h5>
   <p>L’équipe était composée d’un chef de projet assurant à la fois le game design et la programmation, d’un compositeur, et de moi-même en tant que level designer.</p>
-  <p>I designed 40 levels, aiming to offer a wide variety of gameplay situations. Each level functions as its own mini-challenge, allowing me to deeply explore die-and-retry level design—very different from more traditional level design approaches.</p>
+  <p>J’ai conçu 40 niveaux, en cherchant à proposer une grande variété de situations de jeu. Chaque niveau fonctionne comme un mini-défi à part entière, me permettant d’explorer en profondeur le level design de die and retry, un exercice très différent des approches de level design plus classiques.</p>
 </div>`,
       },
 
@@ -1735,7 +1754,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
         metro_more:
 `<div class="details-rt">
   <h5>Context</h5>
-  <p>This school project’s constraint was to design a game playable with a single button in two months. I was looking for an elegant idea that would be technically “cost-efficient”, since I was just getting started with programming.</p>
+  <p>This school project’s constraint was to design a game playable with a single button in two months. I was looking for an elegant idea that would be technically cost-efficient, since I was just getting started with programming.</p>
 
   <h5>Pitch</h5>
   <p>METRO is a rhythm-driven runner where you control a bike racing at full speed through a tunnel filled with obstacles, with music playing a major role.</p>
@@ -1781,7 +1800,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
   <p>In Muscles &amp; Rockets, the player wields an overpowered rocket launcher. Its recoil is so intense that each shot throws the character backward. The player must use that recoil to progress through six levels mixing platforming challenges and combat.</p>
 
   <h5>Contribution</h5>
-  <p>I contributed as a game designer and as the level designer for level 1. I also handled the tutorialization, an aspect I especially like to polish in my projects.</p>
+  <p>I contributed as a game designer and as the level designer for level 1. I also handled tutorialization, an aspect I especially like to polish in my projects.</p>
   <p>I iterated a lot on gamefeel as well. Each rocket shot needed to communicate a strong sense of power. However, the player shoots continuously throughout the game: feedback had to stay impactful without hurting readability or causing discomfort. Finding that balance was a central gamefeel challenge.</p>
 
   <h5>Design</h5>
@@ -1919,13 +1938,15 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       videoWrap.className = 'expanded-video';
 
       const vid = document.createElement('video');
-      const src = project.getAttribute('data-video') || '';
-      vid.src = src;
+      const srcRaw = project.getAttribute('data-video') || '';
+      const mapped = (window.__ASSET_URLS__ && window.__ASSET_URLS__.get(srcRaw)) || srcRaw;
+
+      vid.src = mapped;
       vid.muted = true;
       vid.loop = true;
       vid.playsInline = true;
       vid.autoplay = true;
-      vid.preload = 'metadata';
+      vid.preload = 'auto';
 
       videoWrap.appendChild(vid);
 
@@ -1950,7 +1971,17 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       if (vid) {
         try { vid.pause(); } catch (_) {}
         try { vid.currentTime = 0; } catch (_) {}
-        try { vid.removeAttribute('src'); vid.load(); } catch (_) {}
+        try {
+          const srcRaw = project.getAttribute('data-video') || '';
+          const mapped = (window.__ASSET_URLS__ && window.__ASSET_URLS__.get(srcRaw)) || '';
+          if (!mapped.startsWith('blob:')) {
+            vid.removeAttribute('src');
+            vid.load();
+          } else {
+            vid.removeAttribute('src');
+            vid.load();
+          }
+        } catch (_) {}
       }
       wrap.remove();
     }
@@ -2319,6 +2350,214 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
         });
       });
     });
+  </script>
+
+  <script>
+    (function () {
+      if (window.matchMedia("(max-width: 768px)").matches) return;
+
+      const preloader = document.getElementById('preloader');
+      const preFill = document.getElementById('preFill');
+      const prePercent = document.getElementById('prePercent');
+      const preCurrent = document.getElementById('preCurrent');
+      const preCount = document.getElementById('preCount');
+      const preWarn = document.getElementById('preWarn');
+      const preActions = document.getElementById('preActions');
+      const preSkip = document.getElementById('preSkip');
+
+      window.__ASSET_URLS__ = new Map();
+      const objectURLs = [];
+
+      function toAbs(u) {
+        try { return new URL(u, window.location.href).toString(); } catch (_) { return u; }
+      }
+
+      function basename(u) {
+        try {
+          const x = new URL(u, window.location.href);
+          return x.pathname.split('/').pop() || x.pathname;
+        } catch (_) {
+          return (u || '').split('/').pop() || u;
+        }
+      }
+
+      function setUI(done, total, currentLabel) {
+        const pct = total ? Math.min(100, Math.round((done / total) * 100)) : 0;
+        preFill.style.width = pct + '%';
+        prePercent.textContent = pct + '%';
+        preCount.textContent = `${done} / ${total}`;
+        if (currentLabel) preCurrent.textContent = currentLabel;
+      }
+
+      async function fetchAsBlob(url, onProgress) {
+        const res = await fetch(url, { cache: 'force-cache' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const len = Number(res.headers.get('content-length') || 0);
+        if (!res.body || !res.body.getReader) {
+          const b = await res.blob();
+          if (onProgress) onProgress(b.size, b.size, len || b.size);
+          return b;
+        }
+
+        const reader = res.body.getReader();
+        let received = 0;
+        const chunks = [];
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(value);
+          received += value.byteLength;
+          if (onProgress) onProgress(received, len ? len : 0, len);
+        }
+        return new Blob(chunks);
+      }
+
+      async function warmImage(absUrl) {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = async () => {
+            try {
+              if (img.decode) await img.decode().catch(() => {});
+            } catch (_) {}
+            resolve(true);
+          };
+          img.onerror = () => reject(new Error('img error'));
+          img.src = absUrl;
+        });
+      }
+
+      function collectAssets() {
+        const set = new Set();
+
+        set.add(toAbs('img/logo.png'));
+        set.add(toAbs('fonts/brunoacesc-regular-webfont.woff2'));
+
+        document.querySelectorAll('img').forEach(img => {
+          const src = img.getAttribute('src');
+          if (src) set.add(toAbs(src));
+        });
+
+        document.querySelectorAll('.project[data-video]').forEach(p => {
+          const v = p.getAttribute('data-video');
+          if (v) set.add(toAbs(v));
+        });
+
+        return Array.from(set);
+      }
+
+      function isVideo(url) {
+        return /\.(mp4|webm|ogg)(\?|#|$)/i.test(url);
+      }
+
+      async function runPreload() {
+        const all = collectAssets();
+        const total = all.length;
+        let done = 0;
+        const failures = [];
+
+        setUI(0, total, 'Préparation…');
+
+        for (const abs of all) {
+          const name = basename(abs);
+          const isVid = isVideo(abs);
+
+          if (isVid) {
+            setUI(done, total, `Vidéo : ${name}`);
+            try {
+              const blob = await fetchAsBlob(abs, (received, totalBytes, declared) => {
+                const pct = total ? Math.min(100, Math.round((done / total) * 100)) : 0;
+                preFill.style.width = pct + '%';
+                prePercent.textContent = pct + '%';
+                preCount.textContent = `${done} / ${total}`;
+                const mb = (received / (1024 * 1024)).toFixed(1);
+                const suffix = declared ? ` (${mb} MB / ${(declared / (1024 * 1024)).toFixed(1)} MB)` : ` (${mb} MB)`;
+                preCurrent.textContent = `Vidéo : ${name}${suffix}`;
+              });
+
+              const rel = abs.startsWith(window.location.origin) ? abs.slice(window.location.origin.length + (abs.includes('/Portfolio/') ? 0 : 0)) : abs;
+              const rawCandidates = [
+                abs,
+                abs.replace(window.location.origin + '/', ''),
+                abs.replace(window.location.origin, ''),
+                abs.replace(window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/'), ''),
+              ];
+
+              const urlObj = URL.createObjectURL(blob);
+              objectURLs.push(urlObj);
+
+              rawCandidates.forEach(c => {
+                if (!c) return;
+                if (c.startsWith('http')) return;
+                window.__ASSET_URLS__.set(c, urlObj);
+              });
+
+              const path = new URL(abs).pathname;
+              const relPath = path.startsWith('/') ? path.slice(1) : path;
+              window.__ASSET_URLS__.set(relPath, urlObj);
+              if (path.includes('/Portfolio/')) {
+                window.__ASSET_URLS__.set(path.slice(path.indexOf('/Portfolio/') + 1), urlObj);
+                window.__ASSET_URLS__.set(path.slice(path.indexOf('/Portfolio/') + 10), urlObj);
+              }
+            } catch (e) {
+              failures.push(`${name} (vidéo)`);
+            }
+          } else {
+            setUI(done, total, `Image/asset : ${name}`);
+            try {
+              await fetchAsBlob(abs).catch(() => null);
+              await warmImage(abs).catch(() => {});
+            } catch (e) {
+              failures.push(`${name}`);
+            }
+          }
+
+          done++;
+          setUI(done, total, isVid ? `Vidéo : ${name}` : `Image/asset : ${name}`);
+          await new Promise(r => requestAnimationFrame(r));
+        }
+
+        if (failures.length) {
+          preWarn.style.display = 'block';
+          preWarn.textContent = `Certains assets n’ont pas pu être chargés : ${failures.slice(0, 6).join(', ')}${failures.length > 6 ? '…' : ''}`;
+          preActions.style.display = 'flex';
+          preSkip.style.display = 'inline-flex';
+        } else {
+          preWarn.style.display = 'none';
+          preActions.style.display = 'none';
+        }
+      }
+
+      function finish() {
+        document.body.classList.remove('is-loading');
+        preloader.classList.add('hidden');
+        setTimeout(() => {
+          if (preloader && preloader.parentNode) preloader.parentNode.removeChild(preloader);
+        }, 520);
+      }
+
+      preSkip.addEventListener('click', () => finish());
+
+      window.addEventListener('pagehide', () => {
+        try {
+          objectURLs.forEach(u => URL.revokeObjectURL(u));
+        } catch (_) {}
+      }, { once: true });
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(async () => {
+          try {
+            await runPreload();
+            finish();
+          } catch (e) {
+            preWarn.style.display = 'block';
+            preWarn.textContent = `Chargement interrompu : ${String(e && e.message ? e.message : e)}.`;
+            preActions.style.display = 'flex';
+            preSkip.style.display = 'inline-flex';
+          }
+        });
+      });
+    })();
   </script>
 </body>
 </html>
