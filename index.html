@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Portfolio – Antoine Pezzulo</title>
+  <title>Portfolio - Antoine Pezzulo</title>
   <link rel="icon" type="image/png" href="img/logo.png" />
 
   <meta property="og:title" content="Portfolio - Antoine Pezzulo" />
@@ -273,7 +273,7 @@
       left: 0;
       width: 100%;
       text-align: center;
-      padding: 1rem;
+      padding: 0.9rem 1rem 0.95rem;
       font-size: 1.2rem;
       font-weight: 500;
       color: #ffffffcc;
@@ -286,6 +286,48 @@
       transition: transform 0.2s ease, opacity 0.2s ease;
       border-radius: 0 0 var(--radius) var(--radius);
       z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      line-height: 1.1;
+    }
+
+    .hover-title {
+      font-size: 1.15rem;
+      font-weight: 650;
+      color: rgba(255,255,255,0.92);
+      letter-spacing: 0.02em;
+    }
+
+    .hover-tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.45rem 0.45rem;
+      max-width: 92%;
+    }
+
+    .hover-tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.24rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.92);
+      background: rgba(0,0,0,0.18);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.10),
+        0 10px 24px rgba(0,0,0,0.22);
+      backdrop-filter: blur(10px) saturate(140%);
+      -webkit-backdrop-filter: blur(10px) saturate(140%);
+      white-space: nowrap;
     }
 
     .project:hover .card-front h3 { transform: translateY(0); opacity: 1; }
@@ -665,8 +707,6 @@
       pointer-events: auto;
       left: 0px;
       top: 0px;
-      width: 600px;
-      height: 400px;
       transform-origin: top left;
       contain: layout paint;
       border-radius: var(--radius);
@@ -717,8 +757,9 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       z-index: 1;
+      background: #000;
     }
 
     .expanded-video video {
@@ -726,12 +767,13 @@
       top: 0; left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       display: block;
       filter: saturate(1.02) contrast(1.03);
       z-index: 2;
       opacity: 0;
       transition: none;
+      background: #000;
     }
 
     .project.expanded .card-back {
@@ -797,6 +839,15 @@
     .details-view { display: none; flex-direction: column; gap: 1rem; height: 100%; }
 
     .normal-view p[data-i18n$="_desc"] { white-space: pre-line; }
+
+    .project.expanded .normal-view p[data-i18n$="_desc"] {
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 5;
+      overflow: hidden;
+      max-height: calc(1.4em * 5);
+    }
 
     .details-header {
       display: flex;
@@ -1248,7 +1299,7 @@
       width: 120px;
       opacity: 0.8;
       margin-top: 2rem;
-    " />
+      " />
   </div>
 
   <style>
@@ -1293,7 +1344,7 @@
     </div>
 
     <div class="intro-card">
-      <p data-i18n="bio">Étudiant à ISART Digital, j’ai une appétence particulière pour la tutorialisation, l’UX et la recherche de gamefeel.
+      <p data-i18n="bio">Étudiant à ISART Digital, j’ai une appétence particulière pour la tutorialisation, l’UX et la recherche de game feel.
 J’aime travailler par itération dans le moteur, les mains dans le cambouis, afin de confronter rapidement les idées au jeu et d’affiner les intentions de design.</p>
     </div>
 
@@ -1311,7 +1362,17 @@ J’aime travailler par itération dans le moteur, les mains dans le cambouis, a
 
           <div class="card-face card-front">
             <img src="img/metro.png" alt="METRO screenshot" />
-            <h3>METRO</h3>
+            <h3>
+              <span class="hover-title">METRO</span>
+              <div class="hover-tags" aria-hidden="true">
+                <span class="hover-tag">Game Design</span>
+                <span class="hover-tag">Level Design</span>
+                <span class="hover-tag">Programmation</span>
+                <span class="hover-tag">UI/UX</span>
+                <span class="hover-tag">Visual</span>
+                <span class="hover-tag">Sound Design</span>
+              </div>
+            </h3>
           </div>
 
           <div class="card-face card-back">
@@ -1341,7 +1402,7 @@ J’aime travailler par itération dans le moteur, les mains dans le cambouis, a
                 <p data-i18n="metro_desc">
 METRO est un runner rythmé, réalisé en solo.
 La contrainte était de concevoir un jeu jouable avec un seul bouton.
-Vous incarnez une moto sans pilote lancée à vive allure dans un tunnel de néon ; l’unique bouton vous sert à orienter votre trajectoire.
+Vous incarnez une moto sans pilote lancée à vive allure dans un tunnel de néon ; l’unique bouton sert à orienter la trajectoire.
                 </p>
 
                 <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
@@ -1372,7 +1433,16 @@ Vous incarnez une moto sans pilote lancée à vive allure dans un tunnel de néo
 
           <div class="card-face card-front">
             <img src="img/mouse knight.png" alt="Mouse Knight screenshot" />
-            <h3>Mouse Knight</h3>
+            <h3>
+              <span class="hover-title">Mouse Knight</span>
+              <div class="hover-tags" aria-hidden="true">
+                <span class="hover-tag">Game Design</span>
+                <span class="hover-tag">Level Design</span>
+                <span class="hover-tag">Programmation</span>
+                <span class="hover-tag">UI/UX</span>
+                <span class="hover-tag">Visual</span>
+              </div>
+            </h3>
           </div>
 
           <div class="card-face card-back">
@@ -1433,7 +1503,12 @@ Le jeu propose d’incarner une petite souris chevalier qui rebondit sur ses enn
 
           <div class="card-face card-front">
             <img src="img/voracines.png" alt="Voracines screenshot" />
-            <h3>Voracines</h3>
+            <h3>
+              <span class="hover-title">Voracines</span>
+              <div class="hover-tags" aria-hidden="true">
+                <span class="hover-tag">Game Design</span>
+              </div>
+            </h3>
           </div>
 
           <div class="card-face card-back">
@@ -1485,7 +1560,12 @@ J’ai participé au projet en tant que game designer, avec une contribution pri
 
           <div class="card-face card-front">
             <img src="img/reflect.png" alt="Reflect screenshot" />
-            <h3>Reflect</h3>
+            <h3>
+              <span class="hover-title">Reflect</span>
+              <div class="hover-tags" aria-hidden="true">
+                <span class="hover-tag">Level Design</span>
+              </div>
+            </h3>
           </div>
 
           <div class="card-face card-back">
@@ -1504,7 +1584,7 @@ J’ai participé au projet en tant que game designer, avec une contribution pri
                 </div>
 
                 <p data-i18n="ref_desc">
-Reflect est un die and retry 2D en vue top-down, avec des mécaniques inspirées des bullet hell.
+Reflect est un die and retry 2D en vue top-down, avec des mécaniques inspirées des bullet hells.
 J’ai assuré l’intégralité du level design et apporté quelques retours et suggestions sur le game design.
 Dans ce jeu, le joueur doit exploiter les attaques de ses ennemis grâce à une mécanique centrale de parade, permettant de renvoyer leurs projectiles.
                 </p>
@@ -1537,7 +1617,13 @@ Dans ce jeu, le joueur doit exploiter les attaques de ses ennemis grâce à une 
 
           <div class="card-face card-front">
             <img src="img/pleasant chalk.png" alt="Pleasant Chalk screenshot" />
-            <h3>Pleasant Chalk</h3>
+            <h3>
+              <span class="hover-title">Pleasant Chalk</span>
+              <div class="hover-tags" aria-hidden="true">
+                <span class="hover-tag">UI/UX</span>
+                <span class="hover-tag">Visual</span>
+              </div>
+            </h3>
           </div>
 
           <div class="card-face card-back">
@@ -1589,7 +1675,13 @@ J’ai choisi de reskin le jeu pour offrir une expérience chill et lo-fi.
 
           <div class="card-face card-front">
             <img src="img/muscles & rockets.png" alt="Muscles & Rockets screenshot" />
-            <h3>Muscles & Rockets</h3>
+            <h3>
+              <span class="hover-title">Muscles & Rockets</span>
+              <div class="hover-tags" aria-hidden="true">
+                <span class="hover-tag">Game Design</span>
+                <span class="hover-tag">Level Design</span>
+              </div>
+            </h3>
           </div>
 
           <div class="card-face card-back">
@@ -1686,14 +1778,14 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       fr: {
         name: "ANTOINE PEZZULO",
         subtitle: "Junior Game Designer",
-        bio: "Étudiant à ISART Digital, j’ai une appétence particulière pour la tutorialisation, l’UX et la recherche de gamefeel.\nJ’aime travailler par itération dans le moteur, les mains dans le cambouis, afin de confronter rapidement les idées au jeu et d’affiner les intentions de design.",
+        bio: "Étudiant à ISART Digital, j’ai une appétence particulière pour la tutorialisation, l’UX et la recherche de game feel.\nJ’aime travailler par itération dans le moteur, les mains dans le cambouis, afin de confronter rapidement les idées au jeu et d’affiner les intentions de design.",
         projects: "Mes Projets",
         contact: "Contact",
         phone: "Téléphone",
         details_toggle: "Détails",
 
         metro_team: "Solo",
-        metro_desc: "METRO est un runner rythmé, réalisé en solo.\nLa contrainte était de concevoir un jeu jouable avec un seul bouton.\nVous incarnez une moto sans pilote lancée à vive allure dans un tunnel de néon ; l’unique bouton vous sert à orienter votre trajectoire.",
+        metro_desc: "METRO est un runner rythmé, réalisé en solo.\nLa contrainte était de concevoir un jeu jouable avec un seul bouton.\nVous incarnez une moto sans pilote lancée à vive allure dans un tunnel de néon ; l’unique bouton sert à orienter la trajectoire.",
         metro_more:
 `<div class="details-rt">
   <h5>Contexte</h5>
@@ -1707,7 +1799,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
 
   <h5>Problème rencontré</h5>
   <p>Lors des premiers playtests, un problème est rapidement remonté : la motion sickness. J’ai identifié que la principale source venait du motif du tunnel. À très haute vitesse, un motif trop discret fait perdre la perception du tube et donc la sensation de vitesse, tandis qu’un motif trop prononcé provoque de la motion sickness.</p>
-  <p>J’ai longuement itéré sur le visuel du tunnel, testant de nombreuses variantes, jusqu’à trouver un compromis efficace : des bandes larges et fines qui se chevauchent, suffisamment visibles pour transmettre la vitesse, sans provoquer de malaise sur la durée.</p>
+  <p>J’ai longuement itéré sur le visuel du tunnel, testant de nombreuses variantes, jusqu’à trouver un compromis efficace. J'ai opté pour des bandes larges et fines qui se chevauchent, suffisamment visibles pour transmettre la vitesse, sans provoquer de malaise sur la durée.</p>
 
   <h5>Défis UI/UX</h5>
   <p>La contrainte du one button s’appliquait également aux menus, ce qui représentait un véritable défi d’UI/UX. J’ai itéré sur la structure des menus ainsi que sur les feedbacks visuels et sonores afin de garantir une navigation claire sans friction malgré le bouton unique. C’était très amusant.</p>
@@ -1744,7 +1836,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
 
   <h5>Contribution</h5>
   <p>J’ai participé au projet en tant que game designer et level designer du niveau 1. J’ai pris en charge la tutorialisation, un aspect que j’aime particulièrement soigner dans mes projets.</p>
-  <p>J’ai également beaucoup itéré sur le gamefeel. Chaque tir de roquette devait transmettre une sensation de puissance marquée. Or, le joueur tire en continu tout au long du jeu : les feedbacks devaient donc rester percutants sans nuire à la lisibilité ni provoquer d’inconfort. Trouver cet équilibre a constitué un défi central du gamefeel.</p>
+  <p>J’ai également beaucoup itéré sur le game feel. Chaque tir de roquette devait transmettre une sensation de puissance marquée. Or, le joueur tire en continu tout au long du jeu : les feedbacks devaient donc rester percutants sans nuire à la lisibilité ni provoquer d’inconfort. Trouver cet équilibre a constitué un défi central du game feel.</p>
 
   <h5>Design</h5>
   <p>Le gameplay est entièrement centré sur le lance-roquettes, permettant de fusionner combat et plateforming autour d’une seule USP forte. L’impossibilité de sauter renforce cette identité et oblige le joueur à penser chacun de ses tirs comme un moyen de déplacement autant que d’attaque.</p>
@@ -1762,13 +1854,13 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
   <p>Ce projet scolaire s’est déroulé sur une durée de deux mois, au sein d’une équipe composée de six game designers et de deux music &amp; sound designers. L’objectif était de concevoir un brawler en 3D à la troisième personne.</p>
 
   <h5>Pitch</h5>
-  <p>Vous incarnez une petite souris chevalier dans une aventure d’environ quinze minutes. Trop petite pour manier une épée, elle n’a qu’un seul moyen de se défendre&nbsp;: sauter et rebondir violemment sur la tête de ses adversaires.</p>
+  <p>Vous incarnez une petite souris chevalier dans une aventure d’environ quinze minutes. Trop petite pour manier une épée, elle n’a qu’un seul moyen de se défendre : sauter et rebondir violemment sur la tête de ses adversaires.</p>
 
   <h5>Contribution</h5>
-  <p>L’équipe était composée de cinq game designers, dont deux ont également assuré la programmation, moi compris. J’ai programmé l’ensemble du jeu à l’exception des ennemis et du boss, avec une attention particulière portée au gamefeel.</p>
-  <p>I contributed to game design, level design, and UI/UX.</p>
-  <p>I was also responsible for the project’s visual identity: animations, juiciness, asset research and in-game integration, and post-processing.</p>
-  <p>Finally, I set up and maintained the Git repository, and designed and implemented the FTUE.</p>
+  <p>L’équipe était composée de cinq game designers, dont deux ont également assuré la programmation, moi compris. J’ai programmé l’ensemble du jeu à l’exception des ennemis et du boss, avec une attention particulière portée au game feel.</p>
+  <p>J’ai contribué au game design, au level design ainsi qu’à l’UI/UX.</p>
+  <p>J’étais également responsable de l’identité visuelle du projet : animations, juiciness, recherche et intégration d’assets, ainsi que le post-traitement.</p>
+  <p>Enfin, j’ai mis en place et maintenu le dépôt Git, tout en concevant et intégrant la FTUE.</p>
 
   <h5>Apprentissages</h5>
   <p>Ce projet a été particulièrement riche en apprentissages, aussi bien en hard skills qu’en soft skills. J’y ai découvert et approfondi le terraformage de terrain sous Unity, l’intégration de FMOD, ainsi que la gestion de caméras à la troisième personne, un aspect bien plus complexe qu’il n’y paraît lorsqu’il s’agit d’obtenir un rendu qualitatif.</p>
@@ -1777,7 +1869,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
 
   <h5>Problèmes rencontrés</h5>
   <p>Un problème majeur est apparu lors des premiers playtests. Le joueur saute très fréquemment et doit se positionner en l’air au-dessus de ses ennemis pour leur rebondir dessus. Or, lorsque le joueur sautait, la caméra le suivait vers le haut, lui faisant perdre de vue le sol, pourtant essentiel pour viser correctement en dessous de lui.</p>
-  <p>J’ai pris en charge ce problème en menant un important travail d’itération sur la caméra. J’ai conçu un système d’auto-caméra qui ne s’active que lorsque nécessaire&nbsp;: celle-ci effectue une plongée afin d’aider le joueur à viser lors des sauts. Un offset vertical a également été ajouté pour placer le point d’impact au centre de l’écran lorsque le joueur est en l’air.</p>
+  <p>J’ai pris en charge ce problème en menant un important travail d’itération sur la caméra. J’ai conçu un système d’auto-caméra qui ne s’active que lorsque nécessaire : celle-ci effectue une plongée afin d’aider le joueur à viser lors des sauts. Un offset vertical a également été ajouté pour placer le point d’impact au centre de l’écran lorsque le joueur est en l’air.</p>
 </div>`,
 
         vor_team: "Équipe de 8",
@@ -1802,7 +1894,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
 </div>`,
 
         ref_team: "Équipe de 3",
-        ref_desc: "Reflect est un die and retry 2D en vue top-down, avec des mécaniques inspirées des bullet hell.\nJ’ai assuré l’intégralité du level design et apporté quelques retours et suggestions sur le game design.\nDans ce jeu, le joueur doit exploiter les attaques de ses ennemis grâce à une mécanique centrale de parade, permettant de renvoyer leurs projectiles.",
+        ref_desc: "Reflect est un die and retry 2D en vue top-down, avec des mécaniques inspirées des bullet hells.\nJ’ai assuré l’intégralité du level design et apporté quelques retours et suggestions sur le game design.\nDans ce jeu, le joueur doit exploiter les attaques de ses ennemis grâce à une mécanique centrale de parade, permettant de renvoyer leurs projectiles.",
         ref_more:
 `<div class="details-rt">
   <h5>Contexte</h5>
@@ -1821,7 +1913,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       en: {
         name: "ANTOINE PEZZULO",
         subtitle: "Junior Game Designer",
-        bio: "Game design student at ISART Digital, with a strong interest in tutorial design, UX, and gamefeel research.\nI like working through iteration directly in the engine, hands-on, to quickly confront ideas with the game and refine design intentions.",
+        bio: "Game design student at ISART Digital, with a strong interest in tutorial design, UX, and game feel research.\nI like working through iteration directly in the engine, hands-on, to quickly confront ideas with the game and refine design intentions.",
         projects: "My Projects",
         contact: "Contact",
         phone: "Phone",
@@ -1842,7 +1934,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
 
   <h5>Problem encountered</h5>
   <p>During early playtests, one issue came up quickly: motion sickness. I identified the main source as the tunnel pattern. At very high speed, a pattern that’s too subtle makes the tube hard to perceive and weakens the sense of speed, while a pattern that’s too strong can trigger motion sickness.</p>
-  <p>I iterated for a long time on the tunnel visuals, testing many variants, until I found an effective compromise: wide and thin bands overlapping each other—visible enough to convey speed without causing discomfort over time.</p>
+  <p>I iterated for a long time on the tunnel visuals, testing many variants, until I found an effective compromise: wide and thin bands overlapping each other. They are visible enough to convey speed without causing discomfort over time.</p>
 
   <h5>UI/UX challenges</h5>
   <p>The one-button constraint also applied to menus, which created a real UI/UX challenge. I iterated on the menu structure as well as visual and audio feedback to ensure clear, frictionless navigation despite the single button. It was a lot of fun.</p>
@@ -1872,14 +1964,14 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
         mar_more:
 `<div class="details-rt">
   <h5>Context</h5>
-  <p>This school project took place over two months, within a team of six game designers, one programmer, and one music &amp; sound designer. The goal was to create a 2.5D action platformer.</p>
+  <p>This school project took place over two months, within a team of six game designers, one programmer, and one Music &amp; Sound Designer. The goal was to create a 2.5D action platformer.</p>
 
   <h5>Pitch</h5>
   <p>In Muscles &amp; Rockets, the player wields an overpowered rocket launcher. Its recoil is so intense that each shot throws the character backward. The player must use that recoil to progress through six levels mixing platforming challenges and combat.</p>
 
   <h5>Contribution</h5>
   <p>I contributed as a game designer and as the level designer for level 1. I also handled tutorialization, an aspect I especially like to polish in my projects.</p>
-  <p>I iterated a lot on gamefeel as well. Each rocket shot needed to communicate a strong sense of power. However, the player shoots continuously throughout the game: feedback had to stay impactful without hurting readability or causing discomfort. Finding that balance was a central gamefeel challenge.</p>
+  <p>I iterated a lot on game feel as well. Each rocket shot needed to communicate a strong sense of power. However, the player shoots continuously throughout the game: feedback had to stay impactful without hurting readability or causing discomfort. Finding that balance was a central game feel challenge.</p>
 
   <h5>Design</h5>
   <p>The gameplay is entirely centered around the rocket launcher, merging combat and platforming into a single strong USP. The inability to jump reinforces that identity and forces the player to think of every shot as both movement and attack.</p>
@@ -1894,13 +1986,13 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
         mouse_more:
 `<div class="details-rt">
   <h5>Context</h5>
-  <p>This school project took place over two months, within a team of six game designers and two music &amp; sound designers. The goal was to design a third-person 3D brawler.</p>
+  <p>This school project took place over two months, within a team of six game designers and two Music &amp; Sound Designers. The goal was to design a third-person 3D brawler.</p>
 
   <h5>Pitch</h5>
   <p>You play as a small mouse knight in an adventure of about fifteen minutes. Too small to wield a sword, it has only one way to defend itself: jumping and violently bouncing on enemies’ heads.</p>
 
   <h5>Contribution</h5>
-  <p>The team consisted of five game designers, two of whom also handled programming (including me). I programmed the entire game except for the enemies and the boss, with a strong focus on gamefeel.</p>
+  <p>The team consisted of five game designers, two of whom also handled programming (including me). I programmed the entire game except for the enemies and the boss, with a strong focus on game feel.</p>
   <p>I contributed to game design, level design, and UI/UX.</p>
   <p>I was also responsible for the project’s visual identity: animations, juiciness, asset research and in-game integration, and post-processing.</p>
   <p>Finally, I set up and maintained the Git repository, and designed and implemented the FTUE.</p>
@@ -1911,7 +2003,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
   <p>Most importantly, this project helped me understand that the main value of a non-commercial project lies less in the final game’s quality than in the learning it enables.</p>
 
   <h5>Problems encountered</h5>
-  <p>A major issue appeared during early playtests. The player jumps very frequently and must position themselves above enemies to bounce on them. However, when the player jumped, the camera followed upward, making them lose sight of the ground—essential for aiming correctly below.</p>
+  <p>A major issue appeared during early playtests. The player jumps very frequently and must position themselves above enemies to bounce on them. However, when the player jumped, the camera followed upward, making them lose sight of the ground. This view is essential for aiming correctly below.</p>
   <p>I addressed this by doing extensive iteration on the camera. I designed an auto-camera system that activates only when needed: it dives downward to help the player aim during jumps. A vertical offset was also added so the impact point sits at the center of the screen while the player is in the air.</p>
 </div>`,
 
@@ -1949,7 +2041,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
 
   <h5>Contribution</h5>
   <p>The team consisted of a project lead handling both game design and programming, a composer, and me as the level designer.</p>
-  <p>I designed 40 levels, aiming to offer a wide variety of gameplay situations. Each level functions as its own mini-challenge, allowing me to deeply explore die-and-retry level design—very different from more traditional level design approaches.</p>
+  <p>I designed 40 levels, aiming to offer a wide variety of gameplay situations. Each level functions as its own mini-challenge, allowing me to deeply explore die-and-retry level design. This is very different from more traditional level design approaches.</p>
 </div>`,
       }
     };
@@ -2146,17 +2238,65 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       return clone;
     }
 
-    function computeExpandedTargetRect() {
+    function measureCollapsedPanelHeight(sourceProject, widthPx) {
+      const m = buildExpandedClone(sourceProject);
+      m.style.position = 'fixed';
+      m.style.left = '-9999px';
+      m.style.top = '0px';
+      m.style.width = `${widthPx}px`;
+      m.style.height = 'auto';
+      m.style.transform = 'none';
+      m.style.pointerEvents = 'none';
+      m.style.visibility = 'hidden';
+      expandedLayer.appendChild(m);
+
+      const back = m.querySelector('.card-back');
+      if (back) {
+        back.style.position = 'relative';
+        back.style.height = 'auto';
+        back.style.bottom = 'auto';
+        back.style.left = '0';
+        back.style.right = '0';
+        back.style.transition = 'none';
+        back.style.opacity = '1';
+        back.style.pointerEvents = 'auto';
+        back.style.overflow = 'visible';
+      }
+
+      const inner = m.querySelector('.card-inner');
+      if (inner) {
+        inner.style.height = 'auto';
+      }
+
+      const h = back ? Math.ceil(back.getBoundingClientRect().height) : 280;
+      m.remove();
+      return Math.max(0, h);
+    }
+
+    function computeExpandedTargetRect(sourceProject) {
       const vw = document.documentElement.clientWidth || window.innerWidth;
       const vh = document.documentElement.clientHeight || window.innerHeight;
 
       const pad = 24;
-      const targetW = Math.min(1100, vw - (pad * 2));
-      const targetH = Math.min(920, vh - (pad * 2));
+      const maxW = Math.max(0, vw - (pad * 2));
+      const maxH = Math.max(0, vh - (pad * 2));
 
-      const targetLeft = (vw - targetW) / 2;
-      const targetTop = (vh - targetH) / 2;
-      return { left: targetLeft, top: targetTop, width: targetW, height: targetH };
+      let w = Math.min(1100, maxW);
+      let panelH = measureCollapsedPanelHeight(sourceProject, w);
+      let totalH = (w * 9) / 16 + panelH;
+
+      if (totalH > maxH) {
+        const wFit = ((maxH - panelH) * 16) / 9;
+        w = Math.max(420, Math.min(wFit, maxW));
+        panelH = measureCollapsedPanelHeight(sourceProject, w);
+        totalH = (w * 9) / 16 + panelH;
+      }
+
+      const h = Math.min(maxH, totalH);
+
+      const left = (vw - w) / 2;
+      const top = (vh - h) / 2;
+      return { left, top, width: w, height: h };
     }
 
     let activeRectAnim = null;
@@ -2283,7 +2423,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       document.documentElement.clientWidth;
 
       const srcRect = sourceProject.getBoundingClientRect();
-      const target = computeExpandedTargetRect();
+      const target = computeExpandedTargetRect(sourceProject);
 
       const clone = buildExpandedClone(sourceProject);
       expandedProject = clone;
@@ -2374,7 +2514,8 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
 
     window.addEventListener('resize', () => {
       if (!expandedProject) return;
-      const target = computeExpandedTargetRect();
+      const ref = expandedSource || expandedProject;
+      const target = computeExpandedTargetRect(ref);
       expandedProject.style.left = `${target.left}px`;
       expandedProject.style.top = `${target.top}px`;
       expandedProject.style.width = `${target.width}px`;
