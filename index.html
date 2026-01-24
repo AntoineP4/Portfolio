@@ -34,13 +34,12 @@
       --text-color: #f2f2f2;
       --accent: #6b8cff;
 
-      --sk-base: rgba(255,255,255,0.055);
-      --sk-border: rgba(255,255,255,0.085);
-      --sk-shimmer-a: rgba(255,255,255,0.00);
-      --sk-shimmer-b: rgba(255,255,255,0.16);
-      --sk-shimmer-c: rgba(255,255,255,0.00);
-      --sk-fade: 220ms;
-      --sk-delay: 130ms;
+      --sk-base: rgba(255,255,255,0.050);
+      --sk-border: rgba(255,255,255,0.080);
+      --sk-shimmer-peak: rgba(255,255,255,0.16);
+      --sk-fade: 260ms;
+      --sk-delay: 210ms;
+      --sk-minshow: 240ms;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -69,12 +68,11 @@
     @keyframes slideFadeIn { to { opacity: 1; transform: translateY(0); } }
     @keyframes slideFadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-    /* Shimmer plus smooth : bande plus fine + blur + easing + un poil plus rapide */
     @keyframes skShimmer {
-      0% { background-position: -120% 0; opacity: 0.0; }
-      20% { opacity: 0.55; }
-      65% { opacity: 0.42; }
-      100% { background-position: 120% 0; opacity: 0.0; }
+      0%   { background-position: -140% 0; opacity: 0.0; }
+      14%  { opacity: 0.55; }
+      66%  { opacity: 0.42; }
+      100% { background-position: 140% 0; opacity: 0.0; }
     }
 
     header {
@@ -290,28 +288,29 @@
     }
 
     .card-front::before {
-      background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.022));
+      background: linear-gradient(135deg, rgba(255,255,255,0.052), rgba(255,255,255,0.020));
     }
 
-    /* Shimmer plus fin / moins violent / plus smooth */
     .card-front::after {
-      background: linear-gradient(
-        110deg,
-        rgba(255,255,255,0.00) 0%,
-        rgba(255,255,255,0.00) 44%,
-        var(--sk-shimmer-b) 50%,
-        rgba(255,255,255,0.00) 56%,
-        rgba(255,255,255,0.00) 100%
-      );
-      background-size: 220% 100%;
-      background-position: -120% 0;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.012), rgba(255,255,255,0.000)),
+        linear-gradient(
+          110deg,
+          rgba(255,255,255,0.00) 0%,
+          rgba(255,255,255,0.00) 46%,
+          var(--sk-shimmer-peak) 50%,
+          rgba(255,255,255,0.00) 54%,
+          rgba(255,255,255,0.00) 100%
+        );
+      background-size: 100% 100%, 240% 100%;
+      background-position: 0 0, -140% 0;
       mix-blend-mode: soft-light;
       filter: blur(10px);
       transform: translate3d(0,0,0);
     }
 
     .card-front.skel-on::before { opacity: 1; }
-    .card-front.skel-on::after { opacity: 1; animation: skShimmer 0.96s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
+    .card-front.skel-on::after { opacity: 1; animation: skShimmer 0.98s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
 
     .card-front img {
       width: 100%;
@@ -596,8 +595,7 @@
       .action-button:hover { transform: none !important; }
       .action-button::before { transform: none !important; opacity: 0 !important; }
       .action-button::after { opacity: 0 !important; }
-
-      .card-front.skel-on::after,
+      .card-front.skel-on::after { animation: none !important; }
       .expanded-video.skel-on .video-skeleton::after { animation: none !important; }
     }
 
@@ -653,7 +651,6 @@
     .contact-item a:hover { color: #fff; text-decoration: underline; }
 
     .contact-item {
-      transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
       will-change: transform;
       position: relative;
       background: transparent;
@@ -853,37 +850,37 @@
       pointer-events: none;
       opacity: 0;
       transition: opacity var(--sk-fade) cubic-bezier(0.22, 1, 0.36, 1);
-      background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015));
       border: 1px solid rgba(255,255,255,0.06);
       backdrop-filter: blur(16px) saturate(140%);
       -webkit-backdrop-filter: blur(16px) saturate(140%);
     }
 
-    /* Shimmer video : même rendu smooth + fin */
     .expanded-video .video-skeleton::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        110deg,
-        rgba(255,255,255,0.00) 0%,
-        rgba(255,255,255,0.00) 44%,
-        var(--sk-shimmer-b) 50%,
-        rgba(255,255,255,0.00) 56%,
-        rgba(255,255,255,0.00) 100%
-      );
-      background-size: 220% 100%;
-      background-position: -120% 0;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.010), rgba(255,255,255,0.000)),
+        linear-gradient(
+          110deg,
+          rgba(255,255,255,0.00) 0%,
+          rgba(255,255,255,0.00) 46%,
+          var(--sk-shimmer-peak) 50%,
+          rgba(255,255,255,0.00) 54%,
+          rgba(255,255,255,0.00) 100%
+        );
+      background-size: 100% 100%, 240% 100%;
+      background-position: 0 0, -140% 0;
       mix-blend-mode: soft-light;
-      filter: blur(10px);
-      transform: translate3d(0,0,0);
+      filter: blur(12px);
       opacity: 0;
     }
 
     .expanded-video.skel-on .video-skeleton { opacity: 1; }
     .expanded-video.skel-on .video-skeleton::after {
       opacity: 1;
-      animation: skShimmer 0.96s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+      animation: skShimmer 0.98s cubic-bezier(0.22, 1, 0.36, 1) infinite;
     }
 
     .expanded-video.video-ready video { opacity: 1; }
@@ -2009,17 +2006,45 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       if (state.inner) state.inner.style.transform = 'rotateX(0deg) rotateY(0deg)';
     }
 
+    function getVarMs(el, name, fallback) {
+      try {
+        const v = getComputedStyle(el).getPropertyValue(name).trim();
+        if (!v) return fallback;
+        if (v.endsWith('ms')) return Math.max(0, parseFloat(v));
+        if (v.endsWith('s')) return Math.max(0, parseFloat(v) * 1000);
+        const n = parseFloat(v);
+        return Number.isFinite(n) ? Math.max(0, n) : fallback;
+      } catch (_) {
+        return fallback;
+      }
+    }
+
     function setConditionalSkeleton(holderEl, isReadyFn, onShow, onHide) {
       let shown = false;
+      let showAt = 0;
+
+      const delay = getVarMs(holderEl, '--sk-delay', 130);
+      const minShow = getVarMs(holderEl, '--sk-minshow', 220);
+
       const t = setTimeout(() => {
         if (isReadyFn()) return;
         shown = true;
+        showAt = performance.now();
         if (onShow) onShow();
-      }, 130);
+      }, delay);
+
       const clear = () => {
         clearTimeout(t);
-        if (shown && onHide) onHide();
+        if (!shown) return;
+        const elapsed = performance.now() - showAt;
+        const remain = Math.max(0, minShow - elapsed);
+        if (remain === 0) {
+          if (onHide) onHide();
+        } else {
+          setTimeout(() => { if (onHide) onHide(); }, remain);
+        }
       };
+
       return { clear };
     }
 
@@ -2099,24 +2124,30 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
         vid.loop = true;
         vid.playsInline = true;
         vid.autoplay = true;
-        vid.preload = 'metadata';
+        vid.preload = 'auto';
+
+        const readyNow = () => (vid.readyState >= 2) && (vid.videoWidth > 0 || vid.videoHeight > 0);
 
         let skCtrl = setConditionalSkeleton(
           videoWrap,
-          () => videoWrap.classList.contains('video-ready'),
+          () => videoWrap.classList.contains('video-ready') || readyNow(),
           () => videoWrap.classList.add('skel-on'),
           () => videoWrap.classList.remove('skel-on')
         );
 
         const settleReady = () => {
-          try { skCtrl.clear(); } catch (_) {}
+          skCtrl.clear();
           videoWrap.classList.add('video-ready');
           videoWrap.classList.remove('skel-on');
         };
 
-        vid.addEventListener('loadeddata', () => {
+        if (readyNow()) {
           requestAnimationFrame(() => settleReady());
-        }, { once: true });
+        } else {
+          const onReady = () => requestAnimationFrame(() => settleReady());
+          vid.addEventListener('loadeddata', onReady, { once: true });
+          vid.addEventListener('canplay', onReady, { once: true });
+        }
 
         vid.addEventListener('error', () => {
           try { skCtrl.clear(); } catch (_) {}
