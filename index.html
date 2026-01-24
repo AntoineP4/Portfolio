@@ -37,10 +37,11 @@
       --sk-base: rgba(255,255,255,0.055);
       --sk-border: rgba(255,255,255,0.085);
       --sk-shimmer-a: rgba(255,255,255,0.00);
-      --sk-shimmer-b: rgba(255,255,255,0.22);
+      --sk-shimmer-b: rgba(255,255,255,0.18);
       --sk-shimmer-c: rgba(255,255,255,0.00);
       --sk-fade: 140ms;
       --sk-delay: 130ms;
+      --sk-shimmer-dur: 900ms;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -70,10 +71,10 @@
     @keyframes slideFadeInUp { to { opacity: 1; transform: translateY(0); } }
 
     @keyframes skShimmer {
-      0% { transform: translate3d(-45%, 0, 0); opacity: 0.0; }
-      18% { opacity: 0.55; }
-      60% { opacity: 0.42; }
-      100% { transform: translate3d(45%, 0, 0); opacity: 0.0; }
+      0%   { background-position: -160% 0; opacity: 0; }
+      16%  { opacity: 0.95; }
+      60%  { opacity: 0.70; }
+      100% { background-position: 160% 0; opacity: 0; }
     }
 
     header {
@@ -293,13 +294,22 @@
     }
 
     .card-front::after {
-      background: linear-gradient(115deg, var(--sk-shimmer-a) 0%, var(--sk-shimmer-b) 35%, var(--sk-shimmer-c) 70%);
+      background:
+        linear-gradient(
+          115deg,
+          rgba(255,255,255,0.0) 0%,
+          rgba(255,255,255,0.0) 43%,
+          rgba(255,255,255,0.18) 50%,
+          rgba(255,255,255,0.0) 57%,
+          rgba(255,255,255,0.0) 100%
+        );
+      background-size: 240% 100%;
+      background-position: -160% 0;
       mix-blend-mode: soft-light;
-      transform: translate3d(-45%, 0, 0);
     }
 
     .card-front.skel-on::before { opacity: 1; }
-    .card-front.skel-on::after { opacity: 1; animation: skShimmer 1.15s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
+    .card-front.skel-on::after { opacity: 1; animation: skShimmer var(--sk-shimmer-dur) cubic-bezier(0.22, 1, 0.36, 1) infinite; }
 
     .card-front img {
       width: 100%;
@@ -849,16 +859,25 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(115deg, var(--sk-shimmer-a) 0%, var(--sk-shimmer-b) 35%, var(--sk-shimmer-c) 70%);
+      background:
+        linear-gradient(
+          115deg,
+          rgba(255,255,255,0.0) 0%,
+          rgba(255,255,255,0.0) 43%,
+          rgba(255,255,255,0.18) 50%,
+          rgba(255,255,255,0.0) 57%,
+          rgba(255,255,255,0.0) 100%
+        );
+      background-size: 240% 100%;
+      background-position: -160% 0;
       mix-blend-mode: soft-light;
-      transform: translate3d(-45%, 0, 0);
       opacity: 0;
     }
 
     .expanded-video.skel-on .video-skeleton { opacity: 1; }
     .expanded-video.skel-on .video-skeleton::after {
       opacity: 1;
-      animation: skShimmer 1.15s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+      animation: skShimmer var(--sk-shimmer-dur) cubic-bezier(0.22, 1, 0.36, 1) infinite;
     }
 
     .expanded-video.video-ready video { opacity: 1; }
