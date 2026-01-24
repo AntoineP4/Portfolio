@@ -33,6 +33,14 @@
       --shadow: 0 20px 50px rgba(0,0,0,0.4);
       --text-color: #f2f2f2;
       --accent: #6b8cff;
+
+      --sk-base: rgba(255,255,255,0.055);
+      --sk-border: rgba(255,255,255,0.085);
+      --sk-shimmer-a: rgba(255,255,255,0.00);
+      --sk-shimmer-b: rgba(255,255,255,0.22);
+      --sk-shimmer-c: rgba(255,255,255,0.00);
+      --sk-fade: 140ms;
+      --sk-delay: 130ms;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -60,6 +68,13 @@
 
     @keyframes slideFadeIn { to { opacity: 1; transform: translateY(0); } }
     @keyframes slideFadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+    @keyframes skShimmer {
+      0% { transform: translate3d(-45%, 0, 0); opacity: 0.0; }
+      18% { opacity: 0.55; }
+      60% { opacity: 0.42; }
+      100% { transform: translate3d(45%, 0, 0); opacity: 0.0; }
+    }
 
     header {
       text-align: center;
@@ -260,12 +275,45 @@
       z-index: 1;
     }
 
+    .card-front::before,
+    .card-front::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity var(--sk-fade) cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity;
+      z-index: 1;
+    }
+
+    .card-front::before {
+      background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.022));
+    }
+
+    .card-front::after {
+      background: linear-gradient(115deg, var(--sk-shimmer-a) 0%, var(--sk-shimmer-b) 35%, var(--sk-shimmer-c) 70%);
+      mix-blend-mode: soft-light;
+      transform: translate3d(-45%, 0, 0);
+    }
+
+    .card-front.skel-on::before { opacity: 1; }
+    .card-front.skel-on::after { opacity: 1; animation: skShimmer 1.15s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
+
     .card-front img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+      position: relative;
+      z-index: 2;
+      opacity: 1;
+      transition: opacity var(--sk-fade) cubic-bezier(0.22, 1, 0.36, 1);
     }
+
+    .card-front:not(.media-ready) img { opacity: 0.01; }
+    .card-front.media-ready img { opacity: 1; }
 
     .card-front h3 {
       position: absolute;
@@ -286,7 +334,7 @@
       opacity: 0;
       transition: transform 0.2s ease, opacity 0.2s ease;
       border-radius: 0 0 var(--radius) var(--radius);
-      z-index: 2;
+      z-index: 3;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -391,9 +439,6 @@
       align-self: flex-end;
     }
 
-    /* =========================
-       ACTION BUTTONS (fix halo)
-       ========================= */
     .action-button {
       position: relative;
       isolation: isolate;
@@ -447,7 +492,6 @@
         transform 820ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    /* remplace le halo bleu par un liseré fin "premium" */
     .action-button::after {
       content: "";
       position: absolute;
@@ -540,6 +584,7 @@
       .action-button:hover { transform: none !important; }
       .action-button::before { transform: none !important; opacity: 0 !important; }
       .action-button::after { opacity: 0 !important; }
+      .card-front.skel-on::after { animation: none !important; }
     }
 
     footer {
@@ -769,6 +814,8 @@
       object-fit: contain;
       z-index: 1;
       background: #000;
+      opacity: 1;
+      transition: opacity var(--sk-fade) cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .expanded-video video {
@@ -781,9 +828,41 @@
       filter: saturate(1.02) contrast(1.03);
       z-index: 2;
       opacity: 0;
-      transition: none;
+      transition: opacity var(--sk-fade) cubic-bezier(0.22, 1, 0.36, 1);
       background: #000;
     }
+
+    .expanded-video .video-skeleton {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity var(--sk-fade) cubic-bezier(0.22, 1, 0.36, 1);
+      background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+    }
+
+    .expanded-video .video-skeleton::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(115deg, var(--sk-shimmer-a) 0%, var(--sk-shimmer-b) 35%, var(--sk-shimmer-c) 70%);
+      mix-blend-mode: soft-light;
+      transform: translate3d(-45%, 0, 0);
+      opacity: 0;
+    }
+
+    .expanded-video.skel-on .video-skeleton { opacity: 1; }
+    .expanded-video.skel-on .video-skeleton::after {
+      opacity: 1;
+      animation: skShimmer 1.15s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+    }
+
+    .expanded-video.video-ready video { opacity: 1; }
+    .expanded-video.video-ready .video-poster { opacity: 0; }
 
     .project.expanded .card-back {
       opacity: 1;
@@ -1075,218 +1154,10 @@
       filter: blur(2px) brightness(0.78);
       pointer-events: none;
     }
-
-    body.is-loading #site-root { opacity: 0; pointer-events: none; }
-    body.is-loading { overflow: hidden; }
-
-    #preloader {
-      position: fixed;
-      inset: 0;
-      z-index: 100000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      background:
-        radial-gradient(1200px 700px at 15% 15%, rgba(107,140,255,0.18), rgba(0,0,0,0)),
-        radial-gradient(1000px 700px at 85% 20%, rgba(180,120,255,0.14), rgba(0,0,0,0)),
-        rgba(0,0,0,0.72);
-      backdrop-filter: blur(18px) saturate(140%);
-      -webkit-backdrop-filter: blur(18px) saturate(140%);
-      transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1);
-      opacity: 1;
-    }
-
-    #preloader.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .pre-card {
-      width: min(720px, 92vw);
-      border-radius: 1.25rem;
-      padding: 1.7rem 1.7rem 1.4rem;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.10);
-      box-shadow:
-        0 24px 70px rgba(0,0,0,0.65),
-        inset 0 1px 0 rgba(255,255,255,0.06);
-      backdrop-filter: blur(22px) saturate(160%);
-      -webkit-backdrop-filter: blur(22px) saturate(160%);
-    }
-
-    .pre-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 0.85rem;
-    }
-
-    .pre-title {
-      font-family: 'Bruno Ace SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-      font-size: 1.45rem;
-      color: rgba(255,255,255,0.94);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      line-height: 1.1;
-    }
-
-    .pre-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 0.25rem;
-      min-width: 130px;
-    }
-
-    .pre-percent {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-      font-weight: 900;
-      font-size: 1.15rem;
-      color: rgba(255,255,255,0.96);
-      line-height: 1;
-    }
-
-    .pre-sub {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-      color: rgba(255,255,255,0.80);
-      line-height: 1.55;
-      font-size: 0.98rem;
-      margin-bottom: 1.1rem;
-      max-width: 62ch;
-    }
-
-    .pre-bar {
-      height: 12px;
-      width: 100%;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.10);
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.12);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
-    }
-
-    .pre-fill {
-      height: 100%;
-      width: 0%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, rgba(107,140,255,0.85), rgba(180,120,255,0.75));
-      box-shadow: 0 8px 18px rgba(107,140,255,0.12);
-      transition: width 180ms linear;
-    }
-
-    .pre-meta {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.75rem;
-      margin-top: 0.9rem;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-      color: rgba(255,255,255,0.72);
-      font-size: 0.88rem;
-      align-items: center;
-    }
-
-    .pre-current {
-      max-width: 75%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      opacity: 0.9;
-    }
-
-    .pre-count {
-      white-space: nowrap;
-      opacity: 0.85;
-    }
-
-    .pre-warn {
-      margin-top: 0.85rem;
-      padding: 0.75rem 0.85rem;
-      border-radius: 0.9rem;
-      background: rgba(0,0,0,0.38);
-      border: 1px solid rgba(255,255,255,0.10);
-      color: rgba(255,255,255,0.78);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-      font-size: 0.88rem;
-      line-height: 1.45;
-      display: none;
-    }
-
-    .pre-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.7rem;
-      margin-top: 1.05rem;
-    }
-
-    .pre-skip {
-      background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.10));
-      color: rgba(255,255,255,0.96);
-      border: 1px solid rgba(255,255,255,0.18);
-      padding: 0.78rem 1.05rem;
-      border-radius: 1.0rem;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-      font-weight: 900;
-      cursor: pointer;
-      transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), background 260ms ease, border-color 260ms ease, box-shadow 260ms ease;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 220px;
-      box-shadow:
-        0 18px 46px rgba(0,0,0,0.42),
-        inset 0 1px 0 rgba(255,255,255,0.10);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-    }
-
-    .pre-skip:hover {
-      transform: scale(1.03);
-      background: linear-gradient(180deg, rgba(255,255,255,0.24), rgba(255,255,255,0.12));
-      border-color: rgba(107,140,255,0.42);
-      box-shadow:
-        0 22px 56px rgba(0,0,0,0.50),
-        0 0 0 6px rgba(107,140,255,0.14),
-        inset 0 1px 0 rgba(255,255,255,0.12);
-    }
-
-    .pre-skip:active { transform: scale(1.01); }
-
-    @media (prefers-reduced-motion: reduce) {
-      #preloader { transition: none !important; }
-      .pre-fill { transition: none !important; }
-      .pre-skip { transition: none !important; }
-      .project.expanded.details-hint:not(.details-open) .details-toggle { animation: none !important; }
-    }
   </style>
 </head>
 
-<body class="is-loading">
-  <div id="preloader" aria-live="polite" aria-label="Chargement">
-    <div class="pre-card">
-      <div class="pre-top">
-        <div class="pre-title">CHARGEMENT</div>
-        <div class="pre-right">
-          <div class="pre-percent" id="prePercent">0%</div>
-        </div>
-      </div>
-      <div class="pre-sub" id="preSub">Ce téléchargement permet de garantir une expérience fluide et confortable pendant la visite.</div>
-      <div class="pre-bar"><div class="pre-fill" id="preFill"></div></div>
-      <div class="pre-meta">
-        <div class="pre-current" id="preCurrent">Initialisation…</div>
-        <div class="pre-count" id="preCount">0 / 0</div>
-      </div>
-      <div class="pre-warn" id="preWarn"></div>
-      <div class="pre-actions" id="preActions">
-        <button class="pre-skip" id="preSkip" type="button">Accéder au site</button>
-      </div>
-    </div>
-  </div>
-
+<body>
   <div id="mobile-blocker" style="
     position: fixed;
     top: 0; left: 0;
@@ -1916,7 +1787,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
   <p>Le jeu a été entièrement développé sur le moteur Godot Engine, ce qui m’a demandé de m’adapter à un nouvel environnement de travail pour le level design.</p>
 
   <h5>Pitch</h5>
-  <p>Vous incarnez un cube affrontant des méchants triangles qui vous attaquent à distance. Le joueur ne dispose d’aucune attaque directe, mais peut renvoyer les projectiles ennemis grâce à une mécanique de parade.</p>
+  <p>Vous incarnez un cube affrontant des méchants triangles qui vous attaquent à distance. Le joueur ne dispose d’aucune attaque directe, mais peut renvoyer les projectiles ennemis grâce à une mécanique centrale de parade.</p>
 
   <h5>Contribution</h5>
   <p>L’équipe était composée d’un chef de projet assurant à la fois le game design et la programmation, d’un compositeur, et de moi-même en tant que level designer.</p>
@@ -2113,12 +1984,79 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       if (state.inner) state.inner.style.transform = 'rotateX(0deg) rotateY(0deg)';
     }
 
+    function setConditionalSkeleton(holderEl, isReadyFn, onShow, onHide) {
+      let shown = false;
+      const t = setTimeout(() => {
+        if (isReadyFn()) return;
+        shown = true;
+        if (onShow) onShow();
+      }, 130);
+      const clear = () => {
+        clearTimeout(t);
+        if (shown && onHide) onHide();
+      };
+      return { clear };
+    }
+
+    function attachImageSkeleton(img, holderEl) {
+      if (!img || !holderEl) return;
+      const readyNow = () => img.complete && img.naturalWidth > 0;
+
+      if (readyNow()) {
+        holderEl.classList.add('media-ready');
+        holderEl.classList.remove('skel-on');
+        return;
+      }
+
+      holderEl.classList.remove('media-ready');
+
+      const ctrl = setConditionalSkeleton(
+        holderEl,
+        readyNow,
+        () => holderEl.classList.add('skel-on'),
+        () => holderEl.classList.remove('skel-on')
+      );
+
+      const onLoad = async () => {
+        ctrl.clear();
+        try { if (img.decode) await img.decode().catch(() => {}); } catch (_) {}
+        holderEl.classList.add('media-ready');
+        holderEl.classList.remove('skel-on');
+      };
+
+      const onErr = () => {
+        ctrl.clear();
+        holderEl.classList.add('media-ready');
+        holderEl.classList.remove('skel-on');
+      };
+
+      img.addEventListener('load', onLoad, { once: true });
+      img.addEventListener('error', onErr, { once: true });
+    }
+
+    function initThumbSkeletons() {
+      document.querySelectorAll('.project .card-front').forEach(front => {
+        const img = front.querySelector('img');
+        attachImageSkeleton(img, front);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => initThumbSkeletons(), { once: true });
+    } else {
+      initThumbSkeletons();
+    }
+
     function ensureExpandedVideo(project) {
       const existing = project.querySelector('.expanded-video');
       if (existing) return existing;
 
       const videoWrap = document.createElement('div');
       videoWrap.className = 'expanded-video';
+
+      const sk = document.createElement('div');
+      sk.className = 'video-skeleton';
+      videoWrap.appendChild(sk);
 
       const posterSrc = project.getAttribute('data-first-frame') || '';
       if (posterSrc) {
@@ -2136,12 +2074,28 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
         vid.loop = true;
         vid.playsInline = true;
         vid.autoplay = true;
-        vid.preload = 'auto';
+        vid.preload = 'metadata';
 
-        vid.addEventListener('playing', () => {
-          requestAnimationFrame(() => {
-            vid.style.opacity = '1';
-          });
+        let skCtrl = setConditionalSkeleton(
+          videoWrap,
+          () => videoWrap.classList.contains('video-ready'),
+          () => videoWrap.classList.add('skel-on'),
+          () => videoWrap.classList.remove('skel-on')
+        );
+
+        const settleReady = () => {
+          try { skCtrl.clear(); } catch (_) {}
+          videoWrap.classList.add('video-ready');
+          videoWrap.classList.remove('skel-on');
+        };
+
+        vid.addEventListener('loadeddata', () => {
+          requestAnimationFrame(() => settleReady());
+        }, { once: true });
+
+        vid.addEventListener('error', () => {
+          try { skCtrl.clear(); } catch (_) {}
+          videoWrap.classList.remove('skel-on');
         }, { once: true });
 
         videoWrap.appendChild(vid);
@@ -2602,150 +2556,6 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
         });
       });
     });
-  </script>
-
-  <script>
-    (function () {
-      if (window.matchMedia("(max-width: 768px)").matches) return;
-
-      const preloader = document.getElementById('preloader');
-      const preFill = document.getElementById('preFill');
-      const prePercent = document.getElementById('prePercent');
-      const preCurrent = document.getElementById('preCurrent');
-      const preCount = document.getElementById('preCount');
-      const preWarn = document.getElementById('preWarn');
-      const preSkip = document.getElementById('preSkip');
-
-      const abortCtrl = new AbortController();
-      let skipped = false;
-
-      function toAbs(u) {
-        try { return new URL(u, window.location.href).toString(); } catch (_) { return u; }
-      }
-
-      function basename(u) {
-        try {
-          const x = new URL(u, window.location.href);
-          return x.pathname.split('/').pop() || x.pathname;
-        } catch (_) {
-          return (u || '').split('/').pop() || u;
-        }
-      }
-
-      function setUI(done, total, currentLabel) {
-        const pct = total ? Math.min(100, Math.round((done / total) * 100)) : 0;
-        preFill.style.width = pct + '%';
-        prePercent.textContent = pct + '%';
-        preCount.textContent = `${done} / ${total}`;
-        if (currentLabel) preCurrent.textContent = currentLabel;
-      }
-
-      async function fetchAsBlob(url) {
-        const res = await fetch(url, { cache: 'force-cache', signal: abortCtrl.signal });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.blob();
-      }
-
-      async function warmImage(absUrl) {
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.onload = async () => {
-            try {
-              if (img.decode) await img.decode().catch(() => {});
-            } catch (_) {}
-            resolve(true);
-          };
-          img.onerror = () => reject(new Error('img error'));
-          img.src = absUrl;
-        });
-      }
-
-      function collectAssets() {
-        const set = new Set();
-
-        set.add(toAbs('img/logo.png'));
-        set.add(toAbs('fonts/brunoacesc-regular-webfont.woff2'));
-
-        document.querySelectorAll('img').forEach(img => {
-          const src = img.getAttribute('src');
-          if (src) set.add(toAbs(src));
-        });
-
-        document.querySelectorAll('.project').forEach(p => {
-          const frame = p.getAttribute('data-first-frame');
-          if (frame) set.add(toAbs(frame));
-        });
-
-        return Array.from(set);
-      }
-
-      async function runPreload() {
-        const all = collectAssets();
-        const total = all.length;
-        let done = 0;
-        const failures = [];
-
-        setUI(0, total, 'Préparation…');
-
-        for (const abs of all) {
-          if (skipped) break;
-
-          const name = basename(abs);
-          setUI(done, total, `Chargement : ${name}`);
-
-          try {
-            await fetchAsBlob(abs).catch(() => null);
-            await warmImage(abs).catch(() => {});
-          } catch (e) {
-            if (skipped) break;
-            failures.push(`${name}`);
-          }
-
-          done++;
-          setUI(done, total, `Chargement : ${name}`);
-          await new Promise(r => requestAnimationFrame(r));
-        }
-
-        if (skipped) return;
-
-        if (failures.length) {
-          preWarn.style.display = 'block';
-          preWarn.textContent = `Certains assets n’ont pas pu être chargés : ${failures.slice(0, 6).join(', ')}${failures.length > 6 ? '…' : ''}`;
-        } else {
-          preWarn.style.display = 'none';
-        }
-      }
-
-      function finish() {
-        document.body.classList.remove('is-loading');
-        preloader.classList.add('hidden');
-        setTimeout(() => {
-          if (preloader && preloader.parentNode) preloader.parentNode.removeChild(preloader);
-        }, 520);
-      }
-
-      function skipNow() {
-        if (skipped) return;
-        skipped = true;
-        try { abortCtrl.abort(); } catch (_) {}
-        finish();
-      }
-
-      preSkip.addEventListener('click', () => skipNow());
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(async () => {
-          try {
-            await runPreload();
-            if (!skipped) finish();
-          } catch (e) {
-            if (skipped) return;
-            preWarn.style.display = 'block';
-            preWarn.textContent = `Chargement interrompu.`;
-          }
-        });
-      });
-    })();
   </script>
 </body>
 </html>
