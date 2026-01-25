@@ -34,12 +34,13 @@
       --text-color: #f2f2f2;
       --accent: #6b8cff;
 
-      --sk-base: rgba(255,255,255,0.050);
-      --sk-border: rgba(255,255,255,0.080);
-      --sk-shimmer-peak: rgba(255,255,255,0.16);
-      --sk-fade: 260ms;
-      --sk-delay: 210ms;
-      --sk-minshow: 240ms;
+      --sk-base: rgba(255,255,255,0.045);
+      --sk-border: rgba(255,255,255,0.075);
+      --sk-shimmer-peak: rgba(255,255,255,0.18);
+
+      --sk-fade: 420ms;
+      --sk-delay: 160ms;
+      --sk-minshow: 120ms;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -70,8 +71,8 @@
 
     @keyframes skShimmer {
       0%   { background-position: -140% 0; opacity: 0.0; }
-      14%  { opacity: 0.55; }
-      66%  { opacity: 0.42; }
+      16%  { opacity: 0.52; }
+      64%  { opacity: 0.40; }
       100% { background-position: 140% 0; opacity: 0.0; }
     }
 
@@ -288,29 +289,35 @@
     }
 
     .card-front::before {
-      background: linear-gradient(135deg, rgba(255,255,255,0.052), rgba(255,255,255,0.020));
+      background:
+        radial-gradient(90% 85% at 18% 18%, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.018) 62%, rgba(255,255,255,0.0) 100%),
+        linear-gradient(135deg, rgba(255,255,255,0.052), rgba(255,255,255,0.016));
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      border: 1px solid rgba(255,255,255,0.06);
     }
 
     .card-front::after {
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.012), rgba(255,255,255,0.000)),
+        linear-gradient(135deg, rgba(255,255,255,0.010), rgba(255,255,255,0.000)),
         linear-gradient(
           110deg,
           rgba(255,255,255,0.00) 0%,
-          rgba(255,255,255,0.00) 46%,
+          rgba(255,255,255,0.00) 48%,
           var(--sk-shimmer-peak) 50%,
-          rgba(255,255,255,0.00) 54%,
+          rgba(255,255,255,0.00) 52%,
           rgba(255,255,255,0.00) 100%
         );
-      background-size: 100% 100%, 240% 100%;
+      background-size: 100% 100%, 280% 100%;
       background-position: 0 0, -140% 0;
       mix-blend-mode: soft-light;
-      filter: blur(10px);
+      filter: blur(9px);
       transform: translate3d(0,0,0);
+      will-change: opacity, background-position;
     }
 
     .card-front.skel-on::before { opacity: 1; }
-    .card-front.skel-on::after { opacity: 1; animation: skShimmer 0.98s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
+    .card-front.skel-on::after { opacity: 1; animation: skShimmer 1.05s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
 
     .card-front img {
       width: 100%;
@@ -321,9 +328,11 @@
       z-index: 2;
       opacity: 1;
       transition: opacity var(--sk-fade) cubic-bezier(0.22, 1, 0.36, 1);
+      backface-visibility: hidden;
+      transform: translateZ(0);
     }
 
-    .card-front:not(.media-ready) img { opacity: 0.01; }
+    .card-front:not(.media-ready) img { opacity: 0.001; }
     .card-front.media-ready img { opacity: 1; }
 
     .card-front h3 {
@@ -815,7 +824,8 @@
       z-index: 3;
       background: #000;
       opacity: 1;
-      transition: opacity 160ms cubic-bezier(0.22, 1, 0.36, 1);
+      transition: opacity 180ms cubic-bezier(0.22, 1, 0.36, 1);
+      isolation: isolate;
     }
 
     .expanded-video .video-poster {
@@ -826,7 +836,10 @@
       z-index: 1;
       background: #000;
       opacity: 1;
-      transition: opacity var(--sk-fade) cubic-bezier(0.22, 1, 0.36, 1);
+      transform: translateZ(0);
+      filter: saturate(1.02) contrast(1.02);
+      transition: opacity 520ms cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity;
     }
 
     .expanded-video video {
@@ -839,8 +852,10 @@
       filter: saturate(1.02) contrast(1.03);
       z-index: 2;
       opacity: 0;
-      transition: opacity var(--sk-fade) cubic-bezier(0.22, 1, 0.36, 1);
+      transition: opacity 520ms cubic-bezier(0.22, 1, 0.36, 1);
       background: #000;
+      will-change: opacity;
+      transform: translateZ(0);
     }
 
     .expanded-video .video-skeleton {
@@ -850,10 +865,12 @@
       pointer-events: none;
       opacity: 0;
       transition: opacity var(--sk-fade) cubic-bezier(0.22, 1, 0.36, 1);
-      background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015));
+      background:
+        radial-gradient(90% 85% at 18% 18%, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.018) 62%, rgba(255,255,255,0.0) 100%),
+        linear-gradient(135deg, rgba(255,255,255,0.052), rgba(255,255,255,0.014));
       border: 1px solid rgba(255,255,255,0.06);
-      backdrop-filter: blur(16px) saturate(140%);
-      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
     }
 
     .expanded-video .video-skeleton::after {
@@ -865,26 +882,27 @@
         linear-gradient(
           110deg,
           rgba(255,255,255,0.00) 0%,
-          rgba(255,255,255,0.00) 46%,
+          rgba(255,255,255,0.00) 48%,
           var(--sk-shimmer-peak) 50%,
-          rgba(255,255,255,0.00) 54%,
+          rgba(255,255,255,0.00) 52%,
           rgba(255,255,255,0.00) 100%
         );
-      background-size: 100% 100%, 240% 100%;
+      background-size: 100% 100%, 280% 100%;
       background-position: 0 0, -140% 0;
       mix-blend-mode: soft-light;
-      filter: blur(12px);
+      filter: blur(10px);
       opacity: 0;
+      will-change: opacity, background-position;
     }
 
     .expanded-video.skel-on .video-skeleton { opacity: 1; }
     .expanded-video.skel-on .video-skeleton::after {
       opacity: 1;
-      animation: skShimmer 0.98s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+      animation: skShimmer 1.05s cubic-bezier(0.22, 1, 0.36, 1) infinite;
     }
 
     .expanded-video.video-ready video { opacity: 1; }
-    .expanded-video.video-ready .video-poster { opacity: 0; }
+    .expanded-video.poster-off .video-poster { opacity: 0; }
 
     .project.expanded .card-back {
       opacity: 1;
@@ -2023,8 +2041,9 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       let shown = false;
       let showAt = 0;
 
-      const delay = getVarMs(holderEl, '--sk-delay', 130);
-      const minShow = getVarMs(holderEl, '--sk-minshow', 220);
+      const delay = getVarMs(holderEl, '--sk-delay', 140);
+      const minShow = getVarMs(holderEl, '--sk-minshow', 120);
+      const earlyCancelThreshold = 90;
 
       const t = setTimeout(() => {
         if (isReadyFn()) return;
@@ -2037,6 +2056,10 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
         clearTimeout(t);
         if (!shown) return;
         const elapsed = performance.now() - showAt;
+        if (elapsed < earlyCancelThreshold) {
+          if (onHide) onHide();
+          return;
+        }
         const remain = Math.max(0, minShow - elapsed);
         if (remain === 0) {
           if (onHide) onHide();
@@ -2050,6 +2073,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
 
     function attachImageSkeleton(img, holderEl) {
       if (!img || !holderEl) return;
+
       const readyNow = () => img.complete && img.naturalWidth > 0;
 
       if (readyNow()) {
@@ -2070,14 +2094,18 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       const onLoad = async () => {
         ctrl.clear();
         try { if (img.decode) await img.decode().catch(() => {}); } catch (_) {}
-        holderEl.classList.add('media-ready');
-        holderEl.classList.remove('skel-on');
+        requestAnimationFrame(() => {
+          holderEl.classList.add('media-ready');
+          holderEl.classList.remove('skel-on');
+        });
       };
 
       const onErr = () => {
         ctrl.clear();
-        holderEl.classList.add('media-ready');
-        holderEl.classList.remove('skel-on');
+        requestAnimationFrame(() => {
+          holderEl.classList.add('media-ready');
+          holderEl.classList.remove('skel-on');
+        });
       };
 
       img.addEventListener('load', onLoad, { once: true });
@@ -2139,6 +2167,10 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
           skCtrl.clear();
           videoWrap.classList.add('video-ready');
           videoWrap.classList.remove('skel-on');
+          setTimeout(() => {
+            if (!videoWrap.isConnected) return;
+            videoWrap.classList.add('poster-off');
+          }, 160);
         };
 
         if (readyNow()) {
