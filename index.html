@@ -2252,6 +2252,9 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       let vid = null;
       let instantReady = false;
 
+      let failsafeTimer = null;
+      let didSettle = false;
+
       if (srcRaw) {
         vid = videoElCache.get(srcRaw) || null;
 
@@ -2320,6 +2323,10 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
           const loadingShownAt = performance.now();
 
           const settleReady = () => {
+            if (didSettle) return;
+            didSettle = true;
+            if (failsafeTimer) { clearTimeout(failsafeTimer); failsafeTimer = null; }
+
             videoWrap.classList.add('video-ready');
 
             const minShow = getVarMs(videoWrap, '--vl-minshow', 220);
@@ -2339,9 +2346,20 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
           const onReady = () => requestAnimationFrame(() => settleReady());
           vid.addEventListener('loadeddata', onReady, { once: true });
           vid.addEventListener('canplay', onReady, { once: true });
+
+          // Sécurité anti "loading infini" (ne touche pas à la logique existante)
+          // Si aucun event "ready" / "error" ne se déclenche (stall réseau / event déjà passé / bug navigateur),
+          // on retire juste l'overlay de loading après un délai, sans forcer le state.
+          const FAILSAFE_MS = 12000;
+          failsafeTimer = setTimeout(() => {
+            if (!videoWrap.isConnected) return;
+            if (videoWrap.classList.contains('video-ready')) return;
+            videoWrap.classList.remove('loading-visible');
+          }, FAILSAFE_MS);
         }
 
         vid.addEventListener('error', () => {
+          if (failsafeTimer) { clearTimeout(failsafeTimer); failsafeTimer = null; }
           videoWrap.classList.remove('loading-visible');
         }, { once: true });
 
