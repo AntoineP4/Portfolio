@@ -830,6 +830,13 @@
       transition: opacity 140ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
+    /* IMPORTANT: en mode "instant" (skip loading), on force la disparition immédiate du front,
+       pour éviter qu'il serve de "photo intro" pendant 1-2 frames. */
+    .project.expanded.instant-open .card-front {
+      opacity: 0 !important;
+      transition: none !important;
+    }
+
     .expanded-video {
       position: absolute;
       top: 0;
@@ -2248,108 +2255,135 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       loading.innerHTML = `<div class="loading-dots" aria-hidden="true"><span></span><span></span><span></span></div>`;
       videoWrap.appendChild(loading);
 
-      const srcRaw = project.getAttribute('data-video') || '';
-      let vid = null;
-      let instantReady = false;
-
-      if (srcRaw) {
-        vid = videoElCache.get(srcRaw) || null;
-
-        if (!vid) {
-          vid = document.createElement('video');
-          vid.src = srcRaw;
-          videoElCache.set(srcRaw, vid);
-        } else {
-          try {
-            if (vid.parentElement) vid.parentElement.removeChild(vid);
-          } catch (_) {}
-        }
-
-        vid.muted = true;
-        vid.loop = true;
-        vid.playsInline = true;
-        vid.autoplay = true;
-        vid.preload = 'auto';
-
-        const readyNow = () => (vid.readyState >= 2) && (vid.videoWidth > 0 || vid.videoHeight > 0);
-        instantReady = readyNow();
-
-        if (instantReady) {
-          videoWrap.classList.add('instant', 'video-ready', 'poster-off');
-          videoWrap.classList.remove('loading-visible');
-        } else {
-          const posterSrc = project.getAttribute('data-first-frame') || '';
-          if (posterSrc) {
-            preloadPoster(posterSrc);
-            const posterImg = document.createElement('img');
-            posterImg.src = posterSrc;
-            posterImg.className = 'video-poster';
-            posterImg.decoding = 'async';
-            posterImg.loading = 'eager';
-            videoWrap.appendChild(posterImg);
-
-            const cached = posterCache.get(posterSrc);
-            if (cached && cached.complete && cached.naturalWidth > 0) {
-              requestAnimationFrame(() => {
-                if (!videoWrap.isConnected) return;
-                videoWrap.classList.add('poster-in');
-              });
-            } else {
-              const showPoster = async () => {
-                try { if (posterImg.decode) await posterImg.decode().catch(() => {}); } catch (_) {}
-                requestAnimationFrame(() => {
-                  if (!videoWrap.isConnected) return;
-                  videoWrap.classList.add('poster-in');
-                });
-              };
-
-              if (posterImg.complete && posterImg.naturalWidth > 0) showPoster();
-              else {
-                posterImg.addEventListener('load', showPoster, { once: true });
-                posterImg.addEventListener('error', () => {
-                  requestAnimationFrame(() => {
-                    if (!videoWrap.isConnected) return;
-                    videoWrap.classList.add('poster-in');
-                  });
-                }, { once: true });
-              }
-            }
-          }
-
-          videoWrap.classList.add('loading-visible');
-          const loadingShownAt = performance.now();
-
-          const settleReady = () => {
-            videoWrap.classList.add('video-ready');
-
-            const minShow = getVarMs(videoWrap, '--vl-minshow', 220);
-            const elapsed = performance.now() - loadingShownAt;
-            const remain = Math.max(0, minShow - elapsed);
-
-            setTimeout(() => {
-              if (!videoWrap.isConnected) return;
-              videoWrap.classList.remove('loading-visible');
-              setTimeout(() => {
-                if (!videoWrap.isConnected) return;
-                videoWrap.classList.add('poster-off');
-              }, 140);
-            }, remain);
-          };
-
-          const onReady = () => requestAnimationFrame(() => settleReady());
-          vid.addEventListener('loadeddata', onReady, { once: true });
-          vid.addEventListener('canplay', onReady, { once: true });
-        }
-
-        vid.addEventListener('error', () => {
-          videoWrap.classList.remove('loading-visible');
-        }, { once: true });
-
-        videoWrap.appendChild(vid);
-      }
-
       const inner = project.querySelector('.card-inner');
       inner.insertBefore(videoWrap, inner.firstChild);
+
+      const srcRaw = project.getAttribute('data-video') || '';
+      if (!srcRaw) return videoWrap;
+
+      let vid = videoElCache.get(srcRaw) || null;
+
+      if (!vid) {
+        vid = document.createElement('video');
+        vid.src = srcRaw;
+        videoElCache.set(srcRaw, vid);
+      } else {
+        try { if (vid.parentElement) vid.parentElement.removeChild(vid); } catch (_) {}
+      }
+
+      vid.muted = true;
+      vid.loop = true;
+      vid.playsInline = true;
+      vid.autoplay = true;
+      vid.preload = 'auto';
+
+      videoWrap.appendChild(vid);
+
+      const readyNow = () => (vid.readyState >= 2) && (vid.videoWidth > 0 || vid.videoHeight > 0);
+
+      const markInstant = () => {
+        videoWrap.classList.add('instant', 'video-ready', 'poster-off');
+        videoWrap.classList.remove('loading-visible');
+        project.classList.add('instant-open');
+      };
+
+      if (readyNow()) {
+        markInstant();
+        return videoWrap;
+      }
+
+      let settled = false;
+      let loadingShown = false;
+      let loadingShownAt = 0;
+      let posterEl = null;
+      let posterSrc = '';
+      let showTimer = null;
+
+      const delay = getVarMs(videoWrap, '--vl-delay', 140);
+      const minShow = getVarMs(videoWrap, '--vl-minshow', 220);
+
+      const ensurePoster = () => {
+        if (posterEl) return;
+        posterSrc = project.getAttribute('data-first-frame') || '';
+        if (!posterSrc) return;
+
+        preloadPoster(posterSrc);
+
+        posterEl = document.createElement('img');
+        posterEl.src = posterSrc;
+        posterEl.className = 'video-poster';
+        posterEl.decoding = 'async';
+        posterEl.loading = 'eager';
+        videoWrap.insertBefore(posterEl, vid);
+
+        const cached = posterCache.get(posterSrc);
+        const reveal = () => requestAnimationFrame(() => {
+          if (!videoWrap.isConnected) return;
+          videoWrap.classList.add('poster-in');
+        });
+
+        if (cached && cached.complete && cached.naturalWidth > 0) {
+          reveal();
+        } else {
+          const showPoster = async () => {
+            try { if (posterEl.decode) await posterEl.decode().catch(() => {}); } catch (_) {}
+            reveal();
+          };
+          if (posterEl.complete && posterEl.naturalWidth > 0) showPoster();
+          else {
+            posterEl.addEventListener('load', showPoster, { once: true });
+            posterEl.addEventListener('error', reveal, { once: true });
+          }
+        }
+      };
+
+      showTimer = setTimeout(() => {
+        if (settled) return;
+        loadingShown = true;
+        loadingShownAt = performance.now();
+        ensurePoster();
+        videoWrap.classList.add('loading-visible');
+      }, delay);
+
+      const settleNormal = () => {
+        videoWrap.classList.add('video-ready');
+
+        const elapsed = performance.now() - loadingShownAt;
+        const remain = Math.max(0, minShow - elapsed);
+
+        setTimeout(() => {
+          if (!videoWrap.isConnected) return;
+          videoWrap.classList.remove('loading-visible');
+          setTimeout(() => {
+            if (!videoWrap.isConnected) return;
+            videoWrap.classList.add('poster-off');
+          }, 140);
+        }, remain);
+      };
+
+      const settleFast = () => {
+        markInstant();
+      };
+
+      const onReady = () => {
+        if (settled) return;
+        settled = true;
+        if (showTimer) clearTimeout(showTimer);
+
+        requestAnimationFrame(() => {
+          if (!videoWrap.isConnected) return;
+          if (!loadingShown) settleFast();
+          else settleNormal();
+        });
+      };
+
+      vid.addEventListener('loadeddata', onReady, { once: true });
+      vid.addEventListener('canplay', onReady, { once: true });
+
+      vid.addEventListener('error', () => {
+        if (showTimer) clearTimeout(showTimer);
+        videoWrap.classList.remove('loading-visible');
+      }, { once: true });
 
       return videoWrap;
     }
@@ -2376,6 +2410,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       }
 
       wrap.remove();
+      project.classList.remove('instant-open');
     }
 
     function getVideoHeightPx(project) {
