@@ -17,6 +17,13 @@
   <meta name="twitter:description" content="Personal game dev portfolio." />
   <meta name="twitter:image" content="https://antoinep4.github.io/Portfolio/img/preview.png?v=2" />
 
+  <link rel="preload" as="image" href="img/metro_frame.png" fetchpriority="high" />
+  <link rel="preload" as="image" href="img/mouse_knight_frame.png" fetchpriority="high" />
+  <link rel="preload" as="image" href="img/voracines_frame.png" fetchpriority="high" />
+  <link rel="preload" as="image" href="img/reflect_frame.png" fetchpriority="high" />
+  <link rel="preload" as="image" href="img/pleasant_chalk_frame.png" fetchpriority="high" />
+  <link rel="preload" as="image" href="img/muscles_rockets_frame.png" fetchpriority="high" />
+
   <style>
     @font-face {
       font-family: 'Bruno Ace SC';
@@ -41,6 +48,10 @@
       --sk-fade: 420ms;
       --sk-delay: 160ms;
       --sk-minshow: 120ms;
+
+      --vl-fade: 420ms;
+      --vl-delay: 140ms;
+      --vl-minshow: 220ms;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -74,6 +85,13 @@
       16%  { opacity: 0.52; }
       64%  { opacity: 0.40; }
       100% { background-position: 140% 0; opacity: 0.0; }
+    }
+
+    @keyframes dotsPulse {
+      0%   { opacity: 0.38; transform: translate3d(0, 0, 0) scale(0.98); }
+      35%  { opacity: 0.90; transform: translate3d(0, -2px, 0) scale(1.02); }
+      70%  { opacity: 0.52; transform: translate3d(0, 0, 0) scale(1.0); }
+      100% { opacity: 0.38; transform: translate3d(0, 0, 0) scale(0.98); }
     }
 
     header {
@@ -605,7 +623,7 @@
       .action-button::before { transform: none !important; opacity: 0 !important; }
       .action-button::after { opacity: 0 !important; }
       .card-front.skel-on::after { animation: none !important; }
-      .expanded-video.loading-on .video-loading .dot { animation: none !important; }
+      .expanded-video.loading-visible .loading-dots span { animation: none !important; opacity: 0.7 !important; transform: none !important; }
     }
 
     footer {
@@ -826,6 +844,8 @@
       opacity: 1;
       transition: opacity 180ms cubic-bezier(0.22, 1, 0.36, 1);
       isolation: isolate;
+      --vl-delay: var(--vl-delay);
+      --vl-minshow: var(--vl-minshow);
     }
 
     .expanded-video .video-poster {
@@ -837,11 +857,12 @@
       background: #000;
       opacity: 0;
       transform: translateZ(0);
-      transition: opacity 520ms cubic-bezier(0.22, 1, 0.36, 1);
+      transition: opacity 560ms cubic-bezier(0.22, 1, 0.36, 1);
       will-change: opacity;
+      filter: none;
     }
 
-    .expanded-video.poster-ready .video-poster { opacity: 1; }
+    .expanded-video.poster-in .video-poster { opacity: 1; }
     .expanded-video.poster-off .video-poster { opacity: 0; }
 
     .expanded-video video {
@@ -853,68 +874,57 @@
       display: block;
       z-index: 2;
       opacity: 0;
-      transition: opacity 520ms cubic-bezier(0.22, 1, 0.36, 1);
+      transition: opacity 560ms cubic-bezier(0.22, 1, 0.36, 1);
       background: #000;
       will-change: opacity;
       transform: translateZ(0);
+      filter: none;
     }
 
     .expanded-video.video-ready video { opacity: 1; }
 
-    @keyframes dotPulse {
-      0%   { transform: translateZ(0) scale(0.92); opacity: 0.34; }
-      28%  { transform: translateZ(0) scale(1.12); opacity: 0.92; }
-      55%  { transform: translateZ(0) scale(0.98); opacity: 0.48; }
-      100% { transform: translateZ(0) scale(0.92); opacity: 0.34; }
-    }
-
     .expanded-video .video-loading {
       position: absolute;
       inset: 0;
-      z-index: 4;
+      z-index: 3;
       pointer-events: none;
       opacity: 0;
-      transition: opacity var(--sk-fade) cubic-bezier(0.22, 1, 0.36, 1);
       display: flex;
       align-items: center;
       justify-content: center;
+      background: rgba(12,12,14,0.28);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      transition: opacity var(--vl-fade) cubic-bezier(0.22, 1, 0.36, 1);
+      transform: translateZ(0);
+      will-change: opacity;
     }
 
-    .expanded-video .video-loading::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(70% 60% at 20% 20%, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.018) 62%, rgba(255,255,255,0.0) 100%),
-        linear-gradient(135deg, rgba(255,255,255,0.040), rgba(255,255,255,0.010));
-      backdrop-filter: blur(22px) saturate(140%) brightness(0.98);
-      -webkit-backdrop-filter: blur(22px) saturate(140%) brightness(0.98);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
+    .expanded-video.loading-visible .video-loading { opacity: 1; }
 
-    .expanded-video .dots {
-      position: relative;
+    .expanded-video .loading-dots {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      transform: translateZ(0);
-      z-index: 1;
+      transform: translate3d(0,0,0);
+      will-change: transform;
     }
 
-    .expanded-video .dot {
+    .expanded-video .loading-dots span {
       width: 7px;
       height: 7px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.92);
-      opacity: 0.35;
-      animation: dotPulse 1.05s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-      will-change: transform, opacity;
+      background: rgba(255,255,255,0.78);
+      box-shadow:
+        0 10px 24px rgba(0,0,0,0.22),
+        inset 0 1px 0 rgba(255,255,255,0.20);
+      opacity: 0.55;
+      animation: dotsPulse 1.05s cubic-bezier(0.22, 1, 0.36, 1) infinite;
     }
-    .expanded-video .dot:nth-child(2) { animation-delay: 120ms; }
-    .expanded-video .dot:nth-child(3) { animation-delay: 240ms; }
 
-    .expanded-video.loading-on .video-loading { opacity: 1; }
+    .expanded-video .loading-dots span:nth-child(2) { animation-delay: 120ms; }
+    .expanded-video .loading-dots span:nth-child(3) { animation-delay: 240ms; }
 
     .project.expanded .card-back {
       opacity: 1;
@@ -1460,7 +1470,9 @@ Le jeu propose d’incarner une petite souris chevalier qui rebondit sur ses enn
                     <a href="https://youtu.be/bdllN41GYCA" target="_blank" rel="noopener noreferrer" class="action-button">
                       <img src="img/ytb logo.png" alt="" />Trailer
                     </a>
-                    <a href="#" class="action-button">Livret de règle</a>
+                    <a href="#" class="action-button">
+                      Livret de règle
+                    </a>
                   </div>
                 </div>
 
@@ -1788,7 +1800,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
         mouse_more:
 `<div class="details-rt">
   <h5>Contexte</h5>
-  <p>Ce projet scolaire s’est déroulé sur une durée de deux mois, au sein d’une équipe composée de six game designers et de deux music &amp; sound designers. L’objectif était de concevoir un brawler en 3D à la troisième personne.</p>
+  <p>Ce projet scolaire s’est déroulé sur une durée de deux mois, au sein d’une équipe composée de six game designers et deux music &amp; sound designers. L’objectif était de concevoir un brawler en 3D à la troisième personne.</p>
 
   <h5>Pitch</h5>
   <p>Vous incarnez une petite souris chevalier dans une aventure d’environ quinze minutes. Trop petite pour manier une épée, elle n’a qu’un seul moyen de se défendre : sauter et rebondir violemment sur la tête de ses adversaires.</p>
@@ -2015,6 +2027,28 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
     const parallaxActive = new Set();
     let parallaxRaf = 0;
 
+    const posterCache = new Map();
+    function preloadPoster(src) {
+      if (!src || posterCache.has(src)) return;
+      const img = new Image();
+      img.decoding = 'async';
+      img.loading = 'eager';
+      img.src = src;
+      posterCache.set(src, img);
+    }
+
+    function primeAllPosters() {
+      document.querySelectorAll('.project').forEach(p => {
+        preloadPoster(p.getAttribute('data-first-frame'));
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', primeAllPosters, { once: true });
+    } else {
+      primeAllPosters();
+    }
+
     function runParallax() {
       if (parallaxRaf) return;
       const tick = () => {
@@ -2136,6 +2170,40 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       return { clear };
     }
 
+    function setConditionalLoading(holderEl, isReadyFn, onShow, onHide) {
+      let shown = false;
+      let showAt = 0;
+
+      const delay = getVarMs(holderEl, '--vl-delay', 140);
+      const minShow = getVarMs(holderEl, '--vl-minshow', 220);
+      const earlyCancelThreshold = 90;
+
+      const t = setTimeout(() => {
+        if (isReadyFn()) return;
+        shown = true;
+        showAt = performance.now();
+        if (onShow) onShow();
+      }, delay);
+
+      const clear = () => {
+        clearTimeout(t);
+        if (!shown) return;
+        const elapsed = performance.now() - showAt;
+        if (elapsed < earlyCancelThreshold) {
+          if (onHide) onHide();
+          return;
+        }
+        const remain = Math.max(0, minShow - elapsed);
+        if (remain === 0) {
+          if (onHide) onHide();
+        } else {
+          setTimeout(() => { if (onHide) onHide(); }, remain);
+        }
+      };
+
+      return { clear };
+    }
+
     function attachImageSkeleton(img, holderEl) {
       if (!img || !holderEl) return;
 
@@ -2160,6 +2228,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
         ctrl.clear();
         try { if (img.decode) await img.decode().catch(() => {}); } catch (_) {}
         requestAnimationFrame(() => {
+          if (!holderEl.isConnected) return;
           holderEl.classList.add('media-ready');
           holderEl.classList.remove('skel-on');
         });
@@ -2168,6 +2237,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       const onErr = () => {
         ctrl.clear();
         requestAnimationFrame(() => {
+          if (!holderEl.isConnected) return;
           holderEl.classList.add('media-ready');
           holderEl.classList.remove('skel-on');
         });
@@ -2197,36 +2267,46 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       const videoWrap = document.createElement('div');
       videoWrap.className = 'expanded-video';
 
-      const loader = document.createElement('div');
-      loader.className = 'video-loading';
-      loader.innerHTML = `<div class="dots" aria-hidden="true"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>`;
-      videoWrap.appendChild(loader);
+      const loading = document.createElement('div');
+      loading.className = 'video-loading';
+      loading.innerHTML = `<div class="loading-dots" aria-hidden="true"><span></span><span></span><span></span></div>`;
+      videoWrap.appendChild(loading);
 
       const posterSrc = project.getAttribute('data-first-frame') || '';
       if (posterSrc) {
+        preloadPoster(posterSrc);
         const posterImg = document.createElement('img');
         posterImg.src = posterSrc;
         posterImg.className = 'video-poster';
+        posterImg.decoding = 'async';
+        posterImg.loading = 'eager';
         videoWrap.appendChild(posterImg);
 
-        const markPosterReady = async () => {
-          try { if (posterImg.decode) await posterImg.decode().catch(() => {}); } catch (_) {}
+        const cached = posterCache.get(posterSrc);
+        if (cached && cached.complete && cached.naturalWidth > 0) {
           requestAnimationFrame(() => {
             if (!videoWrap.isConnected) return;
-            videoWrap.classList.add('poster-ready');
+            videoWrap.classList.add('poster-in');
           });
-        };
-
-        if (posterImg.complete && posterImg.naturalWidth > 0) {
-          markPosterReady();
         } else {
-          posterImg.addEventListener('load', markPosterReady, { once: true });
-          posterImg.addEventListener('error', () => {
+          const showPoster = async () => {
+            try { if (posterImg.decode) await posterImg.decode().catch(() => {}); } catch (_) {}
             requestAnimationFrame(() => {
               if (!videoWrap.isConnected) return;
-              videoWrap.classList.add('poster-ready');
+              videoWrap.classList.add('poster-in');
             });
-          }, { once: true });
+          };
+
+          if (posterImg.complete && posterImg.naturalWidth > 0) showPoster();
+          else {
+            posterImg.addEventListener('load', showPoster, { once: true });
+            posterImg.addEventListener('error', () => {
+              requestAnimationFrame(() => {
+                if (!videoWrap.isConnected) return;
+                videoWrap.classList.add('poster-in');
+              });
+            }, { once: true });
+          }
         }
       }
 
@@ -2242,37 +2322,34 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
 
         const readyNow = () => (vid.readyState >= 2) && (vid.videoWidth > 0 || vid.videoHeight > 0);
 
-        let ctrl = setConditionalSkeleton(
+        let loadCtrl = setConditionalLoading(
           videoWrap,
           () => videoWrap.classList.contains('video-ready') || readyNow(),
-          () => videoWrap.classList.add('loading-on'),
-          () => videoWrap.classList.remove('loading-on')
+          () => videoWrap.classList.add('loading-visible'),
+          () => videoWrap.classList.remove('loading-visible')
         );
 
         const settleReady = () => {
-          try { ctrl.clear(); } catch (_) {}
+          loadCtrl.clear();
           videoWrap.classList.add('video-ready');
-          videoWrap.classList.remove('loading-on');
-
-          const killPosterSoon = () => {
+          videoWrap.classList.remove('loading-visible');
+          setTimeout(() => {
             if (!videoWrap.isConnected) return;
             videoWrap.classList.add('poster-off');
-          };
-
-          setTimeout(killPosterSoon, 140);
+          }, 140);
         };
 
         if (readyNow()) {
-          requestAnimationFrame(settleReady);
+          requestAnimationFrame(() => settleReady());
         } else {
-          const onReady = () => requestAnimationFrame(settleReady);
+          const onReady = () => requestAnimationFrame(() => settleReady());
           vid.addEventListener('loadeddata', onReady, { once: true });
           vid.addEventListener('canplay', onReady, { once: true });
         }
 
         vid.addEventListener('error', () => {
-          try { ctrl.clear(); } catch (_) {}
-          videoWrap.classList.remove('loading-on');
+          try { loadCtrl.clear(); } catch (_) {}
+          videoWrap.classList.remove('loading-visible');
         }, { once: true });
 
         videoWrap.appendChild(vid);
@@ -2288,7 +2365,6 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       const wrap = ensureExpandedVideo(project);
       const vid = wrap.querySelector('video');
       if (!vid) return;
-
       const p = vid.play();
       if (p && typeof p.catch === 'function') p.catch(() => {});
     }
@@ -2560,6 +2636,9 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
 
       expandedSource = sourceProject;
       hardResetParallax(sourceProject);
+
+      const ff = sourceProject.getAttribute('data-first-frame');
+      if (ff) preloadPoster(ff);
 
       overlay.classList.remove('closing');
       overlay.classList.add('active');
