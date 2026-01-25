@@ -2655,6 +2655,7 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       clone.style.height = `${target.height}px`;
 
       ensureExpandedVideo(clone);
+      playExpandedVideo(clone);
 
       syncPanelAndToggle(clone, true);
 
@@ -2693,7 +2694,6 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       requestAnimationFrame(() => {
         syncPanelAndToggle(clone);
         startFollow(clone);
-        playExpandedVideo(clone);
       });
 
       isTransitioning = false;
