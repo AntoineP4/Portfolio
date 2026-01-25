@@ -42,7 +42,9 @@
       --sk-delay: 160ms;
       --sk-minshow: 120ms;
 
-      --vl-minshow: 360ms;
+      --vl-fade: 520ms;
+      --vl-delay: 120ms;
+      --vl-minshow: 260ms;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -76,6 +78,22 @@
       16%  { opacity: 0.52; }
       64%  { opacity: 0.40; }
       100% { background-position: 140% 0; opacity: 0.0; }
+    }
+
+    @keyframes vlSpin { to { transform: rotate(360deg); } }
+    @keyframes vlBreath {
+      0%, 100% { transform: translate3d(0,0,0) scale(1); filter: brightness(1); }
+      50% { transform: translate3d(0,0,0) scale(1.035); filter: brightness(1.08); }
+    }
+    @keyframes vlDot {
+      0%, 100% { transform: translateY(0); opacity: 0.45; }
+      50% { transform: translateY(-4px); opacity: 0.95; }
+    }
+    @keyframes vlSweep {
+      0% { transform: translate3d(-30%,0,0); opacity: 0; }
+      18% { opacity: 0.55; }
+      62% { opacity: 0.35; }
+      100% { transform: translate3d(30%,0,0); opacity: 0; }
     }
 
     header {
@@ -277,6 +295,50 @@
       z-index: 1;
     }
 
+    .card-front::before,
+    .card-front::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity var(--sk-fade) cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity;
+      z-index: 1;
+    }
+
+    .card-front::before {
+      background:
+        radial-gradient(90% 85% at 18% 18%, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.018) 62%, rgba(255,255,255,0.0) 100%),
+        linear-gradient(135deg, rgba(255,255,255,0.052), rgba(255,255,255,0.016));
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .card-front::after {
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.010), rgba(255,255,255,0.000)),
+        linear-gradient(
+          110deg,
+          rgba(255,255,255,0.00) 0%,
+          rgba(255,255,255,0.00) 48%,
+          var(--sk-shimmer-peak) 50%,
+          rgba(255,255,255,0.00) 52%,
+          rgba(255,255,255,0.00) 100%
+        );
+      background-size: 100% 100%, 280% 100%;
+      background-position: 0 0, -140% 0;
+      mix-blend-mode: soft-light;
+      filter: blur(9px);
+      transform: translate3d(0,0,0);
+      will-change: opacity, background-position;
+    }
+
+    .card-front.skel-on::before { opacity: 1; }
+    .card-front.skel-on::after { opacity: 1; animation: skShimmer 1.05s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
+
     .card-front img {
       width: 100%;
       height: 100%;
@@ -285,10 +347,13 @@
       position: relative;
       z-index: 2;
       opacity: 1;
-      transition: opacity 260ms cubic-bezier(0.22, 1, 0.36, 1);
+      transition: opacity var(--sk-fade) cubic-bezier(0.22, 1, 0.36, 1);
       backface-visibility: hidden;
       transform: translateZ(0);
     }
+
+    .card-front:not(.media-ready) img { opacity: 0.001; }
+    .card-front.media-ready img { opacity: 1; }
 
     .card-front h3 {
       position: absolute;
@@ -549,6 +614,23 @@
 
     .action-button.download-only img { width: 1.3rem; height: 1.3rem; }
 
+    @media (prefers-reduced-motion: reduce) {
+      .action-button,
+      .action-button img,
+      .action-button::before,
+      .action-button::after {
+        transition: none !important;
+      }
+      .action-button:hover { transform: none !important; }
+      .action-button::before { transform: none !important; opacity: 0 !important; }
+      .action-button::after { opacity: 0 !important; }
+      .card-front.skel-on::after { animation: none !important; }
+      .video-loader .vl-ring { animation: none !important; }
+      .video-loader .vl-dots span { animation: none !important; opacity: 0.7 !important; transform: none !important; }
+      .video-loader::after { animation: none !important; opacity: 0 !important; }
+      .video-loader .vl-ui { animation: none !important; }
+    }
+
     footer {
       margin-top: 6rem;
       padding: 2rem;
@@ -769,21 +851,18 @@
       isolation: isolate;
     }
 
-    .expanded-video::before {
-      content: "";
+    .expanded-video .video-poster {
       position: absolute;
-      inset: -1px;
-      pointer-events: none;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: contain;
       z-index: 1;
-      background:
-        radial-gradient(70% 55% at 20% 18%, rgba(107,140,255,0.22) 0%, rgba(0,0,0,0) 62%),
-        radial-gradient(55% 55% at 78% 16%, rgba(180,120,255,0.16) 0%, rgba(0,0,0,0) 62%),
-        radial-gradient(80% 60% at 50% 120%, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 56%),
-        linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.00) 55%);
-      filter: blur(18px) saturate(1.15);
+      background: #000;
       opacity: 1;
-      mix-blend-mode: screen;
       transform: translateZ(0);
+      filter: saturate(1.02) contrast(1.02);
+      transition: opacity 680ms cubic-bezier(0.22, 1, 0.36, 1), filter 680ms cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, filter;
     }
 
     .expanded-video video {
@@ -793,165 +872,124 @@
       height: 100%;
       object-fit: contain;
       display: block;
-      filter: saturate(1.02) contrast(1.03);
       z-index: 2;
       opacity: 0;
-      background: #000;
-      will-change: opacity, filter;
-      transform: translateZ(0);
+      transform: translateZ(0) scale(1.01);
+      filter: blur(7px) saturate(1.03) contrast(1.03);
       transition:
-        opacity 720ms cubic-bezier(0.22, 1, 0.36, 1),
-        filter 980ms cubic-bezier(0.22, 1, 0.36, 1);
+        opacity 820ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 820ms cubic-bezier(0.22, 1, 0.36, 1),
+        filter 820ms cubic-bezier(0.22, 1, 0.36, 1);
+      background: #000;
+      will-change: opacity, transform, filter;
     }
 
-    .expanded-video.video-ready video {
-      opacity: 1;
-      filter: saturate(1.02) contrast(1.03);
-    }
-
-    @keyframes vlSpin { to { transform: rotate(360deg); } }
-    @keyframes vlBreath {
-      0%, 100% { transform: translateZ(0) scale(1); filter: brightness(1); }
-      50% { transform: translateZ(0) scale(1.02); filter: brightness(1.06); }
-    }
-    @keyframes vlSheen {
-      0% { transform: translate3d(-35%, 0, 0); opacity: 0; }
-      18% { opacity: 0.65; }
-      55% { opacity: 0.40; }
-      100% { transform: translate3d(35%, 0, 0); opacity: 0; }
-    }
-    @keyframes vlDots {
-      0% { opacity: 0.18; transform: translateY(0); }
-      35% { opacity: 0.9; transform: translateY(-1px); }
-      70% { opacity: 0.18; transform: translateY(0); }
-      100% { opacity: 0.18; transform: translateY(0); }
-    }
-
-    .expanded-video .video-loader {
+    .video-loader {
       position: absolute;
       inset: 0;
-      z-index: 3;
+      z-index: 4;
       pointer-events: none;
-      display: grid;
-      place-items: center;
-      opacity: 1;
-      transform: translateZ(0);
-      transition:
-        opacity 780ms cubic-bezier(0.22, 1, 0.36, 1),
-        filter 900ms cubic-bezier(0.22, 1, 0.36, 1);
-      filter: blur(0px);
-    }
-
-    .expanded-video.video-ready .video-loader {
       opacity: 0;
-      filter: blur(6px);
+      transition: opacity var(--vl-fade) cubic-bezier(0.22, 1, 0.36, 1);
+      backdrop-filter: blur(26px) saturate(165%) contrast(112%);
+      -webkit-backdrop-filter: blur(26px) saturate(165%) contrast(112%);
+      background:
+        radial-gradient(70% 65% at 18% 18%, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.025) 52%, rgba(255,255,255,0.0) 100%),
+        radial-gradient(60% 55% at 82% 14%, rgba(107,140,255,0.14) 0%, rgba(107,140,255,0.0) 62%),
+        radial-gradient(90% 70% at 50% 120%, rgba(0,0,0,0.90) 0%, rgba(0,0,0,0.0) 56%),
+        linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.08),
+        inset 0 0 36px rgba(255,255,255,0.02);
     }
 
-    .expanded-video .video-loader-card {
-      width: min(62%, 520px);
-      max-width: 520px;
-      border-radius: 18px;
-      padding: 18px 18px 16px;
-      background: rgba(12,12,14,0.42);
-      border: 1px solid rgba(255,255,255,0.10);
-      backdrop-filter: blur(22px) saturate(170%) contrast(108%);
-      -webkit-backdrop-filter: blur(22px) saturate(170%) contrast(108%);
-      box-shadow:
-        0 28px 80px rgba(0,0,0,0.62),
-        inset 0 1px 0 rgba(255,255,255,0.10),
-        inset 0 0 0 1px rgba(255,255,255,0.06);
+    .video-loader::after {
+      content: "";
+      position: absolute;
+      inset: -12%;
+      opacity: 0;
+      background:
+        linear-gradient(
+          110deg,
+          rgba(255,255,255,0.00) 0%,
+          rgba(255,255,255,0.00) 44%,
+          rgba(255,255,255,0.18) 50%,
+          rgba(255,255,255,0.00) 56%,
+          rgba(255,255,255,0.00) 100%
+        );
+      filter: blur(14px);
+      mix-blend-mode: soft-light;
+      transform: translate3d(-30%,0,0);
+      will-change: transform, opacity;
+    }
+
+    .video-loader .vl-ui {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 14px;
-      position: relative;
-      overflow: hidden;
-      animation: vlBreath 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-    }
-
-    .expanded-video .video-loader-card::before {
-      content: "";
-      position: absolute;
-      inset: -30% -20%;
-      background:
-        radial-gradient(55% 60% at 20% 25%, rgba(107,140,255,0.22) 0%, rgba(0,0,0,0) 60%),
-        radial-gradient(55% 60% at 80% 25%, rgba(180,120,255,0.18) 0%, rgba(0,0,0,0) 62%),
-        radial-gradient(70% 80% at 50% 120%, rgba(0,0,0,0.86) 0%, rgba(0,0,0,0) 60%);
-      filter: blur(24px) saturate(1.2);
-      opacity: 0.95;
-      mix-blend-mode: screen;
-      pointer-events: none;
-    }
-
-    .expanded-video .video-loader-card::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        110deg,
-        rgba(255,255,255,0.0) 0%,
-        rgba(255,255,255,0.0) 45%,
-        rgba(255,255,255,0.40) 50%,
-        rgba(255,255,255,0.0) 55%,
-        rgba(255,255,255,0.0) 100%
-      );
-      mix-blend-mode: soft-light;
-      opacity: 0;
-      transform: translate3d(-35%, 0, 0);
-      filter: blur(10px);
-      animation: vlSheen 1.25s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-      pointer-events: none;
-    }
-
-    .expanded-video .video-loader-spinner {
-      width: 22px;
-      height: 22px;
+      padding: 14px 18px;
       border-radius: 999px;
-      border: 2px solid rgba(255,255,255,0.22);
-      border-top-color: rgba(255,255,255,0.82);
-      border-left-color: rgba(107,140,255,0.55);
-      animation: vlSpin 900ms linear infinite;
-      flex: 0 0 auto;
-      position: relative;
-      z-index: 2;
+      background: rgba(14,14,16,0.58);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow:
+        0 22px 60px rgba(0,0,0,0.55),
+        inset 0 1px 0 rgba(255,255,255,0.10);
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      animation: vlBreath 2.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
     }
 
-    .expanded-video .video-loader-label {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-weight: 900;
-      font-size: 0.82rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.82);
+    .video-loader .vl-ring {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, rgba(107,140,255,0.0), rgba(107,140,255,0.92), rgba(255,255,255,0.62), rgba(107,140,255,0.0));
+      -webkit-mask: radial-gradient(circle at 50% 50%, transparent 54%, #000 56%);
+      mask: radial-gradient(circle at 50% 50%, transparent 54%, #000 56%);
+      opacity: 0.95;
+      animation: vlSpin 1.05s linear infinite;
+      filter: drop-shadow(0 0 10px rgba(107,140,255,0.16));
+    }
+
+    .video-loader .vl-dots {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      position: relative;
-      z-index: 2;
-      user-select: none;
-      -webkit-user-select: none;
+      gap: 6px;
+      transform: translateY(1px);
     }
 
-    .expanded-video .video-loader-dots {
-      display: inline-flex;
-      gap: 3px;
-      margin-left: 4px;
-      position: relative;
-      top: -1px;
-    }
-
-    .expanded-video .video-loader-dots i {
-      width: 4px;
-      height: 4px;
+    .video-loader .vl-dots span {
+      width: 5px;
+      height: 5px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.76);
-      display: inline-block;
-      animation: vlDots 1050ms ease-in-out infinite;
-      opacity: 0.25;
+      background: rgba(255,255,255,0.86);
+      opacity: 0.55;
+      animation: vlDot 900ms cubic-bezier(0.22, 1, 0.36, 1) infinite;
+      box-shadow: 0 0 12px rgba(255,255,255,0.06);
+    }
+    .video-loader .vl-dots span:nth-child(2) { animation-delay: 120ms; }
+    .video-loader .vl-dots span:nth-child(3) { animation-delay: 240ms; }
+
+    .expanded-video.loading .video-loader { opacity: 1; }
+    .expanded-video.loading .video-loader::after { opacity: 1; animation: vlSweep 1.25s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
+
+    .expanded-video.loading .video-poster {
+      opacity: 0.92;
+      filter: blur(1.6px) saturate(1.03) contrast(1.03) brightness(0.92);
     }
 
-    .expanded-video .video-loader-dots i:nth-child(2) { animation-delay: 120ms; }
-    .expanded-video .video-loader-dots i:nth-child(3) { animation-delay: 240ms; }
+    .expanded-video.video-ready video {
+      opacity: 1;
+      transform: translateZ(0) scale(1);
+      filter: blur(0px) saturate(1.03) contrast(1.03);
+    }
+
+    .expanded-video.poster-off .video-poster { opacity: 0; filter: blur(6px) saturate(1.02) contrast(1.02) brightness(0.85); }
 
     .project.expanded .card-back {
       opacity: 1;
@@ -1239,22 +1277,9 @@
     .project.expanded.closing .card-back { opacity: 0; transition: opacity 140ms cubic-bezier(0.22, 1, 0.36, 1); }
     .project.expanded.closing .details-toggle { opacity: 0; pointer-events: none; }
 
-    @media (prefers-reduced-motion: reduce) {
-      .action-button,
-      .action-button img,
-      .action-button::before,
-      .action-button::after,
-      .expanded-video video,
-      .expanded-video .video-loader,
-      .expanded-video .video-loader-card,
-      .expanded-video .video-loader-spinner,
-      .expanded-video .video-loader-card::after {
-        transition: none !important;
-        animation: none !important;
-      }
-      .action-button:hover { transform: none !important; }
-      .action-button::before { transform: none !important; opacity: 0 !important; }
-      .action-button::after { opacity: 0 !important; }
+    body.has-expanded .project:not(.expanded) {
+      filter: blur(2px) brightness(0.78);
+      pointer-events: none;
     }
   </style>
 </head>
@@ -2152,6 +2177,128 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       }
     }
 
+    function setConditionalSkeleton(holderEl, isReadyFn, onShow, onHide) {
+      let shown = false;
+      let showAt = 0;
+
+      const delay = getVarMs(holderEl, '--sk-delay', 140);
+      const minShow = getVarMs(holderEl, '--sk-minshow', 120);
+      const earlyCancelThreshold = 90;
+
+      const t = setTimeout(() => {
+        if (isReadyFn()) return;
+        shown = true;
+        showAt = performance.now();
+        if (onShow) onShow();
+      }, delay);
+
+      const clear = () => {
+        clearTimeout(t);
+        if (!shown) return;
+        const elapsed = performance.now() - showAt;
+        if (elapsed < earlyCancelThreshold) {
+          if (onHide) onHide();
+          return;
+        }
+        const remain = Math.max(0, minShow - elapsed);
+        if (remain === 0) {
+          if (onHide) onHide();
+        } else {
+          setTimeout(() => { if (onHide) onHide(); }, remain);
+        }
+      };
+
+      return { clear };
+    }
+
+    function setConditionalOverlay(holderEl, isReadyFn, onShow, onHide) {
+      let shown = false;
+      let showAt = 0;
+
+      const delay = getVarMs(holderEl, '--vl-delay', 120);
+      const minShow = getVarMs(holderEl, '--vl-minshow', 260);
+      const earlyCancelThreshold = 110;
+
+      const t = setTimeout(() => {
+        if (isReadyFn()) return;
+        shown = true;
+        showAt = performance.now();
+        if (onShow) onShow();
+      }, delay);
+
+      const clear = () => {
+        clearTimeout(t);
+        if (!shown) return;
+        const elapsed = performance.now() - showAt;
+        if (elapsed < earlyCancelThreshold) {
+          if (onHide) onHide();
+          return;
+        }
+        const remain = Math.max(0, minShow - elapsed);
+        if (remain === 0) {
+          if (onHide) onHide();
+        } else {
+          setTimeout(() => { if (onHide) onHide(); }, remain);
+        }
+      };
+
+      return { clear };
+    }
+
+    function attachImageSkeleton(img, holderEl) {
+      if (!img || !holderEl) return;
+
+      const readyNow = () => img.complete && img.naturalWidth > 0;
+
+      if (readyNow()) {
+        holderEl.classList.add('media-ready');
+        holderEl.classList.remove('skel-on');
+        return;
+      }
+
+      holderEl.classList.remove('media-ready');
+
+      const ctrl = setConditionalSkeleton(
+        holderEl,
+        readyNow,
+        () => holderEl.classList.add('skel-on'),
+        () => holderEl.classList.remove('skel-on')
+      );
+
+      const onLoad = async () => {
+        ctrl.clear();
+        try { if (img.decode) await img.decode().catch(() => {}); } catch (_) {}
+        requestAnimationFrame(() => {
+          holderEl.classList.add('media-ready');
+          holderEl.classList.remove('skel-on');
+        });
+      };
+
+      const onErr = () => {
+        ctrl.clear();
+        requestAnimationFrame(() => {
+          holderEl.classList.add('media-ready');
+          holderEl.classList.remove('skel-on');
+        });
+      };
+
+      img.addEventListener('load', onLoad, { once: true });
+      img.addEventListener('error', onErr, { once: true });
+    }
+
+    function initThumbSkeletons() {
+      document.querySelectorAll('.project .card-front').forEach(front => {
+        const img = front.querySelector('img');
+        attachImageSkeleton(img, front);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => initThumbSkeletons(), { once: true });
+    } else {
+      initThumbSkeletons();
+    }
+
     function ensureExpandedVideo(project) {
       const existing = project.querySelector('.expanded-video');
       if (existing) return existing;
@@ -2162,15 +2309,20 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       const loader = document.createElement('div');
       loader.className = 'video-loader';
       loader.innerHTML = `
-        <div class="video-loader-card" aria-hidden="true">
-          <div class="video-loader-spinner"></div>
-          <div class="video-loader-label">
-            <span>Loading</span>
-            <span class="video-loader-dots"><i></i><i></i><i></i></span>
-          </div>
+        <div class="vl-ui" aria-hidden="true">
+          <div class="vl-ring"></div>
+          <div class="vl-dots"><span></span><span></span><span></span></div>
         </div>
       `;
       videoWrap.appendChild(loader);
+
+      const posterSrc = project.getAttribute('data-first-frame') || '';
+      if (posterSrc) {
+        const posterImg = document.createElement('img');
+        posterImg.src = posterSrc;
+        posterImg.className = 'video-poster';
+        videoWrap.appendChild(posterImg);
+      }
 
       const srcRaw = project.getAttribute('data-video') || '';
       if (srcRaw) {
@@ -2182,23 +2334,22 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
         vid.autoplay = true;
         vid.preload = 'auto';
 
-        const startAt = performance.now();
-        const minShow = getVarMs(videoWrap, '--vl-minshow', 360);
-
         const readyNow = () => (vid.readyState >= 2) && (vid.videoWidth > 0 || vid.videoHeight > 0);
 
+        let loadCtrl = setConditionalOverlay(
+          videoWrap,
+          () => videoWrap.classList.contains('video-ready') || readyNow(),
+          () => videoWrap.classList.add('loading'),
+          () => videoWrap.classList.remove('loading')
+        );
+
         const settleReady = () => {
-          const elapsed = performance.now() - startAt;
-          const wait = Math.max(0, minShow - elapsed);
+          try { loadCtrl.clear(); } catch (_) {}
+          videoWrap.classList.add('video-ready');
           setTimeout(() => {
             if (!videoWrap.isConnected) return;
-            videoWrap.classList.add('video-ready');
-            setTimeout(() => {
-              if (!videoWrap.isConnected) return;
-              const l = videoWrap.querySelector('.video-loader');
-              if (l) l.remove();
-            }, 980);
-          }, wait);
+            videoWrap.classList.add('poster-off');
+          }, 160);
         };
 
         if (readyNow()) {
@@ -2210,12 +2361,8 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
         }
 
         vid.addEventListener('error', () => {
-          if (!videoWrap.isConnected) return;
-          videoWrap.classList.add('video-ready');
-          setTimeout(() => {
-            const l = videoWrap.querySelector('.video-loader');
-            if (l) l.remove();
-          }, 520);
+          try { loadCtrl.clear(); } catch (_) {}
+          videoWrap.classList.remove('loading');
         }, { once: true });
 
         videoWrap.appendChild(vid);
@@ -2223,10 +2370,6 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
 
       const inner = project.querySelector('.card-inner');
       inner.insertBefore(videoWrap, inner.firstChild);
-
-      const label = videoWrap.querySelector('.video-loader-label span');
-      const lang = localStorage.getItem('lang') || 'fr';
-      if (label) label.textContent = (lang === 'fr') ? 'Chargement' : 'Loading';
 
       return videoWrap;
     }
