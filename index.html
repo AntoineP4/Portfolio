@@ -2049,6 +2049,37 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       primeAllPosters();
     }
 
+    const videoElementCache = new Map();
+    const VIDEO_CACHE_TTL = 140000;
+
+    function pruneVideoCache() {
+      const now = performance.now();
+      for (const [src, entry] of videoElementCache.entries()) {
+        if (!entry || !entry.vid) {
+          videoElementCache.delete(src);
+          continue;
+        }
+        if ((now - entry.t) > VIDEO_CACHE_TTL) {
+          try { entry.vid.pause(); } catch (_) {}
+          try { entry.vid.removeAttribute('src'); entry.vid.load(); } catch (_) {}
+          videoElementCache.delete(src);
+        }
+      }
+    }
+
+    function getCachedVideo(src) {
+      pruneVideoCache();
+      const entry = videoElementCache.get(src);
+      if (!entry || !entry.vid) return null;
+      entry.t = performance.now();
+      return entry.vid;
+    }
+
+    function storeCachedVideo(src, vid) {
+      if (!src || !vid) return;
+      videoElementCache.set(src, { vid, t: performance.now() });
+    }
+
     function runParallax() {
       if (parallaxRaf) return;
       const tick = () => {
@@ -2142,40 +2173,6 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
 
       const delay = getVarMs(holderEl, '--sk-delay', 140);
       const minShow = getVarMs(holderEl, '--sk-minshow', 120);
-      const earlyCancelThreshold = 90;
-
-      const t = setTimeout(() => {
-        if (isReadyFn()) return;
-        shown = true;
-        showAt = performance.now();
-        if (onShow) onShow();
-      }, delay);
-
-      const clear = () => {
-        clearTimeout(t);
-        if (!shown) return;
-        const elapsed = performance.now() - showAt;
-        if (elapsed < earlyCancelThreshold) {
-          if (onHide) onHide();
-          return;
-        }
-        const remain = Math.max(0, minShow - elapsed);
-        if (remain === 0) {
-          if (onHide) onHide();
-        } else {
-          setTimeout(() => { if (onHide) onHide(); }, remain);
-        }
-      };
-
-      return { clear };
-    }
-
-    function setConditionalLoading(holderEl, isReadyFn, onShow, onHide) {
-      let shown = false;
-      let showAt = 0;
-
-      const delay = getVarMs(holderEl, '--vl-delay', 140);
-      const minShow = getVarMs(holderEl, '--vl-minshow', 220);
       const earlyCancelThreshold = 90;
 
       const t = setTimeout(() => {
@@ -2312,45 +2309,79 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
 
       const srcRaw = project.getAttribute('data-video') || '';
       if (srcRaw) {
-        const vid = document.createElement('video');
-        vid.src = srcRaw;
-        vid.muted = true;
-        vid.loop = true;
-        vid.playsInline = true;
-        vid.autoplay = true;
-        vid.preload = 'auto';
+        let vid = getCachedVideo(srcRaw);
+        const isNew = !vid;
+
+        if (!vid) {
+          vid = document.createElement('video');
+          vid.src = srcRaw;
+          vid.muted = true;
+          vid.loop = true;
+          vid.playsInline = true;
+          vid.autoplay = true;
+          vid.preload = 'auto';
+        } else {
+          try { if (vid.parentElement) vid.parentElement.removeChild(vid); } catch (_) {}
+          vid.muted = true;
+          vid.loop = true;
+          vid.playsInline = true;
+          vid.autoplay = true;
+          vid.preload = 'auto';
+          try { vid.currentTime = 0; } catch (_) {}
+        }
 
         const readyNow = () => (vid.readyState >= 2) && (vid.videoWidth > 0 || vid.videoHeight > 0);
 
-        let loadCtrl = setConditionalLoading(
-          videoWrap,
-          () => videoWrap.classList.contains('video-ready') || readyNow(),
-          () => videoWrap.classList.add('loading-visible'),
-          () => videoWrap.classList.remove('loading-visible')
-        );
+        let loadingShown = false;
+        let loadingAt = 0;
+        const minShow = getVarMs(videoWrap, '--vl-minshow', 220);
+
+        const showLoadingImmediate = () => {
+          if (loadingShown) return;
+          loadingShown = true;
+          loadingAt = performance.now();
+          videoWrap.classList.add('loading-visible');
+        };
+
+        const hideLoadingSmooth = () => {
+          if (!loadingShown) {
+            videoWrap.classList.remove('loading-visible');
+            return;
+          }
+          const elapsed = performance.now() - loadingAt;
+          const remain = Math.max(0, minShow - elapsed);
+          if (remain === 0) videoWrap.classList.remove('loading-visible');
+          else setTimeout(() => { if (videoWrap.isConnected) videoWrap.classList.remove('loading-visible'); }, remain);
+        };
 
         const settleReady = () => {
-          loadCtrl.clear();
           videoWrap.classList.add('video-ready');
-          videoWrap.classList.remove('loading-visible');
+          hideLoadingSmooth();
           setTimeout(() => {
             if (!videoWrap.isConnected) return;
             videoWrap.classList.add('poster-off');
           }, 140);
+          storeCachedVideo(srcRaw, vid);
         };
 
         if (readyNow()) {
-          requestAnimationFrame(() => settleReady());
+          videoWrap.classList.add('video-ready');
+          videoWrap.classList.remove('loading-visible');
+          videoWrap.classList.add('poster-off');
+          storeCachedVideo(srcRaw, vid);
         } else {
+          showLoadingImmediate();
+
           const onReady = () => requestAnimationFrame(() => settleReady());
           vid.addEventListener('loadeddata', onReady, { once: true });
           vid.addEventListener('canplay', onReady, { once: true });
-        }
 
-        vid.addEventListener('error', () => {
-          try { loadCtrl.clear(); } catch (_) {}
-          videoWrap.classList.remove('loading-visible');
-        }, { once: true });
+          vid.addEventListener('error', () => {
+            videoWrap.classList.remove('loading-visible');
+          }, { once: true });
+
+          if (isNew) storeCachedVideo(srcRaw, vid);
+        }
 
         videoWrap.appendChild(vid);
       }
@@ -2376,10 +2407,9 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       if (vid) {
         try { vid.pause(); } catch (_) {}
         try { vid.currentTime = 0; } catch (_) {}
-        try {
-          vid.removeAttribute('src');
-          vid.load();
-        } catch (_) {}
+        const src = vid.getAttribute('src') || vid.src || '';
+        if (src) storeCachedVideo(src, vid);
+        try { if (vid.parentElement) vid.parentElement.removeChild(vid); } catch (_) {}
       }
       wrap.remove();
     }
