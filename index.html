@@ -883,6 +883,14 @@
 
     .expanded-video.video-ready video { opacity: 1; }
 
+    .expanded-video.instant video {
+      transition: none !important;
+      opacity: 1 !important;
+    }
+
+    .expanded-video.instant .video-poster { display: none !important; }
+    .expanded-video.instant .video-loading { opacity: 0 !important; transition: none !important; }
+
     .expanded-video .video-loading {
       position: absolute;
       inset: 0;
@@ -2028,6 +2036,8 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
     let parallaxRaf = 0;
 
     const posterCache = new Map();
+    const videoElCache = new Map();
+
     function preloadPoster(src) {
       if (!src || posterCache.has(src)) return;
       const img = new Image();
@@ -2047,37 +2057,6 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       document.addEventListener('DOMContentLoaded', primeAllPosters, { once: true });
     } else {
       primeAllPosters();
-    }
-
-    const videoElementCache = new Map();
-    const VIDEO_CACHE_TTL = 140000;
-
-    function pruneVideoCache() {
-      const now = performance.now();
-      for (const [src, entry] of videoElementCache.entries()) {
-        if (!entry || !entry.vid) {
-          videoElementCache.delete(src);
-          continue;
-        }
-        if ((now - entry.t) > VIDEO_CACHE_TTL) {
-          try { entry.vid.pause(); } catch (_) {}
-          try { entry.vid.removeAttribute('src'); entry.vid.load(); } catch (_) {}
-          videoElementCache.delete(src);
-        }
-      }
-    }
-
-    function getCachedVideo(src) {
-      pruneVideoCache();
-      const entry = videoElementCache.get(src);
-      if (!entry || !entry.vid) return null;
-      entry.t = performance.now();
-      return entry.vid;
-    }
-
-    function storeCachedVideo(src, vid) {
-      if (!src || !vid) return;
-      videoElementCache.set(src, { vid, t: performance.now() });
     }
 
     function runParallax() {
@@ -2269,119 +2248,102 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       loading.innerHTML = `<div class="loading-dots" aria-hidden="true"><span></span><span></span><span></span></div>`;
       videoWrap.appendChild(loading);
 
-      const posterSrc = project.getAttribute('data-first-frame') || '';
-      if (posterSrc) {
-        preloadPoster(posterSrc);
-        const posterImg = document.createElement('img');
-        posterImg.src = posterSrc;
-        posterImg.className = 'video-poster';
-        posterImg.decoding = 'async';
-        posterImg.loading = 'eager';
-        videoWrap.appendChild(posterImg);
-
-        const cached = posterCache.get(posterSrc);
-        if (cached && cached.complete && cached.naturalWidth > 0) {
-          requestAnimationFrame(() => {
-            if (!videoWrap.isConnected) return;
-            videoWrap.classList.add('poster-in');
-          });
-        } else {
-          const showPoster = async () => {
-            try { if (posterImg.decode) await posterImg.decode().catch(() => {}); } catch (_) {}
-            requestAnimationFrame(() => {
-              if (!videoWrap.isConnected) return;
-              videoWrap.classList.add('poster-in');
-            });
-          };
-
-          if (posterImg.complete && posterImg.naturalWidth > 0) showPoster();
-          else {
-            posterImg.addEventListener('load', showPoster, { once: true });
-            posterImg.addEventListener('error', () => {
-              requestAnimationFrame(() => {
-                if (!videoWrap.isConnected) return;
-                videoWrap.classList.add('poster-in');
-              });
-            }, { once: true });
-          }
-        }
-      }
-
       const srcRaw = project.getAttribute('data-video') || '';
+      let vid = null;
+      let instantReady = false;
+
       if (srcRaw) {
-        let vid = getCachedVideo(srcRaw);
-        const isNew = !vid;
+        vid = videoElCache.get(srcRaw) || null;
 
         if (!vid) {
           vid = document.createElement('video');
           vid.src = srcRaw;
-          vid.muted = true;
-          vid.loop = true;
-          vid.playsInline = true;
-          vid.autoplay = true;
-          vid.preload = 'auto';
+          videoElCache.set(srcRaw, vid);
         } else {
-          try { if (vid.parentElement) vid.parentElement.removeChild(vid); } catch (_) {}
-          vid.muted = true;
-          vid.loop = true;
-          vid.playsInline = true;
-          vid.autoplay = true;
-          vid.preload = 'auto';
-          try { vid.currentTime = 0; } catch (_) {}
+          try {
+            if (vid.parentElement) vid.parentElement.removeChild(vid);
+          } catch (_) {}
         }
 
+        vid.muted = true;
+        vid.loop = true;
+        vid.playsInline = true;
+        vid.autoplay = true;
+        vid.preload = 'auto';
+
         const readyNow = () => (vid.readyState >= 2) && (vid.videoWidth > 0 || vid.videoHeight > 0);
+        instantReady = readyNow();
 
-        let loadingShown = false;
-        let loadingAt = 0;
-        const minShow = getVarMs(videoWrap, '--vl-minshow', 220);
-
-        const showLoadingImmediate = () => {
-          if (loadingShown) return;
-          loadingShown = true;
-          loadingAt = performance.now();
-          videoWrap.classList.add('loading-visible');
-        };
-
-        const hideLoadingSmooth = () => {
-          if (!loadingShown) {
-            videoWrap.classList.remove('loading-visible');
-            return;
-          }
-          const elapsed = performance.now() - loadingAt;
-          const remain = Math.max(0, minShow - elapsed);
-          if (remain === 0) videoWrap.classList.remove('loading-visible');
-          else setTimeout(() => { if (videoWrap.isConnected) videoWrap.classList.remove('loading-visible'); }, remain);
-        };
-
-        const settleReady = () => {
-          videoWrap.classList.add('video-ready');
-          hideLoadingSmooth();
-          setTimeout(() => {
-            if (!videoWrap.isConnected) return;
-            videoWrap.classList.add('poster-off');
-          }, 140);
-          storeCachedVideo(srcRaw, vid);
-        };
-
-        if (readyNow()) {
-          videoWrap.classList.add('video-ready');
+        if (instantReady) {
+          videoWrap.classList.add('instant', 'video-ready', 'poster-off');
           videoWrap.classList.remove('loading-visible');
-          videoWrap.classList.add('poster-off');
-          storeCachedVideo(srcRaw, vid);
         } else {
-          showLoadingImmediate();
+          const posterSrc = project.getAttribute('data-first-frame') || '';
+          if (posterSrc) {
+            preloadPoster(posterSrc);
+            const posterImg = document.createElement('img');
+            posterImg.src = posterSrc;
+            posterImg.className = 'video-poster';
+            posterImg.decoding = 'async';
+            posterImg.loading = 'eager';
+            videoWrap.appendChild(posterImg);
+
+            const cached = posterCache.get(posterSrc);
+            if (cached && cached.complete && cached.naturalWidth > 0) {
+              requestAnimationFrame(() => {
+                if (!videoWrap.isConnected) return;
+                videoWrap.classList.add('poster-in');
+              });
+            } else {
+              const showPoster = async () => {
+                try { if (posterImg.decode) await posterImg.decode().catch(() => {}); } catch (_) {}
+                requestAnimationFrame(() => {
+                  if (!videoWrap.isConnected) return;
+                  videoWrap.classList.add('poster-in');
+                });
+              };
+
+              if (posterImg.complete && posterImg.naturalWidth > 0) showPoster();
+              else {
+                posterImg.addEventListener('load', showPoster, { once: true });
+                posterImg.addEventListener('error', () => {
+                  requestAnimationFrame(() => {
+                    if (!videoWrap.isConnected) return;
+                    videoWrap.classList.add('poster-in');
+                  });
+                }, { once: true });
+              }
+            }
+          }
+
+          videoWrap.classList.add('loading-visible');
+          const loadingShownAt = performance.now();
+
+          const settleReady = () => {
+            videoWrap.classList.add('video-ready');
+
+            const minShow = getVarMs(videoWrap, '--vl-minshow', 220);
+            const elapsed = performance.now() - loadingShownAt;
+            const remain = Math.max(0, minShow - elapsed);
+
+            setTimeout(() => {
+              if (!videoWrap.isConnected) return;
+              videoWrap.classList.remove('loading-visible');
+              setTimeout(() => {
+                if (!videoWrap.isConnected) return;
+                videoWrap.classList.add('poster-off');
+              }, 140);
+            }, remain);
+          };
 
           const onReady = () => requestAnimationFrame(() => settleReady());
           vid.addEventListener('loadeddata', onReady, { once: true });
           vid.addEventListener('canplay', onReady, { once: true });
-
-          vid.addEventListener('error', () => {
-            videoWrap.classList.remove('loading-visible');
-          }, { once: true });
-
-          if (isNew) storeCachedVideo(srcRaw, vid);
         }
+
+        vid.addEventListener('error', () => {
+          videoWrap.classList.remove('loading-visible');
+        }, { once: true });
 
         videoWrap.appendChild(vid);
       }
@@ -2403,14 +2365,16 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
     function stopAndRemoveExpandedVideo(project) {
       const wrap = project.querySelector('.expanded-video');
       if (!wrap) return;
+
       const vid = wrap.querySelector('video');
       if (vid) {
         try { vid.pause(); } catch (_) {}
         try { vid.currentTime = 0; } catch (_) {}
-        const src = vid.getAttribute('src') || vid.src || '';
-        if (src) storeCachedVideo(src, vid);
-        try { if (vid.parentElement) vid.parentElement.removeChild(vid); } catch (_) {}
+        try {
+          if (vid.parentElement) vid.parentElement.removeChild(vid);
+        } catch (_) {}
       }
+
       wrap.remove();
     }
 
