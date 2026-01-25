@@ -76,21 +76,6 @@
       100% { background-position: 140% 0; opacity: 0.0; }
     }
 
-    @keyframes loaderGlassBreath {
-      0%, 100% { opacity: 0.78; }
-      50% { opacity: 0.96; }
-    }
-    @keyframes loaderDrift {
-      0% { transform: translate3d(-10%, 0, 0); opacity: 0.0; }
-      20% { opacity: 0.22; }
-      60% { opacity: 0.16; }
-      100% { transform: translate3d(10%, 0, 0); opacity: 0.0; }
-    }
-    @keyframes dotPulse {
-      0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.40; }
-      50% { transform: translate3d(0, -1.2px, 0); opacity: 0.90; }
-    }
-
     header {
       text-align: center;
       margin-bottom: 2rem;
@@ -620,8 +605,7 @@
       .action-button::before { transform: none !important; opacity: 0 !important; }
       .action-button::after { opacity: 0 !important; }
       .card-front.skel-on::after { animation: none !important; }
-      .expanded-video .video-loader::before { animation: none !important; }
-      .expanded-video .loader-dots span { animation: none !important; opacity: 0.55 !important; transform: none !important; }
+      .expanded-video.loading-on .video-loading .dot { animation: none !important; }
     }
 
     footer {
@@ -842,9 +826,6 @@
       opacity: 1;
       transition: opacity 180ms cubic-bezier(0.22, 1, 0.36, 1);
       isolation: isolate;
-      --sk-delay: 140ms;
-      --sk-minshow: 260ms;
-      --sk-fade: 520ms;
     }
 
     .expanded-video .video-poster {
@@ -854,12 +835,14 @@
       object-fit: contain;
       z-index: 1;
       background: #000;
-      opacity: 1;
+      opacity: 0;
       transform: translateZ(0);
-      filter: saturate(1.02) contrast(1.02);
-      transition: opacity 680ms cubic-bezier(0.22, 1, 0.36, 1);
+      transition: opacity 520ms cubic-bezier(0.22, 1, 0.36, 1);
       will-change: opacity;
     }
+
+    .expanded-video.poster-ready .video-poster { opacity: 1; }
+    .expanded-video.poster-off .video-poster { opacity: 0; }
 
     .expanded-video video {
       position: absolute;
@@ -868,95 +851,70 @@
       height: 100%;
       object-fit: contain;
       display: block;
-      filter: saturate(1.02) contrast(1.03);
       z-index: 2;
       opacity: 0;
-      transition: opacity 680ms cubic-bezier(0.22, 1, 0.36, 1);
+      transition: opacity 520ms cubic-bezier(0.22, 1, 0.36, 1);
       background: #000;
       will-change: opacity;
       transform: translateZ(0);
     }
 
-    .expanded-video .video-loader {
+    .expanded-video.video-ready video { opacity: 1; }
+
+    @keyframes dotPulse {
+      0%   { transform: translateZ(0) scale(0.92); opacity: 0.34; }
+      28%  { transform: translateZ(0) scale(1.12); opacity: 0.92; }
+      55%  { transform: translateZ(0) scale(0.98); opacity: 0.48; }
+      100% { transform: translateZ(0) scale(0.92); opacity: 0.34; }
+    }
+
+    .expanded-video .video-loading {
       position: absolute;
       inset: 0;
-      z-index: 3;
+      z-index: 4;
       pointer-events: none;
       opacity: 0;
       transition: opacity var(--sk-fade) cubic-bezier(0.22, 1, 0.36, 1);
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
-      border: 1px solid rgba(255,255,255,0.06);
-      backdrop-filter: blur(22px) saturate(140%) brightness(1.03);
-      -webkit-backdrop-filter: blur(22px) saturate(140%) brightness(1.03);
-      transform: translateZ(0);
-      will-change: opacity;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .expanded-video .video-loader::before {
-      content: "";
-      position: absolute;
-      inset: -18% -22%;
-      background:
-        radial-gradient(70% 55% at 20% 20%, rgba(255,255,255,0.11) 0%, rgba(255,255,255,0.0) 60%),
-        radial-gradient(60% 50% at 80% 15%, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.0) 62%),
-        linear-gradient(115deg, rgba(255,255,255,0.0), rgba(255,255,255,0.14), rgba(255,255,255,0.0));
-      mix-blend-mode: soft-light;
-      filter: blur(18px);
-      opacity: 0.0;
-      transform: translate3d(-10%, 0, 0);
-      animation: loaderDrift 1.55s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-      will-change: transform, opacity;
-      pointer-events: none;
-    }
-
-    .expanded-video .video-loader::after {
+    .expanded-video .video-loading::before {
       content: "";
       position: absolute;
       inset: 0;
       background:
-        repeating-linear-gradient(
-          90deg,
-          rgba(255,255,255,0.0) 0px,
-          rgba(255,255,255,0.0) 10px,
-          rgba(255,255,255,0.012) 12px,
-          rgba(255,255,255,0.0) 16px
-        );
-      opacity: 0.18;
-      mix-blend-mode: soft-light;
-      animation: loaderGlassBreath 2.2s ease-in-out infinite;
-      pointer-events: none;
+        radial-gradient(70% 60% at 20% 20%, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.018) 62%, rgba(255,255,255,0.0) 100%),
+        linear-gradient(135deg, rgba(255,255,255,0.040), rgba(255,255,255,0.010));
+      backdrop-filter: blur(22px) saturate(140%) brightness(0.98);
+      -webkit-backdrop-filter: blur(22px) saturate(140%) brightness(0.98);
+      border: 1px solid rgba(255,255,255,0.06);
     }
 
-    .expanded-video .loader-dots {
-      position: absolute;
-      right: 18px;
-      bottom: 14px;
-      display: inline-flex;
-      gap: 6px;
+    .expanded-video .dots {
+      position: relative;
+      display: flex;
       align-items: center;
-      opacity: 0.72;
+      justify-content: center;
+      gap: 10px;
       transform: translateZ(0);
+      z-index: 1;
     }
 
-    .expanded-video .loader-dots span {
-      width: 4px;
-      height: 4px;
+    .expanded-video .dot {
+      width: 7px;
+      height: 7px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.86);
-      box-shadow:
-        0 10px 22px rgba(0,0,0,0.22),
-        0 0 0 1px rgba(0,0,0,0.18);
-      animation: dotPulse 1.05s ease-in-out infinite;
+      background: rgba(255,255,255,0.92);
+      opacity: 0.35;
+      animation: dotPulse 1.05s cubic-bezier(0.22, 1, 0.36, 1) infinite;
       will-change: transform, opacity;
     }
+    .expanded-video .dot:nth-child(2) { animation-delay: 120ms; }
+    .expanded-video .dot:nth-child(3) { animation-delay: 240ms; }
 
-    .expanded-video .loader-dots span:nth-child(2) { animation-delay: 120ms; }
-    .expanded-video .loader-dots span:nth-child(3) { animation-delay: 240ms; }
-
-    .expanded-video.skel-on .video-loader { opacity: 1; }
-    .expanded-video.video-ready video { opacity: 1; }
-    .expanded-video.poster-off .video-poster { opacity: 0; }
+    .expanded-video.loading-on .video-loading { opacity: 1; }
 
     .project.expanded .card-back {
       opacity: 1;
@@ -2240,11 +2198,8 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
       videoWrap.className = 'expanded-video';
 
       const loader = document.createElement('div');
-      loader.className = 'video-loader';
-      const dots = document.createElement('div');
-      dots.className = 'loader-dots';
-      dots.innerHTML = '<span></span><span></span><span></span>';
-      loader.appendChild(dots);
+      loader.className = 'video-loading';
+      loader.innerHTML = `<div class="dots" aria-hidden="true"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>`;
       videoWrap.appendChild(loader);
 
       const posterSrc = project.getAttribute('data-first-frame') || '';
@@ -2253,6 +2208,26 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
         posterImg.src = posterSrc;
         posterImg.className = 'video-poster';
         videoWrap.appendChild(posterImg);
+
+        const markPosterReady = async () => {
+          try { if (posterImg.decode) await posterImg.decode().catch(() => {}); } catch (_) {}
+          requestAnimationFrame(() => {
+            if (!videoWrap.isConnected) return;
+            videoWrap.classList.add('poster-ready');
+          });
+        };
+
+        if (posterImg.complete && posterImg.naturalWidth > 0) {
+          markPosterReady();
+        } else {
+          posterImg.addEventListener('load', markPosterReady, { once: true });
+          posterImg.addEventListener('error', () => {
+            requestAnimationFrame(() => {
+              if (!videoWrap.isConnected) return;
+              videoWrap.classList.add('poster-ready');
+            });
+          }, { once: true });
+        }
       }
 
       const srcRaw = project.getAttribute('data-video') || '';
@@ -2267,34 +2242,37 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
 
         const readyNow = () => (vid.readyState >= 2) && (vid.videoWidth > 0 || vid.videoHeight > 0);
 
-        let skCtrl = setConditionalSkeleton(
+        let ctrl = setConditionalSkeleton(
           videoWrap,
           () => videoWrap.classList.contains('video-ready') || readyNow(),
-          () => videoWrap.classList.add('skel-on'),
-          () => videoWrap.classList.remove('skel-on')
+          () => videoWrap.classList.add('loading-on'),
+          () => videoWrap.classList.remove('loading-on')
         );
 
         const settleReady = () => {
-          skCtrl.clear();
+          try { ctrl.clear(); } catch (_) {}
           videoWrap.classList.add('video-ready');
-          videoWrap.classList.remove('skel-on');
-          setTimeout(() => {
+          videoWrap.classList.remove('loading-on');
+
+          const killPosterSoon = () => {
             if (!videoWrap.isConnected) return;
             videoWrap.classList.add('poster-off');
-          }, 140);
+          };
+
+          setTimeout(killPosterSoon, 140);
         };
 
         if (readyNow()) {
-          requestAnimationFrame(() => settleReady());
+          requestAnimationFrame(settleReady);
         } else {
-          const onReady = () => requestAnimationFrame(() => settleReady());
+          const onReady = () => requestAnimationFrame(settleReady);
           vid.addEventListener('loadeddata', onReady, { once: true });
           vid.addEventListener('canplay', onReady, { once: true });
         }
 
         vid.addEventListener('error', () => {
-          try { skCtrl.clear(); } catch (_) {}
-          videoWrap.classList.remove('skel-on');
+          try { ctrl.clear(); } catch (_) {}
+          videoWrap.classList.remove('loading-on');
         }, { once: true });
 
         videoWrap.appendChild(vid);
