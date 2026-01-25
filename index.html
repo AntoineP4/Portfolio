@@ -52,6 +52,7 @@
       --vl-fade: 420ms;
       --vl-delay: 140ms;
       --vl-minshow: 220ms;
+      --vl-timeout: 9000ms;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -2319,7 +2320,11 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
           videoWrap.classList.add('loading-visible');
           const loadingShownAt = performance.now();
 
+          let settled = false;
           const settleReady = () => {
+            if (settled) return;
+            settled = true;
+
             videoWrap.classList.add('video-ready');
 
             const minShow = getVarMs(videoWrap, '--vl-minshow', 220);
@@ -2336,9 +2341,43 @@ Vous incarnez un personnage incapable de sauter ; vous utilisez un lance-roquett
             }, remain);
           };
 
+          const forceStopLoading = () => {
+            if (!videoWrap.isConnected) return;
+            if (settled) return;
+            videoWrap.classList.remove('loading-visible');
+          };
+
           const onReady = () => requestAnimationFrame(() => settleReady());
+
           vid.addEventListener('loadeddata', onReady, { once: true });
           vid.addEventListener('canplay', onReady, { once: true });
+          vid.addEventListener('canplaythrough', onReady, { once: true });
+
+          const timeoutMs = getVarMs(videoWrap, '--vl-timeout', 9000);
+          const timeoutId = setTimeout(() => {
+            if (settled) return;
+            forceStopLoading();
+          }, timeoutMs);
+
+          const clearTimeoutSafe = () => clearTimeout(timeoutId);
+
+          const onErrorOrAbort = () => {
+            clearTimeoutSafe();
+            forceStopLoading();
+          };
+
+          vid.addEventListener('error', onErrorOrAbort, { once: true });
+          vid.addEventListener('abort', onErrorOrAbort, { once: true });
+
+          const guardCheck = () => {
+            if (settled) return;
+            if (readyNow()) {
+              clearTimeoutSafe();
+              settleReady();
+            }
+          };
+          requestAnimationFrame(guardCheck);
+          setTimeout(guardCheck, 120);
         }
 
         vid.addEventListener('error', () => {
