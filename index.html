@@ -54,6 +54,11 @@
       --vl-minshow: 220ms;
 
       --nav-h: 64px;
+        
+      /* New smooth transition vars */
+      --ease-smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
+      --ease-bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-elastic: cubic-bezier(0.25, 1.35, 0.45, 1);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -62,7 +67,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
       background: var(--bg);
       color: var(--text-color);
-      padding: 0; /* Modifié pour le full page layout */
+      padding: 0;
       overflow-x: hidden;
       background-attachment: fixed;
       background-size: cover;
@@ -96,28 +101,27 @@
       100% { opacity: 0.38; transform: translate3d(0, 0, 0) scale(0.98); }
     }
 
-    /* =========================
-       NOUVELLE ARCHITECTURE PAGES
-    ========================= */
-
     #site-root {
       min-height: 100vh;
       padding-top: calc(var(--nav-h) + 18px);
       padding-bottom: 26px;
     }
 
+    /* --- LAYOUT CENTRÉ ET COMPACT --- */
     #top-nav {
       position: fixed;
       top: 14px;
       left: 50%;
       transform: translateX(-50%);
-      width: min(1180px, calc(100vw - 28px));
+      width: fit-content;
+      max-width: calc(100vw - 28px);
       height: var(--nav-h);
-      z-index: 12000; /* Nav z-index */
+      z-index: 12000;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      justify-content: center;
+      /* Espacement augmenté entre toggles et tabs (64px) */
+      gap: 64px; 
       border-radius: 999px;
       background: rgba(255,255,255,0.045);
       border: 1px solid rgba(255,255,255,0.10);
@@ -126,58 +130,149 @@
       box-shadow:
         0 18px 55px rgba(0,0,0,0.48),
         inset 0 1px 0 rgba(255,255,255,0.06);
-      padding: 10px 12px;
+      padding: 10px 14px; 
       overflow: hidden;
     }
 
-    .nav-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
-
-    .nav-mark {
-      display: flex; align-items: center; gap: 10px;
-      padding: 8px 12px 8px 10px; border-radius: 999px;
-      background: rgba(0,0,0,0.18);
-      border: 1px solid rgba(255,255,255,0.10);
-      box-shadow: 0 10px 28px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.08);
-      backdrop-filter: blur(14px) saturate(140%);
-      -webkit-backdrop-filter: blur(14px) saturate(140%);
-      white-space: nowrap; flex: 0 0 auto;
+    /* --- TOGGLE BUTTONS (THEME & LANG) --- */
+    .toggle-btn {
+      appearance: none;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.8);
+      transition: all 0.3s var(--ease-smooth);
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+      /* FIX: Force le masque d'écrêtage pendant les animations */
+      -webkit-mask-image: -webkit-radial-gradient(white, black);
+      mask-image: radial-gradient(white, black);
     }
-    .nav-mark img { width: 22px; height: 22px; border-radius: 6px; opacity: 0.92; display: block; }
-    .nav-mark .nav-name { font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.86rem; color: rgba(255,255,255,0.92); }
+    .toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(1.05);
+      color: #fff;
+    }
+    .toggle-btn:active {
+      transform: scale(0.92);
+    }
 
-    .nav-tabs { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1 1 auto; justify-content: center; }
+    /* THEME ICON ANIMATIONS */
+    .toggle-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      position: absolute;
+      transition: all 0.4s var(--ease-bouncy);
+    }
+    /* Day/Night Logic */
+    .theme-toggle-btn .moon-icon { transform: translateY(0) rotate(0); opacity: 1; }
+    .theme-toggle-btn .sun-icon { transform: translateY(20px) rotate(90deg); opacity: 0; }
+      
+    .theme-toggle-btn.is-day .moon-icon { transform: translateY(-20px) rotate(-90deg); opacity: 0; }
+    .theme-toggle-btn.is-day .sun-icon { transform: translateY(0) rotate(0); opacity: 1; }
+
+    /* LANG TEXT ANIMATIONS (Same as Icons) */
+    .lang-toggle-btn .lang-text {
+      position: absolute;
+      font-weight: 800;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      transition: all 0.4s var(--ease-bouncy);
+      user-select: none;
+    }
+      
+    /* FR is default visible (like Moon) */
+    .lang-toggle-btn .lang-fr { transform: translateY(0) rotate(0); opacity: 1; }
+    .lang-toggle-btn .lang-en { transform: translateY(20px) rotate(90deg); opacity: 0; }
+
+    /* EN Active state (like Sun) */
+    .lang-toggle-btn.is-en .lang-fr { transform: translateY(-20px) rotate(-90deg); opacity: 0; }
+    .lang-toggle-btn.is-en .lang-en { transform: translateY(0) rotate(0); opacity: 1; }
+
+
+    .nav-tabs { 
+        display: flex; 
+        align-items: center; 
+        gap: 14px; 
+        min-width: 0; 
+        flex: 0 1 auto; 
+        justify-content: center; 
+        position: relative;
+    }
+
+    /* --- SLIDING INDICATOR --- */
+    #nav-pill {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        height: 100%;
+        border-radius: 999px;
+        background: rgba(107,140,255,0.08); 
+        border: 1px solid rgba(107,140,255,0.4);
+        box-shadow: 
+            0 0 15px rgba(107,140,255,0.15), 
+            inset 0 0 10px rgba(107,140,255,0.05);
+        pointer-events: none;
+        z-index: 1; 
+        opacity: 0; 
+        transition: 
+            left 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), 
+            width 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), 
+            opacity 0.3s ease;
+    }
 
     .nav-tab {
-      appearance: none; border: 1px solid transparent; background: rgba(255,255,255,0.06);
-      color: rgba(255,255,255,0.88); font-weight: 800; letter-spacing: 0.10em;
-      text-transform: uppercase; font-size: 0.78rem; padding: 10px 12px;
-      border-radius: 999px; cursor: pointer;
-      transition: all 520ms cubic-bezier(0.22, 1, 0.36, 1);
+      appearance: none; 
+      border: 1px solid rgba(255, 255, 255, 0.08); 
+      background: rgba(255,255,255,0.02);
+      color: rgba(255,255,255,0.75); 
+      font-weight: 800; 
+      letter-spacing: 0.12em;
+      text-transform: uppercase; 
+      font-size: 0.75rem; 
+      padding: 10px 16px;
+      border-radius: 999px; 
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      z-index: 2; 
+      transition: color 0.3s ease, transform 0.2s ease, background 0.3s ease, border-color 0.3s ease; 
       user-select: none; -webkit-user-select: none; white-space: nowrap;
+      backdrop-filter: blur(4px);
     }
-    .nav-tab:hover { background: rgba(255,255,255,0.10); transform: translate3d(0, -1px, 0) scale(1.03); box-shadow: 0 14px 36px rgba(0,0,0,0.28); }
+
+    .nav-tab:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.45);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .nav-tab:active {
+      transform: translateY(0px); 
+      transition-duration: 0.1s;
+    }
+
     .nav-tab.active {
-      background: rgba(107,140,255,0.18); border-color: rgba(107,140,255,0.62);
-      color: rgba(255,255,255,0.96);
-      box-shadow: 0 18px 48px rgba(0,0,0,0.34), 0 0 0 6px rgba(107,140,255,0.10);
-      transform: translate3d(0, -1px, 0) scale(1.03);
+      background: transparent; 
+      border-color: transparent; 
+      color: #fff;
+      text-shadow: 0 0 12px rgba(107, 140, 255, 0.5);
+      pointer-events: none;
+      box-shadow: none; 
     }
-
-    .nav-right { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
-
-    /* Lang switch style update for nav */
-    #lang-switch { display: flex; justify-content: center; gap: 8px; margin: 0; opacity: 1; transform: none; animation: none; }
-    #lang-switch button {
-      font-family: inherit; background: rgba(255, 255, 255, 0.07); color: #f2f2f2;
-      border: 1px solid transparent; font-size: 0.92rem; padding: 0.55rem 1.05rem;
-      border-radius: 999px; cursor: pointer; font-weight: 700; letter-spacing: 0.05em;
-      display: flex; align-items: center; justify-content: center; line-height: 1;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2), inset 0 0 0 rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px); position: relative; overflow: hidden;
-      transition: all 0.5s ease;
-    }
-    #lang-switch button:hover { background: rgba(255, 255, 255, 0.12); transform: translate3d(0,-1px,0) scale(1.03); }
-    #lang-switch button.selected { background: rgba(107, 140, 255, 0.18); border-color: var(--accent); color: #ffffff; }
 
     #page-viewport { width: 100vw; overflow: hidden; }
     #pages { display: flex; width: 500vw; transform: translate3d(0,0,0); transition: transform 820ms cubic-bezier(0.22, 1, 0.36, 1); will-change: transform; }
@@ -188,7 +283,6 @@
     .page-hero h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 950; letter-spacing: 0.02em; }
     .page-hero p { margin-top: 10px; color: rgba(255,255,255,0.70); letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; font-size: 0.95rem; }
 
-    /* Modules Accueil */
     .glass-block {
       max-width: 980px; margin: 0 auto 18px auto; padding: 1.15rem 1.35rem; border-radius: var(--radius);
       background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.08);
@@ -223,42 +317,48 @@
     .about-text h2 { font-size: 1.15rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.86); font-weight: 950; margin-bottom: 10px; }
     .about-text p { color: rgba(255,255,255,0.86); line-height: 1.75; white-space: pre-line; font-size: 1.03rem; }
 
-    /* Marquee */
     .marquee { margin-top: 18px; border-radius: 22px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.025); backdrop-filter: blur(18px); }
     .marquee-track { display: flex; gap: 12px; padding: 12px; width: max-content; animation: marquee 24s linear infinite; }
     @keyframes marquee { 0% { transform: translate3d(0,0,0); } 100% { transform: translate3d(-50%,0,0); } }
     .marquee-item { width: 180px; height: 96px; border-radius: 18px; background: radial-gradient(80% 120% at 20% 20%, rgba(107,140,255,0.18) 0%, rgba(0,0,0,0) 60%), rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.10); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.88); font-weight: 900; letter-spacing: 0.12em; font-size: 0.75rem; box-shadow: 0 16px 42px rgba(0,0,0,0.28); }
 
-    /* Liens */
     .links-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 14px; }
-    .link-pill { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 14px; border-radius: 18px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(18px); text-decoration: none; color: rgba(255,255,255,0.90); transition: all 520ms cubic-bezier(0.22, 1, 0.36, 1); cursor: pointer; }
-    .link-pill:hover { transform: translate3d(0,-1px,0) scale(1.01); background: rgba(255,255,255,0.05); border-color: rgba(107,140,255,0.25); box-shadow: 0 24px 66px rgba(0,0,0,0.46); }
+    .link-pill { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 14px; border-radius: 18px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(18px); text-decoration: none; color: rgba(255,255,255,0.90); transition: all 300ms var(--ease-smooth); cursor: pointer; }
+    .link-pill:hover { transform: translateY(-2px) scale(1.01); background: rgba(255,255,255,0.06); border-color: rgba(107,140,255,0.25); box-shadow: 0 14px 40px rgba(0,0,0,0.3); }
+    .link-pill:active { transform: scale(0.99); }
     .link-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
     .link-left img { width: 20px; height: 20px; opacity: 0.92; display: block; }
     .link-title { font-weight: 950; letter-spacing: 0.10em; text-transform: uppercase; font-size: 0.82rem; color: rgba(255,255,255,0.92); }
     .link-desc { color: rgba(255,255,255,0.70); font-size: 0.95rem; }
 
-    /* Play Card & Modal */
     .play-card { border-radius: 22px; padding: 1.1rem 1.2rem; background: radial-gradient(90% 120% at 20% 10%, rgba(107,140,255,0.22) 0%, rgba(0,0,0,0) 60%), rgba(12,12,14,0.64); border: 1px solid rgba(255,255,255,0.10); backdrop-filter: blur(22px); box-shadow: 0 22px 60px rgba(0,0,0,0.55); }
     .play-card h2 { font-size: 1.15rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.90); font-weight: 950; margin-bottom: 10px; }
     .play-card p { color: rgba(255,255,255,0.82); line-height: 1.65; margin-bottom: 14px; white-space: pre-line; font-size: 1.03rem; }
-    .play-cta { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 18px; border-radius: 999px; background: rgba(214,214,218,0.92); color: #0b0b0c; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid rgba(0,0,0,0.10); box-shadow: 0 16px 42px rgba(0,0,0,0.28); cursor: pointer; transition: all 560ms cubic-bezier(0.22, 1, 0.36, 1); }
-    .play-cta:hover { transform: translate3d(0,-1px,0) scale(1.03); box-shadow: 0 22px 54px rgba(0,0,0,0.30); }
+
+    /* FLUIDIFIED PLAY CTA */
+    .play-cta {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 18px;
+      border-radius: 999px; background: rgba(214,214,218,0.92); color: #0b0b0c;
+      font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase;
+      border: 1px solid rgba(0,0,0,0.10); box-shadow: 0 16px 42px rgba(0,0,0,0.28);
+      cursor: pointer;
+      transition: transform 0.25s var(--ease-smooth), box-shadow 0.25s var(--ease-smooth), background 0.25s ease;
+    }
+    .play-cta:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 20px 50px rgba(0,0,0,0.35); background: #fff; }
+    .play-cta:active { transform: scale(0.96); }
 
     #play-overlay { position: fixed; inset: 0; z-index: 14000; background: rgba(0,0,0,0.62); backdrop-filter: blur(12px); opacity: 0; pointer-events: none; transition: opacity 240ms ease; }
     #play-overlay.active { opacity: 1; pointer-events: auto; }
     .play-modal { position: absolute; left: 50%; top: 50%; transform: translate3d(-50%,-50%,0); width: min(1320px, calc(100vw - 28px)); height: min(860px, calc(100vh - 28px)); border-radius: 22px; overflow: hidden; border: 1px solid rgba(255,255,255,0.10); background: rgba(0,0,0,0.75); box-shadow: 0 28px 90px rgba(0,0,0,0.70); }
     .play-modal-top { height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; background: rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.10); backdrop-filter: blur(18px); }
     .play-modal-title .t { font-weight: 950; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.85rem; color: rgba(255,255,255,0.92); }
-    .play-close { appearance: none; border: 1px solid rgba(255,255,255,0.14); background: rgba(0,0,0,0.18); color: rgba(255,255,255,0.92); border-radius: 999px; padding: 10px 14px; cursor: pointer; font-weight: 900; letter-spacing: 0.10em; font-size: 0.75rem; transition: all 520ms; }
-    .play-close:hover { transform: translate3d(0,-1px,0) scale(1.03); background: rgba(255,255,255,0.08); }
+    .play-close { appearance: none; border: 1px solid rgba(255,255,255,0.14); background: rgba(0,0,0,0.18); color: rgba(255,255,255,0.92); border-radius: 999px; padding: 10px 14px; cursor: pointer; font-weight: 900; letter-spacing: 0.10em; font-size: 0.75rem; transition: all 300ms var(--ease-smooth); }
+    .play-close:hover { transform: translateY(-1px) scale(1.03); background: rgba(255,255,255,0.08); }
+    .play-close:active { transform: scale(0.95); }
     .play-iframe { width: 100%; height: calc(100% - 52px); border: 0; display: block; background: #000; }
 
     @media (max-width: 768px) { #top-nav { top: 10px; } .nav-mark .nav-name { display: none; } }
 
-    /* =========================
-       TES STYLES CARTES (INTEGRALITE DU CODE FOURNI)
-    ========================= */
     header { display: none; }
     .intro-card { display: none; }
     .section-title { display: none; }
@@ -298,15 +398,44 @@
     .buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; align-items: center; }
     .engine-logo { height: 1.5rem; opacity: 0.7; margin-top: auto; align-self: flex-end; }
 
-    .action-button { position: relative; isolation: isolate; background: rgba(214,214,218,0.92); color: #0b0b0c; padding: 0.6rem 1.2rem; font-size: 0.95rem; font-weight: 650; border-radius: 1.5rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid rgba(0,0,0,0.10); cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; transform: translate3d(0,0,0) scale(1); transform-origin: center; backface-visibility: hidden; will-change: transform, box-shadow, background, border-color, filter; box-shadow: 0 10px 22px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.62); transition: transform 560ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 1800ms cubic-bezier(0.22, 1, 0.36, 1), background 2600ms cubic-bezier(0.22, 1, 0.36, 1), border-color 2600ms cubic-bezier(0.22, 1, 0.36, 1), filter 2600ms cubic-bezier(0.22, 1, 0.36, 1); }
-    .action-button::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transform: translate3d(-18%, 0, 0); background: linear-gradient( 115deg, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.45) 35%, rgba(255,255,255,0.0) 70% ); mix-blend-mode: soft-light; transition: opacity 520ms cubic-bezier(0.22, 1, 0.36, 1), transform 820ms cubic-bezier(0.22, 1, 0.36, 1); }
-    .action-button::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; border: 1px solid rgba(255,255,255,0.0); transition: opacity 220ms ease, border-color 220ms ease; }
-    @media (hover: hover) and (pointer: fine) { .action-button:hover { background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(242,242,244,0.92) 100%); border-color: rgba(0,0,0,0.10); transform: translate3d(0, -1px, 0) scale(1.055); filter: brightness(1.02); box-shadow: 0 22px 54px rgba(0,0,0,0.30), 0 0 0 1px rgba(255,255,255,0.14), inset 0 1px 0 rgba(255,255,255,0.86); } .action-button:hover::before { opacity: 0.90; transform: translate3d(18%, 0, 0); } .action-button:hover::after { opacity: 1; border-color: rgba(255,255,255,0.55); } }
-    .action-button:active { transform: translate3d(0, 0, 0) scale(1.02); transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 700ms cubic-bezier(0.22, 1, 0.36, 1), background 1400ms cubic-bezier(0.22, 1, 0.36, 1), border-color 1400ms cubic-bezier(0.22, 1, 0.36, 1), filter 1400ms cubic-bezier(0.22, 1, 0.36, 1); filter: brightness(1.01); box-shadow: 0 12px 28px rgba(0,0,0,0.26), 0 0 0 1px rgba(255,255,255,0.10), inset 0 1px 0 rgba(255,255,255,0.58); }
+    /* FLUIDIFIED ACTION BUTTONS */
+    .action-button {
+      position: relative; isolation: isolate; background: rgba(214,214,218,0.92); color: #0b0b0c;
+      padding: 0.6rem 1.2rem; font-size: 0.95rem; font-weight: 650; border-radius: 1.5rem;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;
+      border: 1px solid rgba(0,0,0,0.10); cursor: pointer; user-select: none;
+      -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+      transform: translate3d(0,0,0) scale(1); transform-origin: center;
+      backface-visibility: hidden; will-change: transform, box-shadow;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.62);
+      /* Simplified and smoothed transitions */
+      transition: transform 0.25s var(--ease-smooth), box-shadow 0.25s var(--ease-smooth), background 0.3s ease, border-color 0.3s ease, filter 0.3s ease;
+    }
+    .action-button::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transform: translate3d(-18%, 0, 0); background: linear-gradient( 115deg, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.45) 35%, rgba(255,255,255,0.0) 70% ); mix-blend-mode: soft-light; transition: opacity 0.3s ease, transform 0.4s ease; }
+    .action-button::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; border: 1px solid rgba(255,255,255,0.0); transition: opacity 0.2s ease, border-color 0.2s ease; }
+
+    @media (hover: hover) and (pointer: fine) {
+      .action-button:hover {
+        background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(242,242,244,0.92) 100%);
+        border-color: rgba(0,0,0,0.10);
+        transform: translateY(-2px) scale(1.05);
+        filter: brightness(1.02);
+        box-shadow: 0 18px 45px rgba(0,0,0,0.30), 0 0 0 1px rgba(255,255,255,0.14), inset 0 1px 0 rgba(255,255,255,0.86);
+      }
+      .action-button:hover::before { opacity: 0.90; transform: translate3d(18%, 0, 0); }
+      .action-button:hover::after { opacity: 1; border-color: rgba(255,255,255,0.55); }
+    }
+    .action-button:active {
+      transform: scale(0.96);
+      transition: transform 0.1s ease;
+      filter: brightness(0.98);
+      box-shadow: 0 5px 12px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.58);
+    }
     .action-button:focus-visible { outline: none; border-color: rgba(255,255,255,0.22); box-shadow: 0 22px 54px rgba(0,0,0,0.30), 0 0 0 2px rgba(255,255,255,0.20), inset 0 1px 0 rgba(255,255,255,0.86); }
     .action-button:focus-visible::after { opacity: 1; border-color: rgba(255,255,255,0.72); }
-    .action-button img { display: block; height: 1rem; margin: 0; pointer-events: none; transform: translate3d(0,0,0) scale(1); will-change: transform, opacity; transition: transform 560ms cubic-bezier(0.22, 1, 0.36, 1), opacity 900ms cubic-bezier(0.22, 1, 0.36, 1); }
-    @media (hover: hover) and (pointer: fine) { .action-button:hover img { transform: translate3d(0,0,0) scale(1.08); } }
+
+    .action-button img { display: block; height: 1rem; margin: 0; pointer-events: none; transform: translate3d(0,0,0) scale(1); will-change: transform, opacity; transition: transform 0.3s var(--ease-smooth); }
+    @media (hover: hover) and (pointer: fine) { .action-button:hover img { transform: scale(1.1); } }
     .action-button.download-only { border-radius: 50%; width: 2.4rem; height: 2.4rem; padding: 0.3rem; display: flex; align-items: center; justify-content: center; }
     .action-button.download-only img { width: 1.3rem; height: 1.3rem; }
     @media (prefers-reduced-motion: reduce) { .action-button, .action-button img, .action-button::before, .action-button::after { transition: none !important; } .action-button:hover { transform: none !important; } .action-button::before { transform: none !important; opacity: 0 !important; } .action-button::after { opacity: 0 !important; } .card-front.skel-on::after { animation: none !important; } .expanded-video.loading-visible .loading-dots span { animation: none !important; opacity: 0.7 !important; transform: none !important; } }
@@ -315,7 +444,7 @@
     #overlay.active { opacity: 1; pointer-events: auto; }
     #overlay.closing { opacity: 0; background-color: rgba(0,0,0,0); backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); transition: opacity 140ms cubic-bezier(0.22, 1, 0.36, 1), background-color 140ms cubic-bezier(0.22, 1, 0.36, 1), backdrop-filter 140ms cubic-bezier(0.22, 1, 0.36, 1), -webkit-backdrop-filter 140ms cubic-bezier(0.22, 1, 0.36, 1); pointer-events: none; }
 
-    #expanded-layer { position: fixed; inset: 0; z-index: 13000; pointer-events: none; } /* MODIFIE ICI: Z-INDEX > 12000 (Nav) */
+    #expanded-layer { position: fixed; inset: 0; z-index: 13000; pointer-events: none; }
     #expanded-layer .project.expanded { pointer-events: auto; z-index: 13001; }
 
     body.has-expanded { overflow: hidden; }
@@ -350,7 +479,6 @@
     .project.expanded .engine-logo { height: 1.7rem; }
     .normal-view { display: flex; flex-direction: column; gap: 1rem; height: 100%; }
     .details-view { display: none; flex-direction: column; gap: 1rem; height: 100%; }
-    .normal-view p[data-i18n$="_desc"] { white-space: pre-line; }
     .project.expanded .normal-view p[data-i18n$="_desc"] { line-height: 1.4; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; overflow: hidden; max-height: calc(1.4em * 5); }
     .details-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
     .details-title { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
@@ -398,7 +526,7 @@
   ">
     <h1 style="font-size: 1.8rem; margin-bottom: 4rem; letter-spacing: 1px;">ANTOINE PEZZULO<br>PORTFOLIO</h1>
     <p style="font-size: 1rem; max-width: 400px; line-height: 1.6; opacity: 0.8; margin-bottom: 1.5rem;">
-      Conçu pour ordinateur<br><br>Designed for desktop<br><br>
+      Conçu pour ordinateur
     </p>
     <img src="img/mobile-dead.png" alt="Mobile unsupported" style="width: 120px; opacity: 0.8; margin-top: 2rem;" />
   </div>
@@ -416,7 +544,7 @@
   <div id="play-overlay" aria-hidden="true">
     <div class="play-modal" role="dialog" aria-modal="true" aria-label="METRO Demo">
       <div class="play-modal-top">
-        <div class="play-modal-title"><span class="t" data-i18n="play_overlay_title">METRO — Démo</span></div>
+        <div class="play-modal-title"><span class="t">METRO — Démo</span></div>
         <button class="play-close" type="button" data-play-close>Fermer</button>
       </div>
       <iframe class="play-iframe" data-play-iframe src="" allow="autoplay; fullscreen; gamepad; clipboard-read; clipboard-write" loading="eager"></iframe>
@@ -428,25 +556,26 @@
     <div id="expanded-layer" aria-hidden="true"></div>
 
     <nav id="top-nav" aria-label="Navigation">
-      <div class="nav-left">
-        <div class="nav-mark" aria-hidden="true">
-          <img src="img/logo.png" alt="" />
-          <div class="nav-name">ANTOINE</div>
-        </div>
-      </div>
+        
+      <button id="lang-btn" class="toggle-btn lang-toggle-btn" aria-label="Switch Language">
+        <span class="lang-text lang-fr">FR</span>
+        <span class="lang-text lang-en">EN</span>
+      </button>
+
       <div class="nav-tabs" role="tablist" aria-label="Pages">
-        <button class="nav-tab" type="button" data-page="accueil" data-i18n="tab_home">Accueil</button>
-        <button class="nav-tab" type="button" data-page="portfolio" data-i18n="tab_portfolio">Portfolio</button>
-        <button class="nav-tab" type="button" data-page="moi" data-i18n="tab_about">Moi</button>
-        <button class="nav-tab" type="button" data-page="liens" data-i18n="tab_links">Liens/Contact</button>
-        <button class="nav-tab" type="button" data-page="jouer" data-i18n="tab_play">Jouer</button>
+        <div id="nav-pill"></div>
+        <button class="nav-tab" type="button" data-page="accueil">Accueil</button>
+        <button class="nav-tab" type="button" data-page="portfolio">Portfolio</button>
+        <button class="nav-tab" type="button" data-page="moi">Moi</button>
+        <button class="nav-tab" type="button" data-page="liens">Liens/Contact</button>
+        <button class="nav-tab" type="button" data-page="jouer">Jouer</button>
       </div>
-      <div class="nav-right">
-        <div id="lang-switch">
-          <button data-lang="fr">Français</button>
-          <button data-lang="en">English</button>
-        </div>
-      </div>
+
+      <button id="theme-btn" class="toggle-btn theme-toggle-btn" aria-label="Toggle Theme">
+        <svg class="moon-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        <svg class="sun-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+      </button>
+
     </nav>
 
     <div id="page-viewport">
@@ -454,28 +583,28 @@
         <section class="page" data-page="accueil">
           <div class="page-inner">
             <div class="page-hero">
-              <h1 data-i18n="home_title">ANTOINE PEZZULO</h1>
-              <p data-i18n="home_subtitle">Junior Game Designer</p>
+              <h1>ANTOINE PEZZULO</h1>
+              <p>Junior Game Designer</p>
             </div>
 
             <div class="status-card">
-              <div class="label" data-i18n="home_status_label">Actuellement</div>
-              <div class="text" data-i18n="home_status_text">Recherche un stage à partir du <span class="strong">1er mai</span>.</div>
+              <div class="label">Actuellement</div>
+              <div class="text">Recherche un stage à partir du <span class="strong">1er mai</span>.</div>
             </div>
 
             <div class="glass-block" style="animation-delay:0.12s;">
-              <p data-i18n="home_welcome">Bienvenue sur mon portfolio.\nIci : une vitrine clean, smooth, et le reste dans les pages.</p>
+              <p>Portfolio.</p>
             </div>
 
             <div class="two-col">
               <div class="about-text">
-                <h2 data-i18n="home_card_title">En bref</h2>
-                <p data-i18n="home_card_text">Étudiant à ISART Digital, avec une appétence particulière pour la tutorialisation, l’UX, et la recherche de game feel.\nJ’aime travailler par itération dans le moteur, les mains dans le cambouis, afin de confronter rapidement les idées au jeu.</p>
+                <h2>En bref</h2>
+                <p>ISART Digital.\nUX • Tutorialisation • Game feel.</p>
               </div>
               <div class="play-card">
-                <h2 data-i18n="home_quickplay_title">Instant</h2>
-                <p data-i18n="home_quickplay_text">Tu veux juste jouer ?\nLance la démo de METRO en quasi plein écran.</p>
-                <button class="play-cta" type="button" data-open-demo><span data-i18n="home_quickplay_btn">Jouer à METRO</span></button>
+                <h2>Instant</h2>
+                <p>Démo METRO.</p>
+                <button class="play-cta" type="button" data-open-demo><span>Jouer à METRO</span></button>
               </div>
             </div>
           </div>
@@ -483,11 +612,12 @@
 
         <section class="page" data-page="portfolio">
           <div class="page-inner">
-            <div class="projects"><div class="project" data-video="videos/metro.mp4" data-first-frame="img/metro_frame.png">
+            <div class="projects">
+              <div class="project" data-video="videos/metro.mp4" data-first-frame="img/metro_frame.png">
                 <div class="card-inner">
                   <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 14l6-6 6 6"></path></svg>
-                    <span class="details-toggle-label" data-i18n="details_toggle">Détails</span>
+                    <span class="details-toggle-label">Détails</span>
                   </button>
                   <div class="card-face card-front">
                     <img src="img/metro.png" alt="METRO screenshot" />
@@ -507,7 +637,7 @@
                     <div class="card-back-content">
                       <div class="normal-view">
                         <div class="top-row">
-                          <div><h4>METRO</h4><span data-i18n="metro_team">Solo</span></div>
+                          <div><h4>METRO</h4><span>Solo</span></div>
                           <div class="buttons">
                             <a href="https://youtu.be/voMQWys06b8" target="_blank" rel="noopener noreferrer" class="action-button"><img src="img/ytb logo.png" alt="" />Trailer</a>
                             <a href="https://youtu.be/xdevRLeE7Kk" target="_blank" rel="noopener noreferrer" class="action-button"><img src="img/ytb logo.png" alt="" />Walkthrough</a>
@@ -515,14 +645,23 @@
                             <a href="files/METRO.zip" download class="action-button download-only"><img src="img/dl logo.png" alt="Download" /></a>
                           </div>
                         </div>
-                        <p data-i18n="metro_desc">METRO est un runner rythmé, réalisé en solo...</p>
+                        <p>Runner 1 bouton.</p>
                         <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
                       </div>
                       <div class="details-view">
                         <div class="details-header">
-                          <div class="details-title"><h4>METRO</h4><span data-i18n="metro_team">Solo</span></div>
+                          <div class="details-title"><h4>METRO</h4><span>Solo</span></div>
                         </div>
-                        <div class="details-text" data-i18n="metro_more" data-i18n-html></div>
+                        <div class="details-text" data-i18n-html>
+                          <div class="details-rt">
+                            <h5>Focus</h5>
+                            <ul>
+                              <li>Game feel</li>
+                              <li>Lisibilité</li>
+                              <li>Rythme</li>
+                            </ul>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -533,7 +672,7 @@
                 <div class="card-inner">
                   <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 14l6-6 6 6"></path></svg>
-                    <span class="details-toggle-label" data-i18n="details_toggle">Détails</span>
+                    <span class="details-toggle-label">Détails</span>
                   </button>
                   <div class="card-face card-front">
                     <img src="img/mouse knight.png" alt="Mouse Knight screenshot" />
@@ -552,7 +691,7 @@
                     <div class="card-back-content">
                       <div class="normal-view">
                         <div class="top-row">
-                          <div><h4>Mouse Knight</h4><span data-i18n="mouse_team">Équipe de 5</span></div>
+                          <div><h4>Mouse Knight</h4><span>Équipe de 5</span></div>
                           <div class="buttons">
                             <a href="https://youtu.be/pXoGr9FD1V4" target="_blank" rel="noopener noreferrer" class="action-button"><img src="img/ytb logo.png" alt="" />Trailer</a>
                             <a href="https://youtu.be/__Ve0LGJgvs" target="_blank" rel="noopener noreferrer" class="action-button"><img src="img/ytb logo.png" alt="" />Walkthrough</a>
@@ -560,14 +699,19 @@
                             <a href="#" class="action-button download-only"><img src="img/dl logo.png" alt="" /></a>
                           </div>
                         </div>
-                        <p data-i18n="mouse_desc">Mouse Knight est un brawler-platformer...</p>
+                        <p>Brawler-platformer 3D.</p>
                         <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
                       </div>
                       <div class="details-view">
                         <div class="details-header">
-                          <div class="details-title"><h4>Mouse Knight</h4><span data-i18n="mouse_team">Équipe de 5</span></div>
+                          <div class="details-title"><h4>Mouse Knight</h4><span>Équipe de 5</span></div>
                         </div>
-                        <div class="details-text" data-i18n="mouse_more" data-i18n-html></div>
+                        <div class="details-text" data-i18n-html>
+                          <div class="details-rt">
+                            <h5>Rôle</h5>
+                            <p>GD • LD • Prog.</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -578,7 +722,7 @@
                 <div class="card-inner">
                   <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 14l6-6 6 6"></path></svg>
-                    <span class="details-toggle-label" data-i18n="details_toggle">Détails</span>
+                    <span class="details-toggle-label">Détails</span>
                   </button>
                   <div class="card-face card-front">
                     <img src="img/voracines.png" alt="Voracines screenshot" />
@@ -591,20 +735,25 @@
                     <div class="card-back-content">
                       <div class="normal-view">
                         <div class="top-row">
-                          <div><h4>Voracines</h4><span data-i18n="vor_team">Équipe de 8</span></div>
+                          <div><h4>Voracines</h4><span>Équipe de 8</span></div>
                           <div class="buttons">
                             <a href="https://youtu.be/bdllN41GYCA" target="_blank" rel="noopener noreferrer" class="action-button"><img src="img/ytb logo.png" alt="" />Trailer</a>
                             <a href="https://youtu.be/3aI1dK4PaKc" target="_blank" rel="noopener noreferrer" class="action-button"><img src="img/ytb logo.png" alt="" />Guide</a>
                           </div>
                         </div>
-                        <p data-i18n="vor_desc">Voracines est un jeu de plateau tactique...</p>
+                        <p>Jeu de plateau.</p>
                         <img src="img/no engine logo.png" class="engine-logo" alt="No engine logo" />
                       </div>
                       <div class="details-view">
                         <div class="details-header">
-                          <div class="details-title"><h4>Voracines</h4><span data-i18n="vor_team">Équipe de 8</span></div>
+                          <div class="details-title"><h4>Voracines</h4><span>Équipe de 8</span></div>
                         </div>
-                        <div class="details-text" data-i18n="vor_more" data-i18n-html></div>
+                        <div class="details-text" data-i18n-html>
+                          <div class="details-rt">
+                            <h5>Livrable</h5>
+                            <p>Règles • Playtests.</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -615,7 +764,7 @@
                 <div class="card-inner">
                   <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 14l6-6 6 6"></path></svg>
-                    <span class="details-toggle-label" data-i18n="details_toggle">Détails</span>
+                    <span class="details-toggle-label">Détails</span>
                   </button>
                   <div class="card-face card-front">
                     <img src="img/reflect.png" alt="Reflect screenshot" />
@@ -628,21 +777,26 @@
                     <div class="card-back-content">
                       <div class="normal-view">
                         <div class="top-row">
-                          <div><h4>Reflect</h4><span data-i18n="ref_team">Équipe de 3</span></div>
+                          <div><h4>Reflect</h4><span>Équipe de 3</span></div>
                           <div class="buttons">
                             <a href="#" class="action-button"><img src="img/ytb logo.png" alt="" />Walkthrough</a>
                             <a href="#" class="action-button itch-link"><img src="img/itch logo.png" alt="" />Itch.io</a>
                             <a href="#" class="action-button download-only"><img src="img/dl logo.png" alt="" /></a>
                           </div>
                         </div>
-                        <p data-i18n="ref_desc">Reflect est un die and retry 2D...</p>
+                        <p>Die & retry 2D.</p>
                         <img src="img/godot logo.png" class="engine-logo" alt="Godot Logo" />
                       </div>
                       <div class="details-view">
                         <div class="details-header">
-                          <div class="details-title"><h4>Reflect</h4><span data-i18n="ref_team">Équipe de 3</span></div>
+                          <div class="details-title"><h4>Reflect</h4><span>Équipe de 3</span></div>
                         </div>
-                        <div class="details-text" data-i18n="ref_more" data-i18n-html></div>
+                        <div class="details-text" data-i18n-html>
+                          <div class="details-rt">
+                            <h5>Focus</h5>
+                            <p>LD.</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -653,7 +807,7 @@
                 <div class="card-inner">
                   <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 14l6-6 6 6"></path></svg>
-                    <span class="details-toggle-label" data-i18n="details_toggle">Détails</span>
+                    <span class="details-toggle-label">Détails</span>
                   </button>
                   <div class="card-face card-front">
                     <img src="img/pleasant chalk.png" alt="Pleasant Chalk screenshot" />
@@ -669,21 +823,26 @@
                     <div class="card-back-content">
                       <div class="normal-view">
                         <div class="top-row">
-                          <div><h4>Pleasant Chalk</h4><span data-i18n="chalk_team">Solo</span></div>
+                          <div><h4>Pleasant Chalk</h4><span>Solo</span></div>
                           <div class="buttons">
                             <a href="https://youtu.be/OlWn9bAsLxc" target="_blank" rel="noopener noreferrer" class="action-button"><img src="img/ytb logo.png" alt="" />Walkthrough</a>
                             <a href="#" class="action-button itch-link"><img src="img/itch logo.png" alt="" />Itch.io</a>
                             <a href="files/Pleasant Chalk.zip" download class="action-button download-only"><img src="img/dl logo.png" alt="" /></a>
                           </div>
                         </div>
-                        <p data-i18n="chalk_desc">Pleasant Chalk est un chill game...</p>
+                        <p>Juice / polish.</p>
                         <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
                       </div>
                       <div class="details-view">
                         <div class="details-header">
-                          <div class="details-title"><h4>Pleasant Chalk</h4><span data-i18n="chalk_team">Solo</span></div>
+                          <div class="details-title"><h4>Pleasant Chalk</h4><span>Solo</span></div>
                         </div>
-                        <div class="details-text" data-i18n="chalk_more" data-i18n-html></div>
+                        <div class="details-text" data-i18n-html>
+                          <div class="details-rt">
+                            <h5>Focus</h5>
+                            <p>Feedback.</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -694,7 +853,7 @@
                 <div class="card-inner">
                   <button type="button" class="details-toggle" data-details-toggle aria-label="Toggle details">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 14l6-6 6 6"></path></svg>
-                    <span class="details-toggle-label" data-i18n="details_toggle">Détails</span>
+                    <span class="details-toggle-label">Détails</span>
                   </button>
                   <div class="card-face card-front">
                     <img src="img/muscles & rockets.png" alt="Muscles & Rockets screenshot" />
@@ -710,7 +869,7 @@
                     <div class="card-back-content">
                       <div class="normal-view">
                         <div class="top-row">
-                          <div><h4>Muscles & Rockets</h4><span data-i18n="mar_team">Équipe de 8</span></div>
+                          <div><h4>Muscles & Rockets</h4><span>Équipe de 8</span></div>
                           <div class="buttons">
                             <a href="https://youtu.be/cdR5du5tKaw" target="_blank" rel="noopener noreferrer" class="action-button"><img src="img/ytb logo.png" alt="" />Trailer</a>
                             <a href="https://youtu.be/Rc5iw1KlldQ" target="_blank" rel="noopener noreferrer" class="action-button"><img src="img/ytb logo.png" alt="" />Walkthrough</a>
@@ -718,25 +877,34 @@
                             <a href="files/Muscles & Rockets.zip" download class="action-button download-only"><img src="img/dl logo.png" alt="" /></a>
                           </div>
                         </div>
-                        <p data-i18n="mar_desc">Muscles & Rockets est un jeu d’action-platformer...</p>
+                        <p>2.5D action.</p>
                         <img src="img/unity logo.png" class="engine-logo" alt="Unity Logo" />
                       </div>
                       <div class="details-view">
                         <div class="details-header">
-                          <div class="details-title"><h4>Muscles & Rockets</h4><span data-i18n="mar_team">Équipe de 8</span></div>
+                          <div class="details-title"><h4>Muscles & Rockets</h4><span>Équipe de 8</span></div>
                         </div>
-                        <div class="details-text" data-i18n="mar_more" data-i18n-html></div>
+                        <div class="details-text" data-i18n-html>
+                          <div class="details-rt">
+                            <h5>Rôle</h5>
+                            <p>Tuto • LD.</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-            </div> </div> </section> <section class="page" data-page="moi">
+            </div>
+          </div>
+        </section>
+
+        <section class="page" data-page="moi">
           <div class="page-inner">
             <div class="page-hero">
-              <h1 data-i18n="about_title">Moi</h1>
-              <p data-i18n="about_subtitle">Qui suis-je ?</p>
+              <h1>Moi</h1>
+              <p>Bio</p>
             </div>
 
             <div class="portrait-wrap">
@@ -744,12 +912,8 @@
                 <img src="img/portrait.PNG" alt="Antoine Pezzulo" />
               </div>
               <div class="about-text">
-                <h2 data-i18n="about_card_title">À propos</h2>
-                <p data-i18n="about_text">
-Je suis étudiant en game design à ISART Digital.
-Je mets une grosse priorité sur l’UX, la tutorialisation et le game feel.
-Mon kiff : itérer vite dans le moteur, confronter les intentions au jeu, et polir jusqu’à obtenir une expérience marquante.
-                </p>
+                <h2>À propos</h2>
+                <p>ISART.\nUX • Tuto • Game feel.</p>
               </div>
             </div>
 
@@ -778,8 +942,8 @@ Mon kiff : itérer vite dans le moteur, confronter les intentions au jeu, et pol
         <section class="page" data-page="liens">
           <div class="page-inner">
             <div class="page-hero">
-              <h1 data-i18n="links_title">Liens</h1>
-              <p data-i18n="links_subtitle">Me contacter & mes réseaux</p>
+              <h1>Liens</h1>
+              <p>Contact</p>
             </div>
 
             <div style="max-width:680px; margin:0 auto;">
@@ -797,12 +961,12 @@ Mon kiff : itérer vite dans le moteur, confronter les intentions au jeu, et pol
                     <img src="img/itch logo.png" alt="Itch"/>
                     <div class="link-title">Itch.io</div>
                   </div>
-                  <div class="link-desc">Mes protos</div>
+                  <div class="link-desc">Protos</div>
                 </a>
 
                 <a href="files/CV_Antoine_Pezzulo_FR.pdf" target="_blank" class="link-pill">
                   <div class="link-left">
-                     <span style="font-size:1.2rem;">📄</span>
+                      <span style="font-size:1.2rem;">📄</span>
                     <div class="link-title">CV Français</div>
                   </div>
                   <div class="link-desc">PDF</div>
@@ -810,7 +974,7 @@ Mon kiff : itérer vite dans le moteur, confronter les intentions au jeu, et pol
 
                  <a href="files/CV_Antoine_Pezzulo_EN.pdf" target="_blank" class="link-pill">
                   <div class="link-left">
-                     <span style="font-size:1.2rem;">📄</span>
+                      <span style="font-size:1.2rem;">📄</span>
                     <div class="link-title">CV English</div>
                   </div>
                   <div class="link-desc">PDF</div>
@@ -827,7 +991,7 @@ Mon kiff : itérer vite dans le moteur, confronter les intentions au jeu, et pol
                 <div class="link-pill" data-copy="+33695691082">
                   <div class="link-left">
                     <span style="font-size:1.2rem;">📞</span>
-                    <div class="link-title" data-i18n="phone">Téléphone</div>
+                    <div class="link-title">Téléphone</div>
                   </div>
                   <div class="link-desc copy-trigger">+33 6 95 69 10 82</div>
                 </div>
@@ -839,144 +1003,96 @@ Mon kiff : itérer vite dans le moteur, confronter les intentions au jeu, et pol
         <section class="page" data-page="jouer">
           <div class="page-inner">
             <div class="page-hero">
-              <h1 data-i18n="play_page_title">Jouer</h1>
-              <p data-i18n="play_page_subtitle">Démo interactive</p>
+              <h1>Jouer</h1>
+              <p>Démo</p>
             </div>
 
             <div class="glass-block" style="text-align:center;">
-              <p data-i18n="play_intro">
-                Envie de tester directement ?
-                Voici une version WebGL de <strong>METRO</strong>.
-                La qualité peut varier selon ton navigateur.
-              </p>
+              <p>METRO en WebGL.</p>
             </div>
 
             <div style="display:flex; justify-content:center; margin-top:20px;">
               <div class="play-card" style="width:100%; max-width:500px; text-align:center;">
                  <img src="img/metro_frame.png" alt="Metro" style="width:100%; border-radius:12px; margin-bottom:18px; border:1px solid rgba(255,255,255,0.1); opacity:0.9;" />
-                 <h2 data-i18n="play_card_title">METRO - WebGL</h2>
-                 <p data-i18n="play_card_desc">Runner rythmique à un bouton.</p>
+                 <h2>METRO - WebGL</h2>
+                 <p>Runner 1 bouton.</p>
                  <button class="play-cta" type="button" data-open-demo>
-                  <span data-i18n="play_btn_launch">Lancer le jeu</span>
+                  <span>Lancer le jeu</span>
                 </button>
               </div>
             </div>
           </div>
         </section>
 
-      </div> </div> </div> <script>
-    /* -----------------------------------------------
-       1. NAVIGATION & PAGE SLIDE
-    ----------------------------------------------- */
+      </div>
+    </div>
+  </div>
+
+  <script>
     const pagesContainer = document.getElementById('pages');
     const tabs = document.querySelectorAll('.nav-tab');
+    const navPill = document.getElementById('nav-pill'); 
     const pageOrder = ['accueil', 'portfolio', 'moi', 'liens', 'jouer'];
+
+    // Theme Toggle Functionality (Fake/Visual Only)
+    const themeBtn = document.getElementById('theme-btn');
+    themeBtn.addEventListener('click', () => {
+      themeBtn.classList.toggle('is-day');
+    });
+
+    // Language Toggle Functionality (Fake/Visual Only)
+    const langBtn = document.getElementById('lang-btn');
+    langBtn.addEventListener('click', () => {
+      langBtn.classList.toggle('is-en');
+    });
+
+    // Fonction pour déplacer la pilule sous le bouton actif
+    function updateNavPill(activeBtn) {
+        if (!activeBtn) return;
+        const width = activeBtn.offsetWidth;
+        const left = activeBtn.offsetLeft;
+          
+        navPill.style.width = `${width}px`;
+        navPill.style.left = `${left}px`;
+        navPill.style.opacity = '1';
+    }
 
     function goToPage(pageName) {
       const index = pageOrder.indexOf(pageName);
       if (index === -1) return;
+        
       const offset = index * -100;
       pagesContainer.style.transform = `translate3d(${offset}vw, 0, 0)`;
+        
       tabs.forEach(t => {
-        if (t.dataset.page === pageName) t.classList.add('active');
-        else t.classList.remove('active');
+          const isActive = t.dataset.page === pageName;
+          t.classList.toggle('active', isActive);
+          if (isActive) {
+              updateNavPill(t); 
+          }
       });
+        
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => goToPage(tab.dataset.page));
-    });
-    // Init page
+    tabs.forEach(tab => tab.addEventListener('click', () => goToPage(tab.dataset.page)));
+      
+    // Initialisation
     goToPage('accueil');
+    setTimeout(() => {
+        const initialActive = document.querySelector('.nav-tab.active');
+        if(initialActive) updateNavPill(initialActive);
+    }, 50);
 
-    /* -----------------------------------------------
-       2. TRADUCTIONS (Combinaison des anciennes et nouvelles)
-    ----------------------------------------------- */
-    const translations = {
-      fr: {
-        // UI
-        tab_home: "Accueil", tab_portfolio: "Portfolio", tab_about: "Moi", tab_links: "Liens/Contact", tab_play: "Jouer",
-        home_title: "ANTOINE PEZZULO", home_subtitle: "Junior Game Designer",
-        home_status_label: "ACTUELLEMENT", home_status_text: "Recherche un stage à partir du <span class='strong'>1er mai</span>.",
-        home_welcome: "Bienvenue sur mon portfolio.\nIci : une vitrine clean, smooth, et le reste dans les pages.",
-        home_card_title: "EN BREF", home_card_text: "Étudiant à ISART Digital, avec une appétence particulière pour la tutorialisation, l’UX, et la recherche de game feel.\nJ’aime travailler par itération dans le moteur, les mains dans le cambouis.",
-        home_quickplay_title: "INSTANT", home_quickplay_text: "Tu veux juste jouer ?\nLance la démo de METRO.",
-        home_quickplay_btn: "JOUER À METRO",
-        about_title: "MOI", about_subtitle: "Bio & Inspirations", about_card_title: "À PROPOS",
-        about_text: "Je suis étudiant en game design à ISART Digital.\nJe mets une grosse priorité sur l’UX, la tutorialisation et le game feel.",
-        links_title: "LIENS", links_subtitle: "Contact & Réseaux", phone: "TÉLÉPHONE",
-        play_page_title: "JOUER", play_page_subtitle: "Démo interactive", play_intro: "Envie de tester directement ? Voici une version WebGL de <strong>METRO</strong>.",
-        play_card_title: "METRO - WebGL", play_card_desc: "Runner rythmique à un bouton.", play_btn_launch: "LANCER LE JEU", play_overlay_title: "METRO — DÉMO",
-        
-        // Original Content
-        name: "ANTOINE PEZZULO", subtitle: "Junior Game Designer", bio: "Étudiant à ISART Digital...", projects: "Mes Projets", contact: "Contact", details_toggle: "Détails",
-        metro_team: "Solo",
-        metro_desc: "METRO est un runner rythmé, réalisé en solo.\nLa contrainte était de concevoir un jeu jouable avec un seul bouton.\nVous incarnez une moto sans pilote lancée à vive allure dans un tunnel de néon ; l’unique bouton sert à orienter la trajectoire.",
-        metro_more: `<div class="details-rt"><h5>Contexte</h5><p>Ce projet scolaire avait pour contrainte la conception d’un jeu jouable avec un seul bouton, en deux mois...</p><h5>Pitch</h5><p>METRO est un runner rythmé...</p></div>`,
-        chalk_team: "Solo",
-        chalk_desc: "Pleasant Chalk est un chill game, réalisé en solo.\nL’objectif était de partir d’une version volontairement fade et impersonnelle du jeu Asteroids...",
-        chalk_more: `<div class="details-rt"><h5>Contexte</h5><p>Ce jeu est le résultat du projet Juice It...</p></div>`,
-        mar_team: "Équipe de 8",
-        mar_desc: "Muscles & Rockets est un jeu d’action-platformer en 2.5D.\nJ’ai été game designer et level designer...",
-        mar_more: `<div class="details-rt"><h5>Contexte</h5><p>Ce projet scolaire s’est déroulé sur une durée de deux mois...</p></div>`,
-        mouse_team: "Équipe de 5",
-        mouse_desc: "Mouse Knight est un brawler-platformer en 3D à la troisième personne...",
-        mouse_more: `<div class="details-rt"><h5>Contexte</h5><p>Ce projet scolaire s’est déroulé sur une durée de deux mois...</p></div>`,
-        vor_team: "Équipe de 8",
-        vor_desc: "Voracines est un jeu de plateau tactique de 2 à 4 joueurs...",
-        vor_more: `<div class="details-rt"><h5>Contexte</h5><p>L’objectif de ce projet scolaire était de réaliser un jeu de plateau...</p></div>`,
-        ref_team: "Équipe de 3",
-        ref_desc: "Reflect est un die and retry 2D en vue top-down...",
-        ref_more: `<div class="details-rt"><h5>Contexte</h5><p>Ce projet a été mené en dehors du cadre scolaire...</p></div>`
-      },
-      en: {
-        // UI
-        tab_home: "Home", tab_portfolio: "Portfolio", tab_about: "About", tab_links: "Links", tab_play: "Play",
-        home_title: "ANTOINE PEZZULO", home_subtitle: "Junior Game Designer",
-        home_status_label: "CURRENTLY", home_status_text: "Looking for an internship starting <span class='strong'>May 1st</span>.",
-        home_welcome: "Welcome to my portfolio.\nClean showcase, details inside.",
-        home_card_title: "IN SHORT", home_card_text: "Game Design student at ISART Digital. Focus on UX & Game Feel.",
-        home_quickplay_title: "INSTANT", home_quickplay_text: "Just want to play?\nLaunch METRO.", home_quickplay_btn: "PLAY METRO",
-        about_title: "ME", about_subtitle: "Bio & Inspirations", about_card_title: "ABOUT", about_text: "Game Design student at ISART Digital.\nFocus on UX, tutorials, and game feel.",
-        links_title: "LINKS", links_subtitle: "Contact & Networks", phone: "PHONE",
-        play_page_title: "PLAY", play_page_subtitle: "Interactive Demo", play_intro: "Here is a WebGL build of <strong>METRO</strong>.",
-        play_card_title: "METRO - WebGL", play_card_desc: "One-button rhythm runner.", play_btn_launch: "LAUNCH GAME", play_overlay_title: "METRO — DEMO",
-        
-        // Original Content
-        name: "ANTOINE PEZZULO", subtitle: "Junior Game Designer", bio: "Game design student...", projects: "My Projects", contact: "Contact", details_toggle: "Details",
-        metro_team: "Solo", metro_desc: "METRO is a rhythm-driven runner made solo...", metro_more: `<div class="details-rt"><h5>Context</h5><p>School project...</p></div>`,
-        chalk_team: "Solo", chalk_desc: "Pleasant Chalk is a chill game made solo...", chalk_more: `<div class="details-rt"><h5>Context</h5><p>Juice It project...</p></div>`,
-        mar_team: "Team of 8", mar_desc: "Muscles & Rockets is a 2.5D action platformer...", mar_more: `<div class="details-rt"><h5>Context</h5><p>School project...</p></div>`,
-        mouse_team: "Team of 5", mouse_desc: "Mouse Knight is a third-person 3D brawler...", mouse_more: `<div class="details-rt"><h5>Context</h5><p>School project...</p></div>`,
-        vor_team: "Team of 8", vor_desc: "Voracines is a tactical board game...", vor_more: `<div class="details-rt"><h5>Context</h5><p>Board game project...</p></div>`,
-        ref_team: "Team of 3", ref_desc: "Reflect is a top-down 2D die-and-retry...", ref_more: `<div class="details-rt"><h5>Context</h5><p>Side project...</p></div>`
-      }
-    };
+    window.addEventListener('resize', () => {
+        const currentActive = document.querySelector('.nav-tab.active');
+        if(currentActive) updateNavPill(currentActive);
+    });
 
-    function switchLanguage(lang) {
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        const val = translations[lang][key];
-        if (typeof val !== 'string') return;
-        if (el.hasAttribute('data-i18n-html')) el.innerHTML = val;
-        else el.textContent = val;
-      });
-      document.querySelectorAll('#lang-switch button')
-        .forEach(btn => btn.classList.toggle('selected', btn.dataset.lang === lang));
-      localStorage.setItem('lang', lang);
-    }
-    const savedLang = localStorage.getItem('lang') || 'fr';
-    switchLanguage(savedLang);
-    document.querySelectorAll('#lang-switch button').forEach(btn => btn.addEventListener('click', () => switchLanguage(btn.dataset.lang)));
-
-    /* -----------------------------------------------
-       3. JOUER (DEMO MODAL)
-    ----------------------------------------------- */
     const playOverlay = document.getElementById('play-overlay');
     const playIframe = playOverlay.querySelector('[data-play-iframe]');
     const playCloseBtn = playOverlay.querySelector('[data-play-close]');
-    const DEMO_URL = "demo/index.html"; 
+    const DEMO_URL = "demo/index.html";
 
     function openDemo() { playIframe.src = DEMO_URL; playOverlay.classList.add('active'); }
     function closeDemo() { playOverlay.classList.remove('active'); setTimeout(() => { playIframe.src = ""; }, 300); }
@@ -986,9 +1102,6 @@ Mon kiff : itérer vite dans le moteur, confronter les intentions au jeu, et pol
     });
     playCloseBtn.addEventListener('click', closeDemo);
 
-    /* -----------------------------------------------
-       4. COPY LOGIC
-    ----------------------------------------------- */
     document.querySelectorAll('.link-pill[data-copy], .copy-btn').forEach(el => {
       el.addEventListener('click', (e) => {
         if(el.tagName === 'A') return;
@@ -1006,9 +1119,6 @@ Mon kiff : itérer vite dans le moteur, confronter les intentions au jeu, et pol
       });
     });
 
-    /* -----------------------------------------------
-       5. CORE LOGIC (VOTRE JS D'ORIGINE RESTAURÉ)
-    ----------------------------------------------- */
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
     const overlay = document.getElementById('overlay');
     const expandedLayer = document.getElementById('expanded-layer');
@@ -1060,6 +1170,7 @@ Mon kiff : itérer vite dans le moteur, confronter les intentions au jeu, et pol
       followRaf = requestAnimationFrame(loop);
     }
     function stopFollow() { if (followRaf) cancelAnimationFrame(followRaf); followRaf = null; }
+
     function hardResetParallax(project) {
       const state = parallaxState.get(project);
       if (!state) return;
@@ -1091,7 +1202,7 @@ Mon kiff : itérer vite dans le moteur, confronter les intentions au jeu, et pol
       const readyNow = () => img.complete && img.naturalWidth > 0;
       if (readyNow()) { holderEl.classList.add('media-ready'); holderEl.classList.remove('skel-on'); return; }
       holderEl.classList.remove('media-ready');
-      const ctrl = setConditionalSkeleton( holderEl, readyNow, () => holderEl.classList.add('skel-on'), () => holderEl.classList.remove('skel-on') );
+      const ctrl = setConditionalSkeleton(holderEl, readyNow, () => holderEl.classList.add('skel-on'), () => holderEl.classList.remove('skel-on'));
       const onLoad = async () => { ctrl.clear(); try { if (img.decode) await img.decode().catch(() => {}); } catch (_) {} requestAnimationFrame(() => { if (!holderEl.isConnected) return; holderEl.classList.add('media-ready'); holderEl.classList.remove('skel-on'); }); };
       const onErr = () => { ctrl.clear(); requestAnimationFrame(() => { if (!holderEl.isConnected) return; holderEl.classList.add('media-ready'); holderEl.classList.remove('skel-on'); }); };
       img.addEventListener('load', onLoad, { once: true }); img.addEventListener('error', onErr, { once: true });
@@ -1104,17 +1215,17 @@ Mon kiff : itérer vite dans le moteur, confronter les intentions au jeu, et pol
       const existing = project.querySelector('.expanded-video'); if (existing) return existing;
       const videoWrap = document.createElement('div'); videoWrap.className = 'expanded-video';
       const loading = document.createElement('div'); loading.className = 'video-loading'; loading.innerHTML = `<div class="loading-dots" aria-hidden="true"><span></span><span></span><span></span></div>`; videoWrap.appendChild(loading);
-      const srcRaw = project.getAttribute('data-video') || ''; let vid = null; let isCached = false;
+      const srcRaw = project.getAttribute('data-video') || ''; let vid = null;
       if (srcRaw) {
         vid = videoElCache.get(srcRaw) || null;
-        if (!vid) { vid = document.createElement('video'); vid.muted = true; vid.loop = true; vid.playsInline = true; vid.preload = 'auto'; vid.src = srcRaw; videoElCache.set(srcRaw, vid); } 
-        else { isCached = true; try { if (vid.parentElement) vid.parentElement.removeChild(vid); } catch (_) {} }
+        if (!vid) { vid = document.createElement('video'); vid.muted = true; vid.loop = true; vid.playsInline = true; vid.preload = 'auto'; vid.src = srcRaw; videoElCache.set(srcRaw, vid); }
+        else { try { if (vid.parentElement) vid.parentElement.removeChild(vid); } catch (_) {} }
         const posterSrc = project.getAttribute('data-first-frame') || '';
         if (posterSrc) { const posterImg = document.createElement('img'); posterImg.src = posterSrc; posterImg.className = 'video-poster'; posterImg.decoding = 'async'; videoWrap.appendChild(posterImg); requestAnimationFrame(() => { if(videoWrap.isConnected) videoWrap.classList.add('poster-in'); }); }
       }
       videoWrap.appendChild(vid);
       const isReadyNow = vid.readyState >= 3;
-      if (isReadyNow) { videoWrap.classList.add('instant', 'video-ready', 'poster-off'); const p = vid.play(); if (p && typeof p.catch === 'function') p.catch(() => {}); } 
+      if (isReadyNow) { videoWrap.classList.add('instant', 'video-ready', 'poster-off'); const p = vid.play(); if (p && typeof p.catch === 'function') p.catch(() => {}); }
       else {
         videoWrap.classList.add('loading-visible');
         const onCanPlay = () => { videoWrap.classList.add('video-ready'); videoWrap.classList.remove('loading-visible'); setTimeout(() => { if(videoWrap.isConnected) videoWrap.classList.add('poster-off'); }, 100); const p = vid.play(); if (p && typeof p.catch === 'function') p.catch(() => {}); };
@@ -1155,13 +1266,17 @@ Mon kiff : itérer vite dans le moteur, confronter les intentions au jeu, et pol
     }
 
     function closeDetails(project) {
-      if (!project) return; project.classList.remove('details-open'); switchLanguage(localStorage.getItem('lang') || 'fr'); requestAnimationFrame(() => syncPanelAndToggle(project));
+      if (!project) return;
+      project.classList.remove('details-open');
+      requestAnimationFrame(() => syncPanelAndToggle(project));
     }
 
     function toggleDetails(project) {
-      if (!project) return; if (!project.classList.contains('expanded')) return;
-      project.classList.remove('details-hint'); localStorage.setItem('seenDetailsToggleHint', '1');
-      project.classList.toggle('details-open'); switchLanguage(localStorage.getItem('lang') || 'fr');
+      if (!project) return;
+      if (!project.classList.contains('expanded')) return;
+      project.classList.remove('details-hint');
+      localStorage.setItem('seenDetailsToggleHint', '1');
+      project.classList.toggle('details-open');
       requestAnimationFrame(() => syncPanelAndToggle(project));
     }
 
@@ -1188,22 +1303,25 @@ Mon kiff : itérer vite dans le moteur, confronter les intentions au jeu, et pol
       return { left, top, width: w, height: h };
     }
 
-    let activeRectAnim = null; let isTransitioning = false;
-    function animateRectWAAPI(el, fromRect, toRect, duration, easing) {
-      if (activeRectAnim) { try { activeRectAnim.cancel(); } catch (_) {} activeRectAnim = null; }
-      const kf = [ { left: `${fromRect.left}px`, top: `${fromRect.top}px`, width: `${fromRect.width}px`, height: `${fromRect.height}px` }, { left: `${toRect.left}px`, top: `${toRect.top}px`, width: `${toRect.width}px`, height: `${toRect.height}px` } ];
-      el.style.left = `${fromRect.left}px`; el.style.top = `${fromRect.top}px`; el.style.width = `${fromRect.width}px`; el.style.height = `${fromRect.height}px`; el.getBoundingClientRect();
-      const anim = el.animate(kf, { duration, easing, fill: 'forwards' }); activeRectAnim = anim;
-      const settle = () => { activeRectAnim = null; el.style.left = `${toRect.left}px`; el.style.top = `${toRect.top}px`; el.style.width = `${toRect.width}px`; el.style.height = `${toRect.height}px`; try { anim.cancel(); } catch (_) {} };
-      return anim.finished.then(settle).catch(settle);
-    }
-
     let activeTransformAnim = null;
     function animateTransformWAAPI(el, fromT, toT, duration, easing) {
       if (activeTransformAnim) { try { activeTransformAnim.cancel(); } catch (_) {} activeTransformAnim = null; }
       el.style.transform = fromT; el.getBoundingClientRect();
       const anim = el.animate([{ transform: fromT }, { transform: toT }], { duration, easing, fill: 'forwards' }); activeTransformAnim = anim;
       const settle = () => { activeTransformAnim = null; el.style.transform = toT; try { anim.cancel(); } catch (_) {} };
+      return anim.finished.then(settle).catch(settle);
+    }
+
+    let activeRectAnim = null; let isTransitioning = false;
+    function animateRectWAAPI(el, fromRect, toRect, duration, easing) {
+      if (activeRectAnim) { try { activeRectAnim.cancel(); } catch (_) {} activeRectAnim = null; }
+      const kf = [
+        { left: `${fromRect.left}px`, top: `${fromRect.top}px`, width: `${fromRect.width}px`, height: `${fromRect.height}px` },
+        { left: `${toRect.left}px`, top: `${toRect.top}px`, width: `${toRect.width}px`, height: `${toRect.height}px` }
+      ];
+      el.style.left = `${fromRect.left}px`; el.style.top = `${fromRect.top}px`; el.style.width = `${fromRect.width}px`; el.style.height = `${fromRect.height}px`; el.getBoundingClientRect();
+      const anim = el.animate(kf, { duration, easing, fill: 'forwards' }); activeRectAnim = anim;
+      const settle = () => { activeRectAnim = null; el.style.left = `${toRect.left}px`; el.style.top = `${toRect.top}px`; el.style.width = `${toRect.width}px`; el.style.height = `${toRect.height}px`; try { anim.cancel(); } catch (_) {} };
       return anim.finished.then(settle).catch(settle);
     }
 
@@ -1214,7 +1332,15 @@ Mon kiff : itérer vite dans le moteur, confronter les intentions au jeu, et pol
       clone.classList.add('is-animating'); closeDetails(clone); syncPanelAndToggle(clone, true); clone.classList.add('closing');
       document.body.classList.add('is-closing'); overlay.classList.add('closing'); overlay.classList.remove('active'); document.body.classList.remove('has-expanded');
       const toRect = source ? source.getBoundingClientRect() : null; const fromRect = clone.getBoundingClientRect(); clone.style.transform = 'none';
-      if (toRect) { await animateRectWAAPI( clone, { left: fromRect.left, top: fromRect.top, width: fromRect.width, height: fromRect.height }, { left: toRect.left, top: toRect.top, width: toRect.width, height: toRect.height }, 280, 'cubic-bezier(0.22, 1, 0.36, 1)' ); } else { await new Promise(r => setTimeout(r, 220)); }
+      if (toRect) {
+        await animateRectWAAPI(
+          clone,
+          { left: fromRect.left, top: fromRect.top, width: fromRect.width, height: fromRect.height },
+          { left: toRect.left, top: toRect.top, width: toRect.width, height: toRect.height },
+          280,
+          'cubic-bezier(0.22, 1, 0.36, 1)'
+        );
+      } else { await new Promise(r => setTimeout(r, 220)); }
       stopAndRemoveExpandedVideo(clone); clone.remove(); expandedProject = null;
       if (source) hardResetParallax(source); expandedSource = null;
       overlay.classList.remove('closing'); document.body.classList.remove('is-closing'); isTransitioning = false;
@@ -1233,21 +1359,38 @@ Mon kiff : itérer vite dans le moteur, confronter les intentions au jeu, et pol
       ensureExpandedVideo(clone); playExpandedVideo(clone); syncPanelAndToggle(clone, true);
       const dx = srcRect.left - target.left; const dy = srcRect.top - target.top; const sx = srcRect.width / target.width; const sy = srcRect.height / target.height;
       const fromT = `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy})`; const toT = `translate3d(0px, 0px, 0) scale(1)`;
-      await animateTransformWAAPI( clone, fromT, toT, 520, 'cubic-bezier(0.22, 1, 0.36, 1)' );
+      await animateTransformWAAPI(clone, fromT, toT, 520, 'cubic-bezier(0.22, 1, 0.36, 1)');
       clone.classList.remove('is-animating'); clone.style.transform = 'none';
       const seen = localStorage.getItem('seenDetailsToggleHint') === '1';
-      if (!seen) { clone.classList.add('details-hint'); setTimeout(() => { if (!expandedProject || expandedProject !== clone) return; clone.classList.remove('details-hint'); localStorage.setItem('seenDetailsToggleHint', '1'); }, 5200); }
-      switchLanguage(localStorage.getItem('lang') || 'fr'); syncPanelAndToggle(clone, true);
+      if (!seen) {
+        clone.classList.add('details-hint');
+        setTimeout(() => {
+          if (!expandedProject || expandedProject !== clone) return;
+          clone.classList.remove('details-hint');
+          localStorage.setItem('seenDetailsToggleHint', '1');
+        }, 5200);
+      }
+      syncPanelAndToggle(clone, true);
       requestAnimationFrame(() => { syncPanelAndToggle(clone); startFollow(clone); });
       isTransitioning = false;
     }
 
     overlay.addEventListener('click', () => { if (!expandedProject) return; closeExpanded(); });
-    document.addEventListener('keydown', (e) => { if (!expandedProject) return; if (e.key === 'Escape') { if (expandedProject.classList.contains('details-open')) closeDetails(expandedProject); else closeExpanded(); } });
+    document.addEventListener('keydown', (e) => {
+      if (!expandedProject) return;
+      if (e.key === 'Escape') {
+        if (expandedProject.classList.contains('details-open')) closeDetails(expandedProject);
+        else closeExpanded();
+      }
+    });
     document.addEventListener('click', (e) => {
       const actionBtn = e.target.closest('.action-button'); if (actionBtn) { e.stopPropagation(); return; }
       const toggleBtn = e.target.closest('[data-details-toggle]');
-      if (toggleBtn) { const project = toggleBtn.closest('.project'); if (project && project.classList.contains('expanded')) { e.stopPropagation(); toggleDetails(project); } return; }
+      if (toggleBtn) {
+        const project = toggleBtn.closest('.project');
+        if (project && project.classList.contains('expanded')) { e.stopPropagation(); toggleDetails(project); }
+        return;
+      }
     }, true);
 
     window.addEventListener('resize', () => {
@@ -1262,7 +1405,14 @@ Mon kiff : itérer vite dans le moteur, confronter les intentions au jeu, et pol
         const inner = project.querySelector('.card-inner');
         const state = { project, inner, targetX: 0, targetY: 0, currentX: 0, currentY: 0, hovered: false, maxRotation: 12, friction: 0.065 };
         parallaxState.set(project, state);
-        const updateTargets = (clientX, clientY) => { const r = project.getBoundingClientRect(); const nx = (clientX - r.left) / r.width; const ny = (clientY - r.top) / r.height; state.targetX = (nx - 0.5) * 2 * state.maxRotation; state.targetY = (0.5 - ny) * 2 * state.maxRotation; parallaxActive.add(state); runParallax(); };
+        const updateTargets = (clientX, clientY) => {
+          const r = project.getBoundingClientRect();
+          const nx = (clientX - r.left) / r.width;
+          const ny = (clientY - r.top) / r.height;
+          state.targetX = (nx - 0.5) * 2 * state.maxRotation;
+          state.targetY = (0.5 - ny) * 2 * state.maxRotation;
+          parallaxActive.add(state); runParallax();
+        };
         project.addEventListener('pointerenter', (e) => { if (expandedSource === project) return; state.hovered = true; updateTargets(e.clientX, e.clientY); }, { passive: true });
         project.addEventListener('pointermove', (e) => { if (!state.hovered) return; if (expandedSource === project) return; updateTargets(e.clientX, e.clientY); }, { passive: true });
         project.addEventListener('pointerleave', () => { state.hovered = false; state.targetX = 0; state.targetY = 0; parallaxActive.add(state); runParallax(); }, { passive: true });
