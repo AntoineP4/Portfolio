@@ -685,7 +685,7 @@
     .action-button.download-only img { width: 1.3rem; height: 1.3rem; }
     @media (prefers-reduced-motion: reduce) { .action-button, .action-button img, .action-button::before, .action-button::after { transition: none !important; } .action-button:hover { transform: none !important; } .action-button::before { transform: none !important; opacity: 0 !important; } .action-button::after { opacity: 0 !important; } .card-front.skel-on::after { animation: none !important; } .expanded-video.loading-visible .loading-dots span { animation: none !important; opacity: 0.7 !important; transform: none !important; } }
 
-    #overlay { position: fixed; inset: 0; background-color: rgba(0,0,0,0.55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: opacity 260ms ease, background-color 260ms ease, backdrop-filter 260ms ease, -webkit-backdrop-filter 260ms ease; z-index: 9998; }
+    #overlay { position: fixed; inset: 0; background-color: rgba(0,0,0,0.55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: opacity 260ms ease, background-color 260ms ease, backdrop-filter 260ms ease, -webkit-backdrop-filter 260ms ease; z-index: 12001; }
     #overlay.active { opacity: 1; pointer-events: auto; }
     #overlay.closing { opacity: 0; background-color: rgba(0,0,0,0); backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); transition: opacity 140ms cubic-bezier(0.22, 1, 0.36, 1), background-color 140ms cubic-bezier(0.22, 1, 0.36, 1), backdrop-filter 140ms cubic-bezier(0.22, 1, 0.36, 1), -webkit-backdrop-filter 140ms cubic-bezier(0.22, 1, 0.36, 1); pointer-events: none; }
 
@@ -861,6 +861,10 @@
 
         <section class="page" data-page="portfolio">
           <div class="page-inner">
+            <div class="page-hero">
+                <h1>PORTFOLIO</h1>
+                <p>projets scolaires & personnels</p>
+            </div>
             <div class="projects">
               <div class="project" data-video="videos/metro.mp4" data-first-frame="img/metro_frame.png">
                 <div class="card-inner">
@@ -1153,7 +1157,7 @@
           <div class="page-inner">
             <div class="page-hero">
               <h1>Moi</h1>
-              <p>Bio</p>
+              <p>en savoir plus sur moi</p>
             </div>
 
             <div class="portrait-wrap">
