@@ -59,12 +59,16 @@
       --ease-smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
       --ease-bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
       --ease-elastic: cubic-bezier(0.25, 1.35, 0.45, 1);
+      
+      /* Juicy Ease specific for interactions */
+      --ease-juicy: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-snappy: cubic-bezier(0.175, 0.885, 0.32, 1.4); /* Très réactif avec overshoot */
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       background: var(--bg);
       color: var(--text-color);
       padding: 0;
@@ -110,7 +114,7 @@
         100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
     }
 
-    /* Animation Juicy Bump au clique - MODIFIÉE POUR ÊTRE PLUS COOL */
+    /* Animation Juicy Bump au clique */
     @keyframes blobBump {
         0% { transform: scale(1); }
         25% { transform: scale(1.4, 0.6) translateY(10px); } /* Ecrasement violent au sol */
@@ -175,7 +179,6 @@
       position: relative;
       overflow: hidden;
       flex-shrink: 0;
-      /* FIX: Force le masque d'écrêtage pendant les animations */
       -webkit-mask-image: -webkit-radial-gradient(white, black);
       mask-image: radial-gradient(white, black);
     }
@@ -303,10 +306,9 @@
     .page { flex: 0 0 100vw; width: 100vw; padding: 0 18px; min-height: calc(100vh - var(--nav-h) - 18px - 26px); }
     .page-inner { max-width: 1180px; margin: 0 auto; padding: 8px 0 40px 0; }
 
-    /* --- MODIFICATION 1 : Augmentation de la marge bas du hero pour pousser le reste --- */
     .page-hero { 
         text-align: center; 
-        margin: 26px auto 70px auto; /* 22px -> 70px */
+        margin: 26px auto 70px auto; 
         opacity: 0; 
         transform: translateY(16px); 
         animation: slideFadeIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards; 
@@ -315,19 +317,18 @@
     .page-hero p { margin-top: 10px; color: rgba(255,255,255,0.70); letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; font-size: 0.95rem; }
 
     /* --- NOUVEAU LAYOUT HOME --- */
-    /* --- MODIFICATION 3 : Espacement du blob --- */
     .blob-intro {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 2rem;
-        margin: 0 auto 60px auto; /* Ajusté pour espacer du bloc suivant */
+        margin: 0 auto 60px auto;
         max-width: 900px;
         opacity: 0; 
         transform: translateY(18px); 
         animation: slideFadeIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         animation-delay: 0.12s;
-        position: relative; /* Pour positionner les particules */
+        position: relative;
     }
 
     /* Le Blob principal */
@@ -341,33 +342,27 @@
         flex-shrink: 0;
         position: relative; 
         cursor: pointer; 
-        /* Transition douce pour la couleur en mode Angry */
         transition: background 0.5s ease, transform 0.1s ease;
         -webkit-tap-highlight-color: transparent;
         user-select: none;
         z-index: 2;
     }
 
-    /* État COLÈRE (Angry) */
     .blob.angry {
         background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
         box-shadow: 0 12px 35px rgba(255, 107, 107, 0.35);
-        cursor: not-allowed; /* CURSEUR BARRÉ */
+        cursor: not-allowed;
     }
 
-    /* Quand on clique (classe ajoutée en JS) */
     .blob.bumping {
-        /* On combine le morphing et le bump pour que l'un n'écrase pas l'autre, durée passée à 0.5s */
         animation: blobMorph 6s ease-in-out infinite, blobBump 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
-    
-    /* Quand le blob bump, les yeux clignent (s'écrasent) */
+      
     .blob.bumping .eye {
         transform: scaleY(0.1);
         transition: transform 0.1s ease-in;
     }
 
-    /* Particules générées par JS */
     .blob-particle {
         position: absolute;
         width: 6px;
@@ -378,12 +373,10 @@
         opacity: 0.8;
     }
 
-    /* Le conteneur du visage */
     .blob-face {
         position: absolute;
         top: 50%; 
         left: 50%;
-        /* Centrage de base - sera modifié par le JS pour suivre la souris */
         transform: translate(-50%, -50%); 
         width: 60%; 
         height: 40%;
@@ -391,13 +384,13 @@
         flex-direction: column;
         align-items: center; 
         justify-content: center;
-        pointer-events: none; /* Le clic doit traverser vers le blob */
+        pointer-events: none;
         will-change: transform;
     }
 
     .eyes-row {
         display: flex;
-        gap: 14px; /* Espacement des yeux */
+        gap: 14px;
         justify-content: center;
         width: 100%;
     }
@@ -405,15 +398,13 @@
     .eye {
         width: 10px;
         height: 12px;
-        background: #101015; /* Très foncé, quasi noir mais dans le thème */
+        background: #101015;
         border-radius: 50%;
         position: relative;
-        /* Pour l'animation de clignement */
         transform-origin: bottom center;
         transition: transform 0.2s ease-out;
     }
       
-    /* Petit reflet mignon dans les yeux */
     .eye::after {
         content: '';
         position: absolute;
@@ -425,8 +416,6 @@
         border-radius: 50%;
     }
 
-    /* BOUCHE SUPPRIMÉE POUR LE MINIMALISME */
-
     .welcome-bubble {
         position: relative;
         background: rgba(255, 255, 255, 0.03);
@@ -434,7 +423,7 @@
         backdrop-filter: blur(18px) saturate(160%);
         padding: 1rem 1.4rem;
         border-radius: 18px;
-        border-bottom-left-radius: 4px; /* Flèche implicite vers le blob */
+        border-bottom-left-radius: 4px;
         box-shadow: 0 15px 40px rgba(0,0,0,0.25);
         animation: floatBubble 5s ease-in-out infinite;
         max-width: 420px;
@@ -447,11 +436,9 @@
         color: rgba(255, 255, 255, 0.92);
         font-weight: 400;
         margin: 0;
-        /* Transition smooth pour le changement de texte */
         transition: opacity 0.3s ease;
     }
       
-    /* Classe utilitaire pour le fade out du texte */
     .welcome-bubble p.fade-out {
         opacity: 0;
     }
@@ -506,8 +493,6 @@
     }
     .glass-block p { white-space: pre-line; line-height: 1.7; font-size: 1.03rem; color: rgba(255,255,255,0.86); letter-spacing: 0.01em; text-align: center; }
 
-    /* --- MODIFICATION 2 : STATUS CARD AMÉLIORÉE --- */
-    /* Animation de pulsation légère pour attirer l'oeil */
     @keyframes cardPulse {
         0% { box-shadow: 0 22px 60px rgba(0,0,0,0.55), 0 0 0 0px rgba(107,140,255,0); border-color: rgba(107,140,255,0.3); }
         100% { box-shadow: 0 22px 60px rgba(0,0,0,0.55), 0 0 20px rgba(107,140,255,0.15); border-color: rgba(107,140,255,0.6); }
@@ -518,7 +503,6 @@
       margin: 0 auto 60px auto; 
       padding: 1.2rem 1.4rem; 
       border-radius: 18px;
-      /* Background amélioré : plus clean mais avec une teinte technologique */
       background: linear-gradient(135deg, rgba(107,140,255,0.08), rgba(12,12,14,0.8));
       border: 1px solid rgba(107,140,255,0.3); 
       backdrop-filter: blur(22px) saturate(160%);
@@ -536,9 +520,7 @@
       justify-content: center; 
       gap: 10px; 
       padding: 6px 14px; 
-      /* PILLE CARRÉE */
       border-radius: 6px; 
-      /* COULEUR QUI RESSORT */
       background: rgba(107,140,255,0.2); 
       border: 1px solid rgba(107,140,255,0.5);
       font-weight: 900; 
@@ -553,19 +535,290 @@
     .status-card .text { font-size: 1.05rem; color: rgba(255,255,255,0.92); line-height: 1.65; white-space: pre-line; }
     .status-card .strong { color: rgba(255,255,255,0.96); font-weight: 900; }
 
-    .portrait-wrap { display: grid; grid-template-columns: 280px 1fr; gap: 18px; align-items: start; }
+    /* --- STYLES SECTION MOI --- */
+    .portrait-wrap { 
+        display: grid; 
+        grid-template-columns: 280px 1fr; 
+        gap: 20px; /* Reduced gap */
+        align-items: stretch; /* Stretch pour hauteur égale */
+        max-width: 980px; 
+        margin: 0 auto; 
+    }
     @media (max-width: 820px) { .portrait-wrap { grid-template-columns: 1fr; } }
-    .portrait { width: 280px; aspect-ratio: 1/1; border-radius: 22px; overflow: hidden; border: 1px solid rgba(255,255,255,0.10); background: rgba(255,255,255,0.04); box-shadow: 0 22px 60px rgba(0,0,0,0.45); backdrop-filter: blur(14px); }
-    .portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      
+    /* MODIFICATION: Portrait carré */
+    .portrait { 
+        width: 100%;
+        max-width: 250px; /* Reduced max-width for smaller vertical size */
+        aspect-ratio: 1/1; /* Carré strict */
+        border-radius: 22px; /* Bords arrondis pour matcher la carte */
+        overflow: hidden; 
+        border: 1px solid rgba(255,255,255,0.10); 
+        background: rgba(255,255,255,0.04); 
+        box-shadow: 0 22px 60px rgba(0,0,0,0.45); 
+        backdrop-filter: blur(14px); 
+        margin: 0 auto;
+    }
+      
+    .portrait img { 
+        width: 100%; 
+        height: 100%; 
+        object-fit: cover; 
+        display: block; 
+        transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); 
+    }
+    .portrait:hover img {
+        transform: scale(1.06); 
+        transition: transform 0.5s var(--ease-juicy);
+    }
 
-    .about-text { border-radius: 22px; padding: 1.1rem 1.2rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(18px); box-shadow: 0 18px 55px rgba(0,0,0,0.34); }
-    .about-text h2 { font-size: 1.15rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.86); font-weight: 950; margin-bottom: 10px; }
-    .about-text p { color: rgba(255,255,255,0.86); line-height: 1.75; white-space: pre-line; font-size: 1.03rem; }
+    /* --- CARTE D'IDENTITÉ AMÉLIORÉE (APPLE TIER) --- */
+    .about-text {
+        position: relative;
+        border-radius: 22px;
+        padding: 1.4rem; /* Padding réduit pour diminuer la hauteur */
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 18px 55px rgba(0,0,0,0.34);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow: hidden;
+    }
 
-    .marquee { margin-top: 18px; border-radius: 22px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.025); backdrop-filter: blur(18px); }
-    .marquee-track { display: flex; gap: 12px; padding: 12px; width: max-content; animation: marquee 24s linear infinite; }
+    /* MODIFICATION: Reflet net et lumineux, masqué en bas */
+    .about-text::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; bottom: 0;
+        width: 4px; /* Largeur du reflet */
+        /* Dégradé très lumineux et net */
+        background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+        pointer-events: none;
+        z-index: 2;
+        /* Masque pour limiter la lumière à la partie haute (fond blanc de la photo) */
+        mask-image: linear-gradient(180deg, black 60%, transparent 85%);
+        -webkit-mask-image: linear-gradient(180deg, black 60%, transparent 85%);
+    }
+    /* Ligne de lumière sur la tranche */
+    .about-text::after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; bottom: 0;
+        width: 1px;
+        background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%);
+        z-index: 0;
+    }
+
+    .about-text h2 {
+        font-size: 2rem;
+        letter-spacing: -0.02em;
+        color: #fff;
+        font-weight: 800;
+        margin: 0 0 0.8rem 0; /* Marge réduite pour hauteur */
+        padding-bottom: 0.6rem; /* Padding réduit */
+        position: relative;
+        border-bottom: none;
+        z-index: 1;
+    }
+
+    /* Le trait souligné qui fade à 70% */
+    .about-text h2 .underline {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 1px;
+        width: 100%;
+        background: linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.3) 40%, transparent 70%);
+    }
+      
+    /* Grid Layout pour les stats (alignement parfait) */
+    .id-stats {
+        display: grid;
+        grid-template-columns: max-content 1fr; /* Colonne titre vs Valeur */
+        column-gap: 2rem; /* Bel espace constant */
+        row-gap: 0.5rem; /* Gap réduit pour compactage */
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .id-stats li {
+        display: contents; /* Permet aux enfants du li de se placer dans la grid parente */
+    }
+    
+    .id-stats strong {
+        color: rgba(255,255,255,0.5); /* Couleur plus subtile pour les titres */
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        align-self: center; /* Alignement vertical centré */
+    }
+    
+    .id-stats span {
+        color: rgba(255,255,255,0.95);
+        font-weight: 500;
+        font-size: 1.1rem;
+        align-self: center;
+    }
+
+    /* Bloc Biographie Large */
+    .bio-block {
+        max-width: 980px; 
+        margin: 22px auto 0 auto;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 22px;
+        backdrop-filter: blur(18px);
+        box-shadow: inset 0 0 20px rgba(255,255,255,0.02), 0 12px 40px rgba(0,0,0,0.28);
+        opacity: 0;
+        transform: translateY(18px);
+        animation: slideFadeIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        animation-delay: 0.1s;
+    }
+    .bio-block h2 {
+        font-size: 1.25rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: rgba(255,255,255,0.95);
+        font-weight: 900;
+        margin-bottom: 1rem;
+    }
+    .bio-block p {
+        line-height: 1.8;
+        font-size: 1.05rem;
+        color: rgba(255,255,255,0.86);
+        white-space: pre-line;
+    }
+
+
+    /* === REFINED MARQUEE STYLES (NOUVEAU) === */
+    /* Séparateur/Titre discret */
+    .marquee-separator {
+        text-align: center;
+        margin: 42px auto 20px auto;
+        font-size: 0.85rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.55);
+        font-weight: 700;
+        opacity: 0;
+        animation: slideFadeIn 0.8s ease forwards 0.2s;
+    }
+
+    /* Le flux lui-même, sans bordures, transparent, plein écran relatif */
+    .marquee { 
+        margin-top: 0;
+        margin-bottom: 12px;
+        background: transparent;
+        border: none;
+        backdrop-filter: none;
+        overflow: hidden; 
+        width: 100%;
+        position: relative;
+        /* Masking pour l'effet de fondu sur les côtés */
+        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+        mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+        opacity: 0;
+        animation: slideFadeIn 0.8s ease forwards 0.3s;
+    }
+      
+    .marquee-track { 
+        display: flex; 
+        align-items: center; 
+        gap: 0; 
+        padding: 24px 0; 
+        width: max-content; 
+        animation: marquee 50s linear infinite; /* Un peu plus lent pour le côté "rivière" */
+        
+        /* CORRECTION GLITCH: Force GPU et Anti-Aliasing */
+        will-change: transform;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        perspective: 1000px;
+        transform-style: preserve-3d;
+    }
+      
     @keyframes marquee { 0% { transform: translate3d(0,0,0); } 100% { transform: translate3d(-50%,0,0); } }
-    .marquee-item { width: 180px; height: 96px; border-radius: 18px; background: radial-gradient(80% 120% at 20% 20%, rgba(107,140,255,0.18) 0%, rgba(0,0,0,0) 60%), rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.10); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.88); font-weight: 900; letter-spacing: 0.12em; font-size: 0.75rem; box-shadow: 0 16px 42px rgba(0,0,0,0.28); }
+      
+    .marquee-item { 
+        width: 180px; 
+        height: 96px; 
+        margin-right: 16px; /* Espace un peu plus aéré */
+        border-radius: 18px; 
+        
+        /* IMAGE SETTINGS */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative; 
+        
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        
+        color: rgba(255,255,255,1); 
+        font-weight: 900; 
+        letter-spacing: 0.12em; 
+        font-size: 0.85rem; 
+        text-transform: uppercase;
+        
+        border: 1px solid rgba(255,255,255,0.25); 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.22); /* Ombre plus douce */
+        overflow: hidden;
+        flex-shrink: 0; 
+        isolation: isolate;
+
+        transition: 
+            transform 0.4s var(--ease-smooth),
+            border-color 0.3s ease, 
+            box-shadow 0.3s ease;
+            
+        /* CORRECTION GLITCH: Force layer propre pour chaque item */
+        -webkit-font-smoothing: antialiased;
+        transform: translateZ(0); 
+        backface-visibility: hidden;
+    }
+
+    .marquee-item::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: transparent;
+        z-index: -1;
+        transition: background 0.3s ease;
+    }
+      
+    /* Hover State for Marquee Item */
+    .marquee-item:hover {
+        /* Modified: No scale, just gentle lift - USE translate3d for GPU consistency */
+        transform: translate3d(0, -6px, 0); 
+        z-index: 10; 
+        border-color: rgba(255,255,255,0.95);
+        /* Slightly softer shadow for the "light" feel */
+        box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+    }
+    
+    .marquee-item:hover::after {
+        background-color: transparent;
+    }
+
+    .marquee-item span {
+        position: relative;
+        z-index: 2;
+        text-shadow: 
+            0 1px 2px rgba(0,0,0,1),        
+            0 2px 10px rgba(0,0,0,0.8); 
+        text-align: center;
+        padding: 0 10px;
+        pointer-events: none;
+    }
 
     .links-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 14px; }
     .link-pill { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 14px; border-radius: 18px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(18px); text-decoration: none; color: rgba(255,255,255,0.90); transition: all 300ms var(--ease-smooth); cursor: pointer; }
@@ -1165,29 +1418,59 @@
                 <img src="img/portrait.PNG" alt="Antoine Pezzulo" />
               </div>
               <div class="about-text">
-                <h2>À propos</h2>
-                <p>ISART.\nUX • Tuto • Game feel.</p>
+                <h2>
+                    ANTOINE PEZZULO
+                    <div class="underline"></div>
+                </h2>
+                <ul class="id-stats">
+                    <li><strong>Age</strong> <span>20 ans</span></li>
+                    <li><strong>Lieu</strong> <span>Paris, France</span></li>
+                    <li><strong>Ecole</strong> <span>ISART Digital</span></li>
+                    <li><strong>Domaine</strong> <span>Game & Level Design</span></li>
+                    <li><strong>Spécialité</strong> <span>Game Feel - Tutorialisation - UX</span></li>
+                </ul>
               </div>
             </div>
 
-            <div class="glass-block" style="margin-top:22px;">
-               <h3 style="text-align:center; margin-bottom:12px; font-weight:900; color:rgba(255,255,255,0.9); font-size:1.1rem;">INSPIRATIONS</h3>
-               <div class="marquee" aria-hidden="true">
-                 <div class="marquee-track">
-                   <div class="marquee-item">CELESTE</div>
-                   <div class="marquee-item">HOLLOW KNIGHT</div>
-                   <div class="marquee-item">SUPER HEXAGON</div>
-                   <div class="marquee-item">OUTER WILDS</div>
-                   <div class="marquee-item">HADES</div>
-                   <div class="marquee-item">TUNIC</div>
-                   <div class="marquee-item">CELESTE</div>
-                   <div class="marquee-item">HOLLOW KNIGHT</div>
-                   <div class="marquee-item">SUPER HEXAGON</div>
-                   <div class="marquee-item">OUTER WILDS</div>
-                   <div class="marquee-item">HADES</div>
-                   <div class="marquee-item">TUNIC</div>
-                 </div>
-               </div>
+            <div class="bio-block">
+                <h2>Biographie</h2>
+                <p>
+                    Avant d’étudier le game design à ISART Digital, j’ai suivi une classe préparatoire aux grandes écoles de commerce. Cette période m’a donné de solides bases en mathématiques… et m’a surtout montré où je ne voulais pas aller. J’ai donc quitté la prépa avant les concours pour me consacrer pleinement au jeu vidéo. Aujourd’hui, je suis très heureux de ce choix, et convaincu d’être sur un terrain qui me correspond.
+
+                    Je m’intéresse avant tout à la manière dont un jeu se ressent. Le game feel et l’expérience utilisateur sont au cœur de ma pratique, avec une approche très concrète : prototyper vite, tester, itérer, ajuster. Selon moi, le game design est indissociable du moteur, au plus proche du jeu et de ses sensations.
+                </p>
+            </div>
+
+            <h3 class="marquee-separator">Jeux qui m’ont marqué</h3>
+            
+            <div class="marquee" aria-hidden="true">
+              <div class="marquee-track">
+                <div class="marquee-item" style="background-image: url('img/jeu1.png');"><span>Manifold Garden</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu2.png');"><span>Blasphemous 2</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu3.png');"><span>Valheim</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu4.png');"><span>Elden Ring</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu5.png');"><span>Silksong</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu6.png');"><span>Blue Prince</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu7.png');"><span>Dune Imperium</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu8.png');"><span>DOOM Eternal</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu9.png');"><span>Sekiro</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu10.png');"><span>Viewfinder</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu11.png');"><span>The Alters</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu12.png');"><span>Inscryption</span></div>
+
+                <div class="marquee-item" style="background-image: url('img/jeu1.png');"><span>Manifold Garden</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu2.png');"><span>Blasphemous 2</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu3.png');"><span>Valheim</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu4.png');"><span>Elden Ring</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu5.png');"><span>Silksong</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu6.png');"><span>Blue Prince</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu7.png');"><span>Dune Imperium</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu8.png');"><span>DOOM Eternal</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu9.png');"><span>Sekiro</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu10.png');"><span>Viewfinder</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu11.png');"><span>The Alters</span></div>
+                <div class="marquee-item" style="background-image: url('img/jeu12.png');"><span>Inscryption</span></div>
+              </div>
             </div>
           </div>
         </section>
