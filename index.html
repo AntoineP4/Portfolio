@@ -55,14 +55,11 @@
 
       --nav-h: 64px;
         
-      /* New smooth transition vars */
       --ease-smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
       --ease-bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
-      
-      /* Juicy Ease specific for interactions */
       --ease-juicy: cubic-bezier(0.34, 1.56, 0.64, 1);
-      --ease-punch: cubic-bezier(0.34, 1.56, 0.64, 1); /* Elastic overshoot for opening */
-      --ease-expo: cubic-bezier(0.19, 1, 0.22, 1); /* Premium dynamic feel for closing */
+      --ease-punch: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -105,7 +102,6 @@
       100% { opacity: 0.38; transform: translate3d(0, 0, 0) scale(0.98); }
     }
 
-    /* --- BLOB ANIMATION --- */
     @keyframes blobMorph {
         0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
         25% { border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%; }
@@ -134,7 +130,6 @@
       padding-bottom: 26px;
     }
 
-    /* --- LAYOUT CENTRÉ ET COMPACT --- */
     #top-nav {
       position: fixed;
       top: 14px;
@@ -160,7 +155,6 @@
       overflow: hidden;
     }
 
-    /* --- TOGGLE BUTTONS --- */
     .toggle-btn {
       appearance: none;
       background: rgba(0, 0, 0, 0.2);
@@ -299,7 +293,6 @@
     .page-hero h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 950; letter-spacing: 0.02em; }
     .page-hero p { margin-top: 10px; color: rgba(255,255,255,0.70); letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; font-size: 0.95rem; }
 
-    /* --- LAYOUT HOME --- */
     .blob-intro {
         display: flex;
         align-items: center;
@@ -419,39 +412,88 @@
     }
     .glass-block p { white-space: pre-line; line-height: 1.7; font-size: 1.03rem; color: rgba(255,255,255,0.86); letter-spacing: 0.01em; text-align: center; }
 
-    @keyframes cardPulse {
-        0% { box-shadow: 0 22px 60px rgba(0,0,0,0.55), 0 0 0 0px rgba(107,140,255,0); border-color: rgba(107,140,255,0.3); }
-        100% { box-shadow: 0 22px 60px rgba(0,0,0,0.55), 0 0 20px rgba(107,140,255,0.15); border-color: rgba(107,140,255,0.6); }
+    /* --- STATUS CARD POLISHED --- */
+    .status-card {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto 60px auto;
+      border-radius: 20px;
+      overflow: hidden; 
+      transform: translateY(18px);
+      opacity: 0;
+      animation: slideFadeIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation-delay: 0.06s;
+      z-index: 0;
+      background: rgba(18, 18, 22, 0.7); 
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      -webkit-mask-image: -webkit-radial-gradient(white, black);
     }
 
-    .status-card {
-      max-width: 980px; margin: 0 auto 60px auto; padding: 1.2rem 1.4rem; border-radius: 18px;
-      background: linear-gradient(135deg, rgba(107,140,255,0.08), rgba(12,12,14,0.8));
-      border: 1px solid rgba(107,140,255,0.3); 
-      backdrop-filter: blur(22px) saturate(160%); -webkit-backdrop-filter: blur(22px) saturate(160%);
-      opacity: 0; transform: translateY(18px); 
-      animation: slideFadeIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards, cardPulse 3s ease-in-out infinite alternate; 
-      animation-delay: 0.06s; text-align: center;
+    .status-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 350px; 
+      height: 80px; 
+      offset-path: rect(0 100% 100% 0 round 20px);
+      animation: travel 10s linear infinite;
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(107, 140, 255, 0.4) 30%, 
+        rgba(255, 255, 255, 0.95) 50%, 
+        rgba(107, 140, 255, 0.4) 70%, 
+        transparent 100%
+      );
+      mix-blend-mode: screen; 
+      filter: blur(20px);
+      opacity: 1;
+      pointer-events: none;
+      z-index: 0;
+      offset-anchor: center;
+      will-change: offset-distance;
+    }
+
+    @keyframes travel {
+      from { offset-distance: 0%; }
+      to   { offset-distance: 100%; }
+    }
+
+    .status-inner {
+      position: relative;
+      margin: 1px;
+      border-radius: 19px;
+      background: rgba(18, 18, 24, 0.94); 
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 1;
     }
 
     .status-card .label { 
-      display: inline-flex; align-items: center; justify-content: center; gap: 10px; 
-      padding: 6px 14px; border-radius: 6px; background: rgba(107,140,255,0.2); 
-      border: 1px solid rgba(107,140,255,0.5);
-      font-weight: 900; letter-spacing: 0.14em; text-transform: uppercase; 
-      font-size: 0.75rem; color: #fff; margin-bottom: 12px;
-      box-shadow: 0 0 10px rgba(107, 140, 255, 0.2);
+      font-size: 0.75rem; 
+      text-transform: uppercase; 
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.5); 
+      font-weight: 700;
+      margin-bottom: 8px;
     }
-    .status-card .text { font-size: 1.05rem; color: rgba(255,255,255,0.92); line-height: 1.65; white-space: pre-line; }
-    .status-card .strong { color: rgba(255,255,255,0.96); font-weight: 900; }
+      
+    .status-card .text { 
+      font-size: 1.05rem; 
+      color: rgba(255,255,255,0.92); 
+      font-weight: 500; 
+      line-height: 1.5;
+    }
 
-    /* --- STYLES SECTION MOI (MODIFIÉ BENTO) --- */
+    /* --- STYLES SECTION MOI --- */
     .moi-bento { 
         display: grid; 
-        /* 320px pour la photo */
         grid-template-columns: 320px 1fr; 
         gap: 40px; 
-        /* ALIGN-ITEMS: END pour que le bas de la photo et le bouton s'alignent */
         align-items: end; 
         max-width: 980px; 
         margin: 0 auto; 
@@ -461,11 +503,9 @@
         .moi-bento { grid-template-columns: 1fr; justify-items: center; text-align: center; align-items: center; } 
     }
       
-    /* Portrait agrandi à 320px - MODIFIÉ POUR COIN CARRÉ */
     .portrait { 
         width: 320px;
         height: 320px; 
-        /* Coin inférieur droit carré */
         border-radius: 26px 26px 0 26px;
         overflow: hidden; 
         border: 1px solid rgba(255,255,255,0.10); 
@@ -495,20 +535,19 @@
         .about-text h2 .underline { background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%); }
     }
       
-    /* --- STATS STYLES (MODIFIED FOR ICONS) --- */
     .id-stats {
         display: grid; grid-template-columns: max-content 1fr; column-gap: 2.5rem; row-gap: 0.8rem;
         padding: 0; margin: 0; list-style: none; position: relative; z-index: 1;
     }
     @media (max-width: 820px) { .id-stats { justify-content: center; text-align: left; } }
     .id-stats li { display: contents; }
-    
+      
     .stat-row-left {
         display: flex;
         align-items: center;
         gap: 14px;
     }
-    
+      
     .stat-icon {
         width: 36px;
         height: 36px;
@@ -521,7 +560,7 @@
         flex-shrink: 0;
         color: rgba(255,255,255,0.6);
     }
-    
+      
     .stat-icon svg {
         width: 18px;
         height: 18px;
@@ -540,15 +579,12 @@
         color: rgba(255,255,255,0.95); font-weight: 500; font-size: 1.15rem; align-self: center;
     }
 
-    /* === BOUTON CV (VERSION TAB/SQUARE) - MODIFIÉ POUR COLLER AU BORD === */
     .cv-magic-container {
         position: relative;
         margin-top: 2.5rem;
         width: 160px; 
         height: 64px;
-        /* MODIFIÉ : Marge négative pour coller à la photo */
         margin-left: -40px;
-        /* MODIFIÉ : Bords gauches carrés pour la jonction */
         border-radius: 0 999px 999px 0;
         background: rgba(255, 255, 255, 0.12);
         border: 1px solid rgba(255, 255, 255, 0.4);
@@ -557,9 +593,6 @@
         padding-left: 0; overflow: hidden; 
         box-shadow: 0 10px 30px rgba(0,0,0,0.2), 0 0 20px rgba(255,255,255,0.1);
         
-        /* ETAT RETOUR (Sortie de souris) */
-        /* Délai 0.3s (Sécu) */
-        /* Courbe var(--ease-expo) pour un retour dynamique (accélération/décélération) au lieu de linaire */
         transition: 
             width 0.5s var(--ease-expo) 0.3s, 
             background 0.3s ease 0.3s, 
@@ -569,20 +602,17 @@
       
     @media (max-width: 820px) { 
         .cv-magic-container { 
-            /* RESET pour mobile */
             margin: 2.5rem auto 0 auto; 
             border-radius: 6px 999px 999px 6px;
         } 
     }
 
-    /* MODIFICATION ICI : Ajout de la classe .locked-open */
     .cv-magic-container:hover, .cv-magic-container.locked-open {
         width: 420px; 
         background: rgba(255, 255, 255, 0.25);
         border-color: rgba(255, 255, 255, 0.9);
         box-shadow: 0 15px 45px rgba(255, 255, 255, 0.2);
         
-        /* ETAT HOVER (Entrée) : PAS DE DELAI, courbe PUNCHY (Elastique) */
         transition: 
             width 0.4s var(--ease-punch) 0s, 
             background 0.3s ease 0s, 
@@ -601,13 +631,11 @@
         display: flex; gap: 10px; align-items: center;
         opacity: 0; transform: translateX(20px);
         white-space: nowrap; padding-right: 18px; margin-left: -10px;
-        transition: all 0.2s ease 0.2s; /* Fermeture douce */
+        transition: all 0.2s ease 0.2s; 
     }
 
-    /* MODIFICATION ICI : Ajout de la classe .locked-open */
     .cv-magic-container:hover .cv-actions, .cv-magic-container.locked-open .cv-actions {
         opacity: 1; transform: translateX(0);
-        /* Ouverture punchy */
         transition: all 0.3s var(--ease-punch) 0.1s;
     }
 
@@ -622,8 +650,53 @@
         box-shadow: 0 5px 15px rgba(0,0,0,0.2); border-color: #fff;
     }
 
+    /* --- NEW BUTTON STYLE FOR CONTACT PAGE (POLISHED) --- */
+    .cv-redirect-btn {
+        appearance: none;
+        border: none;
+        outline: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 14px 28px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(12px);
+        color: rgba(255, 255, 255, 0.7);
+        font-family: inherit;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .cv-redirect-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.4);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.2), 0 0 20px rgba(255,255,255,0.05);
+    }
+    .cv-redirect-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .cv-redirect-btn .btn-icon svg { 
+        width: 18px; 
+        height: 18px; 
+        transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); 
+        display: block;
+    }
+    .cv-redirect-btn:hover .btn-icon svg { 
+        transform: translateX(-4px); 
+    }
 
-    /* Bloc Biographie Large - Maintenant intégré à la grid */
     .bio-block {
         grid-column: 1 / -1; margin: 0; padding: 2.5rem;
         background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.08);
@@ -641,9 +714,6 @@
         line-height: 1.8; font-size: 1.05rem; color: rgba(255,255,255,0.86); white-space: pre-line;
     }
 
-
-    /* === REFINED MARQUEE STYLES === */
-    /* MODIFIED: Delicate underscore style using flex lines */
     .marquee-separator {
         display: flex;
         align-items: center;
@@ -707,14 +777,247 @@
         text-align: center; padding: 0 10px; pointer-events: none;
     }
 
-    .links-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 14px; }
-    .link-pill { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 14px; border-radius: 18px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(18px); text-decoration: none; color: rgba(255,255,255,0.90); transition: all 300ms var(--ease-smooth); cursor: pointer; }
-    .link-pill:hover { transform: translateY(-2px) scale(1.01); background: rgba(255,255,255,0.06); border-color: rgba(107,140,255,0.25); box-shadow: 0 14px 40px rgba(0,0,0,0.3); }
-    .link-pill:active { transform: scale(0.99); }
-    .link-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
-    .link-left img { width: 20px; height: 20px; opacity: 0.92; display: block; }
-    .link-title { font-weight: 950; letter-spacing: 0.10em; text-transform: uppercase; font-size: 0.82rem; color: rgba(255,255,255,0.92); }
-    .link-desc { color: rgba(255,255,255,0.70); font-size: 0.95rem; }
+
+    /* --- MASTERPIECE LINKS/CONTACT CSS (REFACTORED) --- */
+
+    .contact-dashboard {
+      max-width: 900px;
+      margin: 20px auto 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 48px; /* Plus d'espace entre les sections */
+    }
+
+    .section-head {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: rgba(255, 255, 255, 0.4);
+      font-weight: 700;
+      margin-bottom: 12px;
+      padding-left: 8px;
+    }
+
+    /* === CONTACTS (TOP / PREMIUM) === */
+    .contact-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      opacity: 0;
+      animation: slideFadeInUp 0.7s var(--ease-smooth) forwards 0.1s;
+    }
+
+    .contact-row {
+      position: relative;
+      padding: 24px 28px; /* Plus grand pour l'effet premium */
+      border-radius: 20px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02)); /* Gradient subtil */
+      border: 1px solid rgba(107, 140, 255, 0.2); /* Bordure colorée subtile */
+      backdrop-filter: blur(18px);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      cursor: pointer;
+      transition: all 0.35s var(--ease-juicy);
+      text-decoration: none;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .contact-row:hover {
+      background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 0 1px rgba(107,140,255,0.4);
+      border-color: rgba(107, 140, 255, 0.6);
+    }
+    .contact-row:active { transform: scale(0.98); }
+
+    .c-icon-box {
+      width: 52px; height: 52px;
+      background: rgba(107, 140, 255, 0.1);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent); 
+      border: 1px solid rgba(107, 140, 255, 0.2);
+      transition: transform 0.4s var(--ease-bouncy), background 0.3s ease, color 0.3s ease;
+      z-index: 2;
+    }
+    .c-icon-box svg { width: 26px; height: 26px; stroke-width: 1.8; }
+    .contact-row:hover .c-icon-box { background: var(--accent); color: #fff; transform: scale(1.1) rotate(-5deg); box-shadow: 0 8px 20px rgba(107, 140, 255, 0.3); }
+
+    .c-info { flex: 1; min-width: 0; z-index: 2; }
+    .c-title { font-size: 0.75rem; text-transform: uppercase; font-weight: 800; color: rgba(255,255,255,0.5); letter-spacing: 0.1em; margin-bottom: 4px; }
+    .c-val { font-size: 0.92rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: 0.02em; }
+
+    .c-action {
+      font-size: 0.75rem; font-weight: 800; color: #fff;
+      background: rgba(255,255,255,0.1); padding: 8px 14px; border-radius: 8px;
+      opacity: 0; transform: translateX(10px); transition: all 0.3s var(--ease-smooth);
+      z-index: 2;
+    }
+    .contact-row:hover .c-action { opacity: 1; transform: translateX(0); }
+
+    /* Copied State */
+    .contact-row.copied { background: #4caf50 !important; border-color: #4caf50 !important; }
+    .contact-row.copied .c-icon-box { background: rgba(255,255,255,0.25); color: #fff; border-color: transparent; }
+    .contact-row.copied .c-action { background: rgba(0,0,0,0.2); }
+
+    /* === SOCIALS (BOTTOM / SECONDARY) === */
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      opacity: 0;
+      animation: slideFadeInUp 0.7s var(--ease-smooth) forwards 0.2s;
+    }
+
+    .social-card {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      border-radius: 20px;
+      background: rgba(30, 30, 35, 0.4);
+      /* Increased border opacity slightly here: 0.08 -> 0.18 */
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: transform 0.4s var(--ease-juicy), background 0.3s ease, border-color 0.3s ease;
+      overflow: hidden;
+    }
+
+    .social-card:hover {
+      transform: translateY(-6px);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255,255,255,0.3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .social-icon {
+      width: 42px; height: 42px; object-fit: contain; margin-bottom: 12px;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+      transition: transform 0.4s var(--ease-bouncy);
+      opacity: 0.9;
+    }
+    .social-card:hover .social-icon { transform: scale(1.15); opacity: 1; }
+
+    .social-label {
+      font-size: 0.8rem; font-weight: 600; color: rgba(255,255,255,0.8);
+      letter-spacing: 0.02em;
+    }
+    .social-sub {
+      font-size: 0.7rem; font-weight: 500; color: rgba(255,255,255,0.4);
+      margin-top: 2px;
+    }
+
+    @media (max-width: 700px) {
+      .contact-list { grid-template-columns: 1fr; }
+      .social-grid { grid-template-columns: 1fr 1fr; }
+      .contact-dashboard { gap: 32px; }
+    }
+      
+    /* --- NEW ARTICLES SECTION CSS --- */
+    .article-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        opacity: 0;
+        animation: slideFadeInUp 0.7s var(--ease-smooth) forwards 0.3s;
+    }
+    @media (max-width: 600px) { .article-grid { grid-template-columns: 1fr; } }
+
+    .article-btn {
+        display: flex;
+        align-items: center;
+        padding: 16px 20px;
+        background: rgba(255, 255, 255, 0.02); /* More transparent */
+        border: 1px solid rgba(255, 255, 255, 0.04); /* Fainter border */
+        border-radius: 12px;
+        text-decoration: none;
+        color: rgba(255,255,255,0.75); /* Lower contrast */
+        transition: all 0.3s var(--ease-smooth);
+        overflow: hidden;
+        height: 60px;
+        position: relative;
+    }
+
+    .article-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateX(4px);
+        color: rgba(255,255,255,0.9);
+    }
+
+    /* === NEW PASTILLE DESIGN === */
+    .article-tag {
+        font-size: 0.65rem; 
+        text-transform: uppercase;
+        letter-spacing: 0.15em; 
+        font-weight: 600; 
+        padding: 4px 10px; 
+        border-radius: 99px; 
+        background: transparent; 
+        border: 1px solid rgba(255,255,255,0.15); 
+        color: rgba(255,255,255,0.5); 
+        margin-right: 14px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        transition: border-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Standardized skins (overwriting previous specific colors) */
+    .tag-guide, .tag-video, .tag-article {
+        color: rgba(255,255,255,0.5);
+        background: transparent;
+        border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    /* Light up slightly on hover of the parent button */
+    .article-btn:hover .article-tag {
+        color: rgba(255,255,255,0.9);
+        border-color: rgba(255,255,255,0.5);
+    }
+
+    .article-title {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #fff;
+        opacity: 0.5;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 0;
+        transition: all 0.4s var(--ease-juicy);
+        transform: translateX(-10px);
+    }
+
+    .article-btn:hover .article-title {
+        max-width: 300px;
+        opacity: 1;
+        transform: translateX(0);
+        padding-left: 5px;
+    }
+
+    .article-link-icon {
+        margin-left: auto;
+        width: 16px; 
+        height: 16px;
+        opacity: 0.4;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .article-btn:hover .article-link-icon {
+        opacity: 0.9;
+        transform: translate(2px, -2px);
+    }
+
 
     .play-card { border-radius: 22px; padding: 1.1rem 1.2rem; background: radial-gradient(90% 120% at 20% 10%, rgba(107,140,255,0.22) 0%, rgba(0,0,0,0) 60%), rgba(12,12,14,0.64); border: 1px solid rgba(255,255,255,0.10); backdrop-filter: blur(22px); box-shadow: 0 22px 60px rgba(0,0,0,0.55); }
     .play-card h2 { font-size: 1.15rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.90); font-weight: 950; margin-bottom: 10px; }
@@ -844,7 +1147,7 @@
     .expanded-video.instant .video-loading { opacity: 0 !important; transition: none !important; }
     .expanded-video .video-loading { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0; display: flex; align-items: center; justify-content: center; background: rgba(12,12,14,0.28); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); transition: opacity var(--vl-fade) cubic-bezier(0.22, 1, 0.36, 1); transform: translateZ(0); will-change: opacity; }
     .expanded-video.loading-visible .video-loading { opacity: 1; }
-    .expanded-video .loading-dots { display: flex; align-items: center; justify-content: center; gap: 10px; transform: translate3d(0,0,0); will-change: transform; }
+    .expanded-video .loading-dots { display: flex; align-items center; justify-content: center; gap: 10px; transform: translate3d(0,0,0); will-change: transform; }
     .expanded-video .loading-dots span { width: 7px; height: 7px; border-radius: 999px; background: rgba(255,255,255,0.78); box-shadow: 0 10px 24px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.20); opacity: 0.55; animation: dotsPulse 1.05s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
     .expanded-video .loading-dots span:nth-child(2) { animation-delay: 120ms; }
     .expanded-video .loading-dots span:nth-child(3) { animation-delay: 240ms; }
@@ -944,7 +1247,7 @@
         <button class="nav-tab" type="button" data-page="accueil">Accueil</button>
         <button class="nav-tab" type="button" data-page="portfolio">Portfolio</button>
         <button class="nav-tab" type="button" data-page="moi">Moi</button>
-        <button class="nav-tab" type="button" data-page="liens">Liens/Contact</button>
+        <button class="nav-tab" type="button" data-page="liens">Contacts</button>
         <button class="nav-tab" type="button" data-page="jouer">Jouer</button>
       </div>
 
@@ -965,8 +1268,9 @@
             </div>
 
             <div class="status-card">
-              <div class="label">Actuellement</div>
-              <div class="text">Disponible pour un stage de 4 mois (ou moins) à partir du 1er mai.</div>
+              <div class="status-inner">
+                <div class="text">Actuellement disponible pour un stage de 4 mois (ou moins) à partir du 1er mai.</div>
+              </div>
             </div>
 
             <div class="blob-intro">
@@ -1390,95 +1694,129 @@
         <section class="page" data-page="liens">
           <div class="page-inner">
             <div class="page-hero">
-              <h1>Liens</h1>
-              <p>Contact</p>
+              <h1>CONTACTS</h1>
+              <p>Présence en ligne & moyens de contact</p>
             </div>
 
-            <div style="max-width:680px; margin:0 auto;">
-              <div class="links-grid">
-                
-                <a href="https://itch.io" target="_blank" rel="noopener noreferrer" class="link-pill">
-                  <div class="link-left">
-                    <img src="img/itch logo.png" alt="Itch"/>
-                    <div class="link-title">Itch.io</div>
+            <div class="contact-dashboard">
+              
+              <div>
+                <div class="section-head">Contact</div>
+                <div class="contact-list">
+                  
+                  <div class="contact-row" data-copy="antoine.pezzulo@gmail.com">
+                    <div class="c-icon-box">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    </div>
+                    <div class="c-info">
+                      <div class="c-title">Email</div>
+                      <div class="c-val">antoine.pezzulo@gmail.com</div>
+                    </div>
+                    <div class="c-action">Copier</div>
                   </div>
-                  <div class="link-desc">Protos</div>
-                </a>
 
-                <a href="#" target="_blank" rel="noopener noreferrer" class="link-pill">
-                  <div class="link-left">
-                    <span style="font-size:1.2rem;">⚡</span>
-                    <div class="link-title">Newgrounds</div>
-                  </div>
-                  <div class="link-desc">Animations</div>
-                </a>
+                  <a href="https://www.linkedin.com/in/antoine-pezzulo/" target="_blank" rel="noopener noreferrer" class="contact-row">
+                    <div class="c-icon-box">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    </div>
+                    <div class="c-info">
+                      <div class="c-title">LinkedIn</div>
+                      <div class="c-val">antoine-pezzulo</div>
+                    </div>
+                    <div class="c-action">
+                        <svg class="article-link-icon" style="margin:0; width:18px; height:18px; opacity:1;" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                    </div>
+                  </a>
 
-                <a href="#" target="_blank" rel="noopener noreferrer" class="link-pill">
-                  <div class="link-left">
-                    <span style="font-size:1.2rem;">💻</span>
-                    <div class="link-title">GitHub</div>
+                  <div class="contact-row" data-copy="+33695691082">
+                    <div class="c-icon-box">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    </div>
+                    <div class="c-info">
+                      <div class="c-title">Téléphone</div>
+                      <div class="c-val">+33 6 95 69 10 82</div>
+                    </div>
+                    <div class="c-action">Copier</div>
                   </div>
-                  <div class="link-desc">Code source</div>
-                </a>
 
-                <a href="#" target="_blank" rel="noopener noreferrer" class="link-pill">
-                  <div class="link-left">
-                    <span style="font-size:1.2rem;">🔥</span>
-                    <div class="link-title">Guides Mobafire</div>
+                  <div class="contact-row" data-copy="antiwis">
+                    <div class="c-icon-box">
+                      <svg viewBox="0 0 127.14 96.36" fill="currentColor" style="width: 26px; height: 26px;">
+                          <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.09,105.09,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.11,77.11,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.66-53.23-18.9-72.13ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+                      </svg>
+                    </div>
+                    <div class="c-info">
+                      <div class="c-title">Discord</div>
+                      <div class="c-val">antiwis</div>
+                    </div>
+                    <div class="c-action">Copier</div>
                   </div>
-                  <div class="link-desc">Strategy</div>
-                </a>
 
-                <a href="files/CV_Antoine_Pezzulo_FR.pdf" target="_blank" class="link-pill">
-                  <div class="link-left">
-                      <span style="font-size:1.2rem;">📄</span>
-                    <div class="link-title">CV FR</div>
-                  </div>
-                  <div class="link-desc">PDF</div>
-                </a>
-
-                 <a href="files/CV_Antoine_Pezzulo_EN.pdf" target="_blank" class="link-pill">
-                  <div class="link-left">
-                      <span style="font-size:1.2rem;">📄</span>
-                    <div class="link-title">CV EN</div>
-                  </div>
-                  <div class="link-desc">PDF</div>
-                </a>
-
-                 <div class="link-pill" data-copy="antoine.pezzulo@gmail.com">
-                  <div class="link-left">
-                    <span style="font-size:1.2rem;">✉️</span>
-                    <div class="link-title">Email</div>
-                  </div>
-                  <div class="link-desc copy-trigger">antoine.pezzulo@gmail.com</div>
                 </div>
-
-                <div class="link-pill" data-copy="+33695691082">
-                  <div class="link-left">
-                    <span style="font-size:1.2rem;">📞</span>
-                    <div class="link-title">Téléphone</div>
-                  </div>
-                  <div class="link-desc copy-trigger">+33 6 95 69 10 82</div>
-                </div>
-
-                <a href="https://www.linkedin.com/in/antoine-pezzulo/" target="_blank" rel="noopener noreferrer" class="link-pill">
-                  <div class="link-left">
-                    <img src="img/logo.png" style="border-radius:4px;" alt="LinkedIn"/>
-                    <div class="link-title">LinkedIn</div>
-                  </div>
-                  <div class="link-desc">antoine-pezzulo</div>
-                </a>
-
-                <div class="link-pill" data-copy="User#0000">
-                  <div class="link-left">
-                    <span style="font-size:1.2rem;">💬</span>
-                    <div class="link-title">Discord</div>
-                  </div>
-                  <div class="link-desc copy-trigger">Copier ID</div>
-                </div>
-
               </div>
+
+              <div>
+                <div class="section-head">Plateformes</div>
+                <div class="social-grid">
+                  
+                  <a href="https://antoine4.itch.io" target="_blank" rel="noopener noreferrer" class="social-card">
+                    <img src="img/itch blanc.png" alt="Itch.io" class="social-icon" />
+                    <span class="social-label">Itch.io</span>
+                  </a>
+
+                  <a href="https://antoine4.newgrounds.com" target="_blank" rel="noopener noreferrer" class="social-card">
+                    <img src="img/newgrounds.png" alt="Newgrounds" class="social-icon" />
+                    <span class="social-label">Newgrounds</span>
+                  </a>
+
+                  <a href="https://github.com/AntoineP4" target="_blank" rel="noopener noreferrer" class="social-card">
+                    <svg class="social-icon" viewBox="0 0 24 24" fill="white"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    <span class="social-label">GitHub</span>
+                  </a>
+
+                </div>
+              </div>
+
+              <div style="margin-top: 20px;">
+                  <div class="section-head" style="opacity: 0.6; font-size: 0.75rem;">Articles et Réflexions</div>
+                  <div class="article-grid">
+                      <a href="https://www.mobafire.com/league-of-legends/build/new-season-26-work-in-progress-jhin-guide-updated-every-patch-high-master-elo-otp-633981" class="article-btn" target="_blank">
+                          <span class="article-tag tag-guide">Guide</span>
+                          <span class="article-title">Guide de gameplay populaire - LoL</span>
+                          <svg class="article-link-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                      </a>
+                      
+                      <a href="https://blogcollaboratifgd.wordpress.com/2024/11/25/matchmaking-competitif-quand-lequite-rencontre-la-frustration/" class="article-btn" target="_blank">
+                          <span class="article-tag tag-article">Article</span>
+                          <span class="article-title">Analyse du systeme de matchmaking</span>
+                          <svg class="article-link-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                      </a>
+
+                      <a href="https://youtu.be/vr_3COEPRCA" class="article-btn" target="_blank">
+                          <span class="article-tag tag-video">Vidéo</span>
+                          <span class="article-title">Analyse de FTUE - Detroit Become Human</span>
+                          <svg class="article-link-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                      </a>
+                      
+                      <a href="https://blogcollaboratifgd.wordpress.com/2025/03/08/star-citizen-le-fantasme-au-service-du-profit/" class="article-btn" target="_blank">
+                          <span class="article-tag tag-article">Article</span>
+                          <span class="article-title">Critique de l'industrie - Star Citizen</span>
+                          <svg class="article-link-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                      </a>
+                  </div>
+              </div>
+
+              <div style="text-align: center; margin-top: 60px; padding-bottom: 20px;">
+                  <button id="btn-back-cv" class="cv-redirect-btn">
+                      <span class="btn-icon">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                      </span>
+                      <span class="btn-text">CV</span>
+                  </button>
+              </div>
+
             </div>
+
           </div>
         </section>
 
@@ -1516,19 +1854,16 @@
     const navPill = document.getElementById('nav-pill'); 
     const pageOrder = ['accueil', 'portfolio', 'moi', 'liens', 'jouer'];
 
-    // Theme Toggle Functionality (Fake/Visual Only)
     const themeBtn = document.getElementById('theme-btn');
     themeBtn.addEventListener('click', () => {
       themeBtn.classList.toggle('is-day');
     });
 
-    // Language Toggle Functionality (Fake/Visual Only)
     const langBtn = document.getElementById('lang-btn');
     langBtn.addEventListener('click', () => {
       langBtn.classList.toggle('is-en');
     });
 
-    // Fonction pour déplacer la pilule sous le bouton actif
     function updateNavPill(activeBtn) {
         if (!activeBtn) return;
         const width = activeBtn.offsetWidth;
@@ -1559,7 +1894,6 @@
 
     tabs.forEach(tab => tab.addEventListener('click', () => goToPage(tab.dataset.page)));
       
-    // Initialisation
     goToPage('accueil');
     setTimeout(() => {
         const initialActive = document.querySelector('.nav-tab.active');
@@ -1584,22 +1918,27 @@
     });
     playCloseBtn.addEventListener('click', closeDemo);
 
-    document.querySelectorAll('.link-pill[data-copy], .copy-btn').forEach(el => {
+    // --- NEW COPY LOGIC ---
+    document.querySelectorAll('.contact-row[data-copy]').forEach(el => {
       el.addEventListener('click', (e) => {
-        if(el.tagName === 'A') return;
-        const val = el.getAttribute('data-copy') || el.parentElement.getAttribute('data-copy');
+        const val = el.getAttribute('data-copy');
         if(val) {
           navigator.clipboard.writeText(val).then(() => {
-            const originalBg = el.style.background;
-            el.style.background = "rgba(107,140,255,0.3)";
-            setTimeout(() => { el.style.background = originalBg; }, 400);
-            if(el.classList.contains('copy-btn')) {
-               el.classList.add('copied'); setTimeout(() => el.classList.remove('copied'), 1000);
-            }
+            const actionBtn = el.querySelector('.c-action');
+            const originalText = actionBtn.textContent;
+            
+            el.classList.add('copied');
+            actionBtn.textContent = "Copié !";
+            
+            setTimeout(() => { 
+                el.classList.remove('copied'); 
+                actionBtn.textContent = originalText;
+            }, 1500);
           });
         }
       });
     });
+
 
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
     const overlay = document.getElementById('overlay');
@@ -1905,58 +2244,40 @@
       document.querySelectorAll('.project').forEach(p => p.style.cursor = 'default');
     }
 
-    // --- LOGIQUE BLOB ---
     const blob = document.getElementById('myBlob');
     const blobFace = document.getElementById('blobFace');
     const blobText = document.getElementById('blobText');
     const originalText = "Bonjour à vous et bienvenue sur le site d’Antoine, bonne visite !";
     const angryText = "Antoine m’avait juste mis là pour dire bonjour… et voilà ce qui arrive à chaque fois.";
       
-    // Variables pour l'interpolation fluide (Lerp)
-    let blobMouseX = 0, blobMouseY = 0; // Position cible (souris)
-    let currentX = 0, currentY = 0;     // Position actuelle du visage
+    let blobMouseX = 0, blobMouseY = 0; 
+    let currentX = 0, currentY = 0;        
     let isTracking = false;
 
-    // Variables pour la logique "Angry"
     let clickCount = 0;
     let lastClickTime = 0;
     let isAngry = false;
 
-    // --- FONCTION PARTICULES ---
     function spawnParticles(x, y) {
         const particleCount = 12;
         const colors = isAngry ? ['#ff6b6b', '#ff8e8e'] : ['#6b8cff', '#a3b8ff'];
-        
-        // Conteneur parent pour positionnement relatif (blob-intro)
         const container = blob.parentElement;
         const rect = blob.getBoundingClientRect();
         const containerRect = container.getBoundingClientRect();
-
-        // Position relative du clic dans le blob-intro
         const originX = rect.left + rect.width / 2 - containerRect.left;
         const originY = rect.top + rect.height / 2 - containerRect.top;
 
         for (let i = 0; i < particleCount; i++) {
             const p = document.createElement('div');
             p.classList.add('blob-particle');
-            
-            // Couleur aléatoire
             p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            
-            // Position de départ
             p.style.left = `${originX}px`;
             p.style.top = `${originY}px`;
-            
-            // Physique aléatoire
             const angle = Math.random() * Math.PI * 2;
-            const velocity = Math.random() * 80 + 40; // Vitesse d'éjection
-            
+            const velocity = Math.random() * 80 + 40; 
             const destX = Math.cos(angle) * velocity;
             const destY = Math.sin(angle) * velocity;
-            
             container.appendChild(p);
-            
-            // Animation via Web Animations API
             const animation = p.animate([
                 { transform: `translate(-50%, -50%) scale(1)`, opacity: 1 },
                 { transform: `translate(calc(-50% + ${destX}px), calc(-50% + ${destY}px)) scale(0)`, opacity: 0 }
@@ -1965,26 +2286,20 @@
                 easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
                 fill: 'forwards'
             });
-
             animation.onfinish = () => p.remove();
         }
     }
 
     if (blob && blobFace && blobText) {
-        
-        // 1. Suivi de souris fluide (Lerp)
         document.addEventListener('mousemove', (e) => {
             const rect = blob.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
-
-            // Calcul cible
             const deltaX = e.clientX - centerX;
             const deltaY = e.clientY - centerY;
-            const maxDist = 8; // Rayon max réduit (moins réactif)
+            const maxDist = 8; 
             const angle = Math.atan2(deltaY, deltaX);
             const dist = Math.min(Math.sqrt(deltaX*deltaX + deltaY*deltaY), maxDist);
-
             blobMouseX = Math.cos(angle) * dist;
             blobMouseY = Math.sin(angle) * dist;
 
@@ -1994,18 +2309,11 @@
             }
         });
 
-        // Boucle d'animation pour fluidifier le mouvement
         function updateFacePosition() {
-            // Facteur de lissage (0.03 = très smooth et lent)
             const ease = 0.03; 
-            
-            // Interpolation linéaire
             currentX += (blobMouseX - currentX) * ease;
             currentY += (blobMouseY - currentY) * ease;
-
             blobFace.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px))`;
-
-            // On continue tant qu'on n'est pas "arrivé"
             if (Math.abs(blobMouseX - currentX) > 0.05 || Math.abs(blobMouseY - currentY) > 0.05) {
                 requestAnimationFrame(updateFacePosition);
             } else {
@@ -2013,39 +2321,28 @@
             }
         }
 
-        // 2. Gestion des cliques et du mode Angry
         blob.addEventListener('mousedown', (e) => {
-            // NOUVEAU : Si fâché, on ne peut pas cliquer
             if (isAngry) return;
-
             const now = Date.now();
-
-            // Gestion animation Bump
             blob.classList.remove('bumping');
             void blob.offsetWidth; 
             blob.classList.add('bumping');
-            
-            // Ajout des particules au clic
             spawnParticles(e.clientX, e.clientY);
-
-            // Logique Angry - MISE A JOUR ICI
-            if (now - lastClickTime > 4000) { // Changé de 3000 à 4000 (4 secondes)
+            if (now - lastClickTime > 4000) { 
                 clickCount = 0;
             }
             lastClickTime = now;
             clickCount++;
-
-            if (clickCount >= 3) { // Changé de 4 à 3 cliques
+            if (clickCount >= 3) { 
                 activateAngryMode();
-                clickCount = 0; // Empêche le spam immédiat pour redéclencher
+                clickCount = 0; 
             }
         });
         
-        // Nettoyage animation CSS
         blob.addEventListener('animationend', (e) => {
-             if (e.animationName === 'blobBump') {
-                 blob.classList.remove('bumping');
-             }
+              if (e.animationName === 'blobBump') {
+                  blob.classList.remove('bumping');
+              }
         });
 
         function changeTextSmoothly(newContent) {
@@ -2053,45 +2350,47 @@
             setTimeout(() => {
                 blobText.textContent = newContent;
                 blobText.classList.remove('fade-out');
-            }, 300); // Doit correspondre à la transition CSS (0.3s)
+            }, 300); 
         }
 
         function activateAngryMode() {
-            if (isAngry) return; // Sécurité
-            
+            if (isAngry) return; 
             isAngry = true;
             blob.classList.add('angry');
             changeTextSmoothly(angryText);
-
-            // PLUS DE TIMEOUT : L'état reste actif jusqu'au prochain refresh
-        }
-
-        function resetNormalMode() {
-            isAngry = false;
-            blob.classList.remove('angry');
-            changeTextSmoothly(originalText);
         }
     }
 
-    // --- LOGIQUE CV BUTTON (Lock Open) ---
     const cvContainer = document.querySelector('.cv-magic-container');
     if (cvContainer) {
         let lockTimeout;
         cvContainer.addEventListener('mouseenter', () => {
-            // Ajouter la classe qui force l'état ouvert
             cvContainer.classList.add('locked-open');
-
-            // Nettoyer un ancien timeout si l'utilisateur spamme
             clearTimeout(lockTimeout);
-
-            // Attendre la fin exacte de l'animation d'ouverture (0.4s défini dans le CSS)
-            // C'est ce délai qui assure que l'animation est "totalement terminée"
             lockTimeout = setTimeout(() => {
-                // On retire le verrou. 
-                // Si la souris est toujours dessus, le :hover prend le relais sans coupure.
-                // Si la souris est partie, la fermeture (avec son délai de sécurité CSS) se lance.
                 cvContainer.classList.remove('locked-open');
             }, 400); 
+        });
+    }
+
+    // --- LOGIC FOR REDIRECT BUTTON ---
+    const btnBackCv = document.getElementById('btn-back-cv');
+    if(btnBackCv) {
+        btnBackCv.addEventListener('click', () => {
+            goToPage('moi'); // Navigate to "Moi" page
+
+            // Wait for transition to complete/be well underway
+            setTimeout(() => {
+                const cvContainer = document.querySelector('.cv-magic-container');
+                if(cvContainer) {
+                    cvContainer.classList.add('locked-open'); // Force expand
+
+                    // Close after a delay to mimic hover effect ending
+                    setTimeout(() => {
+                        cvContainer.classList.remove('locked-open');
+                    }, 2500);
+                }
+            }, 600); // Trigger near the end of the slide
         });
     }
 
