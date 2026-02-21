@@ -20,6 +20,8 @@
     <link rel="preload" as="image" href="img/voracines_frame.png" fetchpriority="high" />
     <link rel="preload" as="image" href="img/muscles_rockets_frame.png" fetchpriority="high" />
 
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
     <style>
         :root {
           --radius: 1rem;
@@ -34,8 +36,15 @@
           --ease-juicy: cubic-bezier(0.34, 1.56, 0.64, 1);
           --ease-punch: cubic-bezier(0.34, 1.56, 0.64, 1);
           --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
-          --ease-elegant: cubic-bezier(0.16, 1, 0.3, 1); /* La courbe "Premium" */
+          --ease-elegant: cubic-bezier(0.16, 1, 0.3, 1);
         }
+
+        /* LENIS CSS REQUIS */
+        html.lenis, html.lenis body { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+        .lenis.lenis-scrolling iframe { pointer-events: none; }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -76,7 +85,7 @@
         @keyframes pulseBackground {
           0%    { background-position: 0% 50%; }
           50%   { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
+          100%  { background-position: 0% 50%; }
         }
 
         @keyframes slideFadeIn { to { opacity: 1; transform: translateY(0); } }
@@ -95,8 +104,8 @@
           display: flex; align-items: center; justify-content: center; gap: 64px; 
           border-radius: 999px; background: rgba(255,255,255,0.045);
           border: 1px solid rgba(255,255,255,0.10);
-          backdrop-filter: blur(18px) saturate(160%) brightness(1.05);
-          -webkit-backdrop-filter: blur(18px) saturate(160%) brightness(1.05);
+          backdrop-filter: blur(18px) saturate(160%);
+          -webkit-backdrop-filter: blur(18px) saturate(160%);
           box-shadow: 0 18px 55px rgba(0,0,0,0.48), inset 0 1px 0 rgba(255,255,255,0.06);
           padding: 10px 14px; overflow: hidden;
           transition: transform 0.6s var(--ease-smooth), opacity 0.6s ease;
@@ -167,7 +176,6 @@
         /* --- PAGE LAYOUT --- */
         #page-viewport { width: 100vw; overflow: hidden; }
         
-        /* CORRECTION SCROLL */
         #pages { 
             display: flex; 
             width: 500vw; 
@@ -204,9 +212,12 @@
             padding: 0;
             cursor: pointer;
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            transition: all 0.5s var(--ease-elegant);
+            transition: background 0.5s var(--ease-elegant), border-color 0.5s var(--ease-elegant), transform 0.5s var(--ease-elegant), box-shadow 0.5s var(--ease-elegant);
             box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
             position: relative; overflow: hidden;
+            transform: translateZ(0);
+            -webkit-font-smoothing: antialiased; 
+            backface-visibility: hidden;
         }
         
         .sort-mono-btn:hover {
@@ -232,20 +243,32 @@
         }
 
         .sm-value-box {
-            display: flex; align-items: center; gap: 14px;
+            display: flex; 
+            align-items: center; 
+            gap: 0; 
             padding: 14px 24px 14px 18px;
         }
 
         .sm-text-wrapper {
-            height: 18px; line-height: 18px;
+            width: 110px; 
+            min-width: 110px;
+            max-width: 110px;
+            height: 18px; 
+            line-height: 18px;
             overflow: hidden;
-            display: flex; flex-direction: column; align-items: flex-start;
-            min-width: 90px;
+            display: flex; 
+            flex-direction: column; 
+            align-items: flex-start;
+            margin-right: 14px; 
+            flex-shrink: 0;
+            flex-grow: 0;
         }
 
         .sm-text-slider {
             display: flex; flex-direction: column;
             transition: transform 0.65s var(--ease-elegant);
+            will-change: transform;
+            transform: translate3d(0,0,0);
         }
 
         .sm-val {
@@ -259,6 +282,8 @@
         .sm-arrow-box {
             display: flex; align-items: center; justify-content: center;
             width: 22px; height: 22px; 
+            flex-shrink: 0;
+            transform: translateZ(0); 
         }
 
         .sm-arrow {
@@ -267,6 +292,8 @@
             stroke-width: 2.2; 
             stroke-linecap: round; stroke-linejoin: round;
             transition: transform 0.65s var(--ease-elegant);
+            will-change: transform;
+            transform: translateZ(0);
         }
 
         .sort-mono-btn.is-date .sm-text-slider { transform: translateY(-18px); }
@@ -274,12 +301,9 @@
 
 
         /* =========================================
-           STYLE PORTFOLIO - "DIAMOND GLASS"
-           ========================================= */
+            STYLE PORTFOLIO - "DIAMOND GLASS"
+            ========================================= */
         
-        /* ANIMATION "ELEGANT REVEAL"
-           Plus sobre, plus classe, avec un flou cinématique
-        */
         @keyframes elegantReveal {
             0% { 
                 opacity: 0; 
@@ -312,22 +336,19 @@
             border-top-color: rgba(255, 255, 255, 0.15);
             cursor: pointer;
             transform: translateZ(0);
-            transition: transform 0.6s var(--ease-smooth), box-shadow 0.6s var(--ease-smooth), border-color 0.4s ease;
+            transition: transform 0.4s var(--ease-smooth), box-shadow 0.4s var(--ease-smooth), border-color 0.4s ease;
             box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
-            /* État par défaut */
             opacity: 1; 
         }
         
-        /* Classes pour l'animation d'apparition cascade */
         .project-card.is-reveal-hidden {
             opacity: 0;
             pointer-events: none;
-            /* Pas de visibility: hidden ici pour éviter les bugs de layout pendant le chargement */
         }
         
         .project-card.do-reveal {
-            /* Durée un peu plus longue pour le côté "Slow & Premium" */
-            animation: elegantReveal 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: elegantReveal 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            pointer-events: none;
         }
 
         .project-card:hover {
@@ -477,7 +498,7 @@
             border-radius: 24px; 
             display: flex; flex-direction: column;
             transform: translateY(105%) scale(0.98);
-            transition: transform 0.65s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s ease;
+            transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s ease;
             will-change: transform;
             overflow: hidden;
         }
@@ -526,14 +547,45 @@
             background: rgba(255, 255, 255, 0.25);
         }
 
+        /* --- CUSTOM DESIGN SCROLLBAR --- */
         .pv-scroll-container {
             width: 100%; height: 100%; overflow-y: auto;
-            scrollbar-width: none; -ms-overflow-style: none;
             background: transparent; 
-            scroll-behavior: smooth;
             position: relative;
+            scrollbar-width: none; 
+            -ms-overflow-style: none; 
+            overscroll-behavior: contain;
+            will-change: scroll-position;
         }
+        
         .pv-scroll-container::-webkit-scrollbar { display: none; }
+
+        .pv-content {
+             will-change: transform;
+             display: flow-root; 
+        }
+
+        .pv-custom-track {
+            position: absolute;
+            top: 100px; bottom: 40px; right: 8px;
+            width: 3px;
+            background: rgba(255, 255, 255, 0.02); 
+            border-radius: 99px;
+            z-index: 90;
+            overflow: hidden;
+            pointer-events: none; 
+        }
+
+        .pv-custom-bar {
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.1); 
+            transform-origin: top center;
+            transform: scaleY(0); 
+            will-change: transform;
+            border-radius: 99px;
+        }
 
         .pv-hero { 
             position: relative; 
@@ -560,11 +612,7 @@
 
         .pv-hero::after {
             content: ""; position: absolute; inset: 0;
-            background: linear-gradient(to bottom, 
-                transparent 30%, 
-                rgba(15, 15, 20, 0.4) 60%, 
-                rgba(15, 15, 20, 0.95) 90%, 
-                rgba(15, 15, 20, 1) 100%);
+            background: linear-gradient(to bottom, transparent 30%, rgba(15, 15, 20, 0.4) 60%, rgba(15, 15, 20, 0.95) 90%, rgba(15, 15, 20, 1) 100%);
             z-index: 1;
         }
         
@@ -607,7 +655,6 @@
 
         .pw-container {
             width: 100%;
-            padding-bottom: 200px; 
             position: relative;
         }
 
@@ -618,7 +665,7 @@
             padding: 0 6vw;
             max-width: 1400px;
             margin: 40px auto 100px auto;
-            align-items: start;
+            align-items: start; 
         }
 
         .pw-specs-card {
@@ -648,13 +695,15 @@
         }
 
         .pw-pitch-content {
-            padding-top: 10px;
+            padding-top: 0;
             opacity: 0; transform: translateY(20px);
             animation: slideFadeInUp 0.7s var(--ease-smooth) forwards 0.6s;
         }
         .pw-pitch-text {
             font-size: 1.35rem; line-height: 1.5; color: rgba(255,255,255,0.9);
             font-weight: 400; margin-bottom: 40px; 
+            white-space: pre-line; 
+            margin-top: -12px; 
         }
         
         .pw-contrib-box {
@@ -676,17 +725,8 @@
             display: block;
         }
 
-        .pw-tags-box {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px; 
-        }
-
-        .pw-contrib-box .p-tag {
-            opacity: 1 !important;
-            transform: none !important;
-            margin: 0;
-        }
+        .pw-tags-box { display: flex; flex-wrap: wrap; gap: 8px; }
+        .pw-contrib-box .p-tag { opacity: 1 !important; transform: none !important; margin: 0; }
         
         .pw-body {
             display: flex; flex-direction: column; gap: 120px;
@@ -695,127 +735,208 @@
             margin: 0 auto;
         }
 
-        .pw-case-study {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 60px;
-            align-items: center;
-        }
+        .pw-case-study { display: grid; grid-template-columns: 1fr 1.2fr; gap: 60px; align-items: center; }
+
+        .pw-case-study.no-media { grid-template-columns: 1fr; }
+        .pw-case-study.no-media .pw-case-text { max-width: 800px; margin: 0 auto; }
+        .pw-case-study.is-stacked { align-items: center; }
+
+        /* LAYOUT SPÉCIAL POUR LA VIDÉO (HERO MODE) */
+        .pw-case-study.pw-hero-mode { grid-template-columns: 0.7fr 1.6fr; gap: 60px; margin-bottom: 40px; }
+        
+        /* LAYOUT POUR GRANDE VIDÉO EN PLEINE LARGEUR */
+        .pw-case-study.pw-large-media { grid-template-columns: 1fr; gap: 30px; }
+        .pw-case-study.pw-large-media .pw-case-text { max-width: 900px; margin: 0 auto; }
+        .pw-case-study.pw-large-media .pw-inline-video-box { max-width: 90%; margin: 0 auto; }
         
         .pw-case-study.reversed { direction: rtl; }
         .pw-case-study.reversed .pw-case-text { direction: ltr; }
 
-        .pw-case-text h3 {
-            font-size: 1.8rem; font-weight: 800; color: #fff;
-            margin-bottom: 20px; line-height: 1.2;
-        }
-        .pw-case-text p {
-            font-size: 1.05rem; line-height: 1.7; color: rgba(255,255,255,0.75);
-            margin-bottom: 0;
-        }
+        .pw-stacked-media { display: flex; flex-direction: column; gap: 20px; height: auto; }
+        .pw-stacked-media .pw-case-img-box { flex: none; height: auto; }
+        .pw-stacked-media .pw-case-img { width: 100%; height: auto; object-fit: contain; }
+
+        .pw-carousel-item { grid-area: 1 / 1; opacity: 0; transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1); pointer-events: none; position: relative; }
+        .pw-carousel-item.active { opacity: 1; pointer-events: auto; z-index: 2; }
+
+        .pw-carousel { position: relative; width: 100%; height: auto; border-radius: 20px; background: #15151a; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 60px rgba(0,0,0,0.4); direction: ltr; display: flex; flex-direction: column; overflow: hidden; transform: translateZ(0); }
+        .pw-carousel-inner { position: relative; width: 100%; height: auto; display: grid; }
+        .pw-carousel-img { width: 100%; height: auto; object-fit: contain; display: block; }
+        .pw-carousel-controls { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; background: rgba(12, 12, 16, 0.85); backdrop-filter: blur(12px) saturate(120%); -webkit-backdrop-filter: blur(12px) saturate(120%); border-top: 1px solid rgba(255, 255, 255, 0.04); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02); z-index: 10; border-radius: 0 0 19px 19px; }
+        .pw-carousel-caption-box { flex: 1; display: grid; place-items: center; padding: 0 16px; }
+        .pw-carousel-caption-text { grid-area: 1 / 1; color: rgba(255, 255, 255, 0.85); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; opacity: 0; transform: translateY(4px); transition: opacity 0.4s ease, transform 0.4s ease; }
+        .pw-carousel-caption-text.active { opacity: 1; transform: translateY(0); }
+        .pw-carousel-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); color: rgba(255, 255, 255, 0.7); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%); box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.4s var(--ease-smooth); flex-shrink: 0; }
+        .pw-carousel-btn svg { transition: transform 0.4s var(--ease-smooth), color 0.4s ease; }
+        .pw-carousel-btn:not(.disabled):hover { background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.3); color: #fff; transform: scale(1.08); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+        .pw-carousel-btn:not(.disabled):active { transform: scale(0.95); }
+        .pw-carousel-prev:not(.disabled):hover svg { transform: translateX(-2px); }
+        .pw-carousel-next:not(.disabled):hover svg { transform: translateX(2px); }
+        .pw-carousel-btn.disabled { opacity: 0.35; cursor: default; pointer-events: none; background: transparent; border-color: rgba(255, 255, 255, 0.06); box-shadow: none; color: rgba(255, 255, 255, 0.4); backdrop-filter: none; -webkit-backdrop-filter: none; }
+
+        .pw-large-carousel-container { display: flex; align-items: center; justify-content: center; gap: 20px; width: 100%; margin: 40px 0; }
+        .pw-large-carousel-container .pw-carousel { flex: 1; min-width: 0; margin: 0; }
+        .pw-large-carousel-container .pw-carousel-btn { position: relative; background: rgba(255, 255, 255, 0.05); width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; z-index: 10; }
+        .pw-large-carousel-container .pw-carousel-inner { display: flex; flex-wrap: nowrap; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); will-change: transform; width: 100%; }
+        .pw-large-carousel-container .pw-carousel-item { flex: 0 0 100%; width: 100%; opacity: 1; pointer-events: auto; position: relative; }
+        @media (max-width: 768px) { .pw-large-carousel-container { gap: 10px; } .pw-large-carousel-container .pw-carousel-btn { width: 44px; height: 44px; } .pw-large-carousel-container .pw-carousel-btn svg { width: 24px; height: 24px; } }
+
+        .pw-inline-video-box { position: relative; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 60px rgba(0,0,0,0.4); background: #15151a; cursor: pointer; width: 100%; height: auto; }
+        .pw-inline-video { width: 100%; height: auto; display: block; }
+        .video-glass-legend { position: absolute; top: 14px; left: 14px; z-index: 5; background: rgba(15, 15, 20, 0.45); backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; padding: 6px 14px; color: rgba(255, 255, 255, 0.95); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1); pointer-events: none; }
+        .pw-inline-video-play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) translateZ(0) scale(1.0001); width: 64px; height: 64px; background-color: rgba(10, 10, 15, 0.65); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.15); pointer-events: none; transition: transform 0.4s var(--ease-smooth), background-color 0.4s var(--ease-smooth), border-color 0.4s var(--ease-smooth), box-shadow 0.4s var(--ease-smooth), color 0.4s var(--ease-smooth), opacity 0.4s var(--ease-smooth); backdrop-filter: blur(12px) saturate(180%); -webkit-backdrop-filter: blur(12px) saturate(180%); color: rgba(255,255,255,0.9); box-shadow: 0 10px 30px rgba(0,0,0,0.4), inset 0 0 15px rgba(255,255,255,0.05); }
+        .pw-inline-video-play-btn svg { width: 24px; height: 24px; fill: currentColor; transform: translateX(0.5px); }
+        .pw-inline-video-box:hover .pw-inline-video-play-btn { transform: translate(-50%, -50%) translateZ(0) scale(1.15); background-color: rgba(15, 15, 20, 0.85); border-color: rgba(255, 255, 255, 0.35); box-shadow: 0 15px 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.1); color: #fff; }
+        .pw-inline-video-box.is-playing .pw-inline-video-play-btn { opacity: 0; transform: translate(-50%, -50%) translateZ(0) scale(0.8); }
+
+        .pw-case-text h3 { font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 20px; line-height: 1.2; }
+        .pw-case-text p { font-size: 1.05rem; line-height: 1.7; color: rgba(255,255,255,0.75); margin-bottom: 0; white-space: pre-line; }
         
-        .pw-case-img-box {
-            position: relative;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-            background: #15151a;
-        }
-        .pw-case-img {
-            width: 100%; height: auto; display: block;
-            transition: transform 0.5s ease;
-        }
-        .pw-case-img-box:hover .pw-case-img { transform: scale(1.03); }
+        .pw-case-img-box { position: relative; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 60px rgba(0,0,0,0.4); background: #15151a; }
+        .pw-case-img { width: 100%; height: auto; display: block; }
 
-        .pw-cta-wrapper {
-            position: absolute; 
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            z-index: 100;
-            pointer-events: none; 
-            background: linear-gradient(to top, rgba(11, 11, 14, 1) 0%, rgba(11, 11, 14, 0.8) 40%, rgba(11, 11, 14, 0) 100%);
-            padding-top: 60px; 
-            transform: translateY(100%);
-            animation: slideUpCta 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 0.4s;
-        }
+        .pw-video-card { position: relative; border-radius: 24px; overflow: hidden; background: #050505; width: 100%; height: auto; aspect-ratio: 16/9; cursor: pointer; transform: translate3d(0, 0, 0); will-change: transform, box-shadow; backface-visibility: hidden; -webkit-mask-image: -webkit-radial-gradient(white, black); mask-image: radial-gradient(white, black); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 0 30px rgba(107, 140, 255, 0.25), 0 15px 40px rgba(0,0,0,0.6); transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .pw-video-card::after { content: ""; position: absolute; inset: 0; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.05); pointer-events: none; z-index: 4; transition: border-color 0.4s ease; }
+        .pw-video-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4), 0 0 60px rgba(107, 140, 255, 0.45), 0 25px 60px rgba(0,0,0,0.8); }
+        .pw-video-card:hover::after { border-color: rgba(255, 255, 255, 0); }
+        .pw-video-element { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.9; transition: opacity 0.5s ease; will-change: opacity; }
+        .pw-video-card:hover .pw-video-element { opacity: 1; }
+        .pw-video-overlay { position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 100%); display: flex; align-items: center; justify-content: center; transition: opacity 0.5s ease, backdrop-filter 0.5s ease; backdrop-filter: blur(2px); z-index: 2; }
+        .pw-video-card.is-playing .pw-video-overlay { opacity: 0; backdrop-filter: blur(0); pointer-events: none; }
+        .pw-play-pill { display: inline-flex; align-items: center; gap: 12px; padding: 8px 20px 8px 10px; background-color: rgba(20, 20, 25, 0.6); border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(12px) saturate(180%); -webkit-backdrop-filter: blur(12px) saturate(180%); box-shadow: 0 10px 40px rgba(0,0,0,0.3), inset 0 0 20px rgba(255,255,255,0.05); color: rgba(255,255,255,0.9); transform: translateZ(0) scale(1.0001); transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease; }
+        .pw-play-circle-small { width: 40px; height: 40px; border-radius: 50%; background-color: rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transform: translateZ(0) scale(1.0001); transition: background-color 0.3s ease, transform 0.4s var(--ease-smooth); }
+        .pw-play-circle-small svg { width: 18px; height: 18px; transform: translateX(0.5px); fill: currentColor; }
+        .pw-play-pill-text { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: currentColor; }
+        .pw-video-card:hover .pw-play-pill { transform: translateZ(0) scale(1.08); background-color: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.4); color: #fff; box-shadow: 0 15px 50px rgba(0,0,0,0.4), inset 0 0 20px rgba(255,255,255,0.1), 0 0 30px rgba(107, 140, 255, 0.3); }
+        .pw-video-card:hover .pw-play-circle-small { background-color: rgba(255,255,255,0.25); transform: translateZ(0) scale(1.05); }
+        .pw-video-card.is-playing .pw-play-pill { transform: translateZ(0) scale(0.9) translateY(10px); opacity: 0; }
 
-        @keyframes slideUpCta { to { transform: translateY(0); } }
+        .pw-footer-section { margin-top: 150px; padding-bottom: 80px; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 50px; opacity: 0; animation: slideFadeInUp 0.8s var(--ease-smooth) forwards 0.3s; }
+        .pw-footer-divider { display: flex; align-items: center; justify-content: center; gap: 24px; width: 100%; max-width: 500px; position: relative; }
+        .pw-line { height: 1px; flex: 1; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); position: relative; }
+        .pw-symbol { width: 8px; height: 8px; background: rgba(255,255,255,0.6); transform: rotate(45deg); box-shadow: 0 0 10px rgba(255,255,255,0.4); }
+        .pw-actions-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
 
-        .pw-cta-bar {
-            pointer-events: auto;
-            width: 100%;
-            background: rgba(18, 18, 22, 0.85);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap; 
-            padding: 20px 24px;
-            padding-bottom: calc(20px + env(safe-area-inset-bottom));
-        }
-
+        /* --- STYLES SUR-MESURE POUR LES BOUTONS YOUTUBE ET ITCH.IO --- */
         .pw-cta-btn {
-            appearance: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            height: 52px;
-            padding: 0 28px;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-            text-decoration: none;
-            white-space: nowrap;
-            letter-spacing: 0.01em;
-            outline: none;
-            background: rgba(255, 255, 255, 0.05); 
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: rgba(255, 255, 255, 0.85);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            appearance: none; display: inline-flex; align-items: center; justify-content: center; 
+            height: 60px; width: 250px; padding: 0; gap: 14px; /* LARGEUR FIXE ET UNIFORME ICI */
+            border-radius: 999px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            text-decoration: none; white-space: nowrap; letter-spacing: 0.12em; text-transform: uppercase; outline: none;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%); border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .pw-cta-btn:hover { background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%); border-color: rgba(255,255,255,0.5); color: #fff; transform: translateY(-4px); box-shadow: 0 15px 40px rgba(0,0,0,0.4), inset 0 0 20px rgba(255, 255, 255, 0.05); }
+        .pw-cta-btn:active { transform: translateY(-1px) scale(0.98); opacity: 0.9; }
+
+        .pw-cta-btn.btn-youtube svg {
+            width: 18px; height: 18px; fill: currentColor; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
+        }
+        .pw-cta-btn.btn-youtube:hover {
+            border-color: rgba(255, 80, 80, 0.5); 
+            box-shadow: 0 15px 40px rgba(255,0,0,0.15), inset 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+        .pw-cta-btn.btn-youtube:hover svg {
+            transform: scale(1.2);
+            color: #ff4a4a; /* Lueur YouTube délicate */
         }
 
-        .pw-cta-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.45);
+        .pw-cta-btn.btn-external svg {
+            width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.5; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); stroke-linecap: round; stroke-linejoin: round;
+        }
+        .pw-cta-btn.btn-external:hover {
+            border-color: rgba(107, 140, 255, 0.5);
+            box-shadow: 0 15px 40px rgba(107, 140, 255, 0.15), inset 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+        .pw-cta-btn.btn-external:hover svg {
+            transform: translate(3px, -3px);
+            color: #8faaff; /* Indice subtil d'ouverture vers l'extérieur */
+        }
+
+        /* --- MODAL YOUTUBE CINEMA --- */
+        #yt-modal {
+            position: fixed; inset: 0; z-index: 17000;
+            background: rgba(4, 4, 6, 0.95);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        #yt-modal.active { opacity: 1; pointer-events: auto; }
+        
+        .yt-wrapper { 
+            position: relative; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            width: 85vw; max-width: 1200px; margin: 0 auto; 
+        }
+
+        /* En-tête de la modale vidéo (conteneur du bouton fermer) */
+        .yt-header {
+            width: 100%; display: flex; justify-content: flex-end; margin-bottom: 16px;
+            transform: translateY(20px); opacity: 0; 
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.1s, opacity 0.6s ease 0.1s;
+        }
+        #yt-modal.active .yt-header { transform: translateY(0); opacity: 1; }
+
+        /* Le nouveau bouton de fermeture doux et intégré */
+        .yt-close-btn {
+            appearance: none; border: none; outline: none;
+            display: inline-flex; align-items: center; gap: 14px;
+            background: rgba(20, 20, 25, 0.6); 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 14px 28px 14px 24px; 
+            border-radius: 999px;
+            color: rgba(255, 255, 255, 0.85); 
+            font-family: inherit; font-size: 0.9rem; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+            cursor: pointer; 
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .yt-close-btn:hover {
+            background: rgba(255, 255, 255, 0.15); 
+            border-color: rgba(255, 255, 255, 0.6); 
             color: #fff;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            transform: translateY(-4px) scale(1.02); 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.2), 0 0 30px rgba(107, 140, 255, 0.2);
         }
-
-        .pw-cta-btn:active { transform: translateY(0) scale(0.98); }
-
-        .pw-cta-btn:focus-visible {
-            box-shadow: 0 0 0 3px rgba(107, 140, 255, 0.5);
+        .yt-close-btn:active { transform: translateY(0) scale(0.98); }
+        .yt-close-btn svg { 
+            width: 22px; height: 22px; 
+            stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); 
         }
+        .yt-close-btn:hover svg { transform: translateX(-4px); }
 
-        /* RESPONSIVE */
+        .yt-modal-content {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 24px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05), 0 0 60px rgba(255,255,255,0.05);
+            overflow: hidden;
+            transform: scale(0.95) translateY(30px);
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 2;
+        }
+        #yt-modal.active .yt-modal-content { transform: scale(1) translateY(0); }
+        
+        #yt-iframe { width: 100%; height: 100%; border: none; background: #000; }
+
+        @media (max-width: 900px) { .pw-case-study.pw-hero-mode { grid-template-columns: 1fr; gap: 40px; margin-bottom: 30px; } }
         @media (max-width: 768px) {
             .pw-intro-section { grid-template-columns: 1fr; gap: 40px; margin-top: 20px; }
             .pw-case-study { grid-template-columns: 1fr; gap: 24px; direction: ltr !important; }
             .pw-case-study.reversed { direction: ltr; }
             .pw-case-img-box { order: -1; }
-            
-            .pw-cta-bar {
-                padding: 16px;
-                padding-bottom: calc(16px + env(safe-area-inset-bottom));
-                gap: 10px;
-            }
-            .pw-cta-btn { 
-                flex: 1; 
-                padding: 0 16px;
-                font-size: 0.85rem;
-                height: 48px;
-                min-width: fit-content;
-            }
+            .pw-video-card { order: -1; }
+            .pw-footer-section { margin-top: 100px; gap: 40px; }
+            .pw-actions-row { flex-direction: column; width: 100%; align-items: stretch; padding: 0 24px; gap: 14px; }
+            .pw-cta-btn { width: 100%; }
+            .yt-header { margin-bottom: 12px; }
+            .yt-close-btn { padding: 10px 20px 10px 16px; font-size: 0.8rem; gap: 10px; }
+            .yt-close-btn svg { width: 18px; height: 18px; }
         }
 
         /* --- ACCUEIL BLOB & ELEMENTS --- */
@@ -1063,6 +1184,20 @@
       </div>
     </div>
 
+    <div id="yt-modal" onclick="if(event.target === this || event.target.classList.contains('yt-wrapper')) closeYTModal()">
+        <div class="yt-wrapper">
+            <div class="yt-header">
+                <button class="yt-close-btn" aria-label="Fermer la vidéo" onclick="closeYTModal()">
+                    <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    <span>Retour</span>
+                </button>
+            </div>
+            <div class="yt-modal-content">
+                <iframe id="yt-iframe" allow="autoplay; encrypted-media; fullscreen"></iframe>
+            </div>
+        </div>
+    </div>
+
     <nav id="top-nav" aria-label="Navigation">
         <button id="lang-btn" class="toggle-btn lang-toggle-btn" aria-label="Switch Language">
           <span class="lang-text lang-fr">FR</span>
@@ -1122,7 +1257,7 @@
             <div class="page-inner">
               <div class="page-hero">
                   <h1>PORTFOLIO</h1>
-                  <p>projets scolaires & personnels</p>
+                  <p>projets académiques & personnels</p>
               </div>
               
               <div class="portfolio-controls">
@@ -1186,6 +1321,7 @@
                           <h3 class="project-title">VORACINES</h3>
                           <div class="project-tags">
                               <span class="p-tag">Game Design</span>
+                              <span class="p-tag">Visual</span>
                           </div>
                       </div>
                   </div>
@@ -1225,6 +1361,7 @@
                           <div class="project-tags">
                               <span class="p-tag">Game Design</span>
                               <span class="p-tag">Level Design</span>
+                              <span class="p-tag">UI/UX</span>
                           </div>
                       </div>
                   </div>
@@ -1279,11 +1416,7 @@
                 </div>
                 <div class="bio-block">
                   <h2>Biographie</h2>
-                  <p>
-                      Avant d’intégrer le cursus Game Design d’ISART Digital, j’ai suivi une classe préparatoire aux grandes écoles de commerce. Cette expérience m’a apporté une solide rigueur mathématique, et surtout une certitude : ce n’était pas là que je voulais aller. J’ai donc fait le choix de me réorienter pour me consacrer pleinement au jeu vidéo. Un virage assumé, que je considère aujourd’hui comme une évidence.
-
-                      Ce qui me passionne avant tout, c’est la manière dont un jeu se ressent. Le game feel et l’expérience utilisateur sont au cœur de mon approche, toujours très concrète : prototyper rapidement, tester, itérer, affiner. Pour moi, le game design se vit dans le moteur, au plus près du jeu, de ses mécaniques et de ses sensations.
-                  </p>
+                  <p id="bio-content"></p>
                 </div>
               </div>
               <h3 class="marquee-separator">Ces jeux qui m’ont marqué</h3>
@@ -1361,7 +1494,7 @@
                 <div style="margin-top: 20px;">
                     <div class="section-head" style="opacity: 0.6; font-size: 0.75rem;">Articles et Réflexions</div>
                     <div class="article-grid">
-                        <a href="https://www.mobafire.com/league-of-legends/build/new-season-26-work-in-progress-jhin-guide-updated-every-patch-high-master-elo-otp-633981" class="article-btn" target="_blank"><span class="article-tag tag-guide">Guide</span><span class="article-title">Guide de gameplay populaire - LoL</span><svg class="article-link-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                        <a href="https://www.mobafire.com/league-of-legends/build/new-season-26-work-in-progress-jhin-guide-updated-every-patch-high-master-elo-otp-633981" class="article-btn" target="_blank"><span class="article-tag tag-guide">Guide</span><span class="article-title">Guide de gameplay - 1 million de vues</span><svg class="article-link-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
                         <a href="https://blogcollaboratifgd.wordpress.com/2024/11/25/matchmaking-competitif-quand-lequite-rencontre-la-frustration/" class="article-btn" target="_blank"><span class="article-tag tag-article">Article</span><span class="article-title">Analyse du systeme de matchmaking</span><svg class="article-link-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
                         <a href="https://youtu.be/vr_3COEPRCA" class="article-btn" target="_blank"><span class="article-tag tag-video">Vidéo</span><span class="article-title">Analyse de FTUE - Detroit Become Human</span><svg class="article-link-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
                         <a href="https://blogcollaboratifgd.wordpress.com/2025/03/08/star-citizen-le-fantasme-au-service-du-profit/" class="article-btn" target="_blank"><span class="article-tag tag-article">Article</span><span class="article-title">Critique de l'industrie - Star Citizen</span><svg class="article-link-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
@@ -1376,7 +1509,7 @@
 
           <section class="page" data-page="jouer">
               <div class="page-inner" style="max-width: 1400px; padding: 0;">
-                <div class="cinema-container">
+                <div class="cinema-container" data-lenis-prevent>
                     <div class="cinema-bg-layer">
                         <div class="cinema-bg-img active" id="cinema-bg-1" style="background-image: url('img/metro.png');"></div>
                         <div class="cinema-bg-img" id="cinema-bg-2" style="background-image: url('img/pleasant chalk.png');"></div>
@@ -1384,7 +1517,7 @@
                     <div class="cinema-scanlines"></div>
                     <div class="cinema-vignette"></div>
                     <div class="cinema-ambient-light"></div>
-                    <div class="cinema-content">
+                    <div class="cinema-content" data-lenis-prevent>
                         <div class="game-list-header"></div>
                         <div class="game-item active" data-img="img/metro.png" data-title="METRO" data-url="builds/metro/index.html" data-ratio="1.777"> <div class="game-item-bg"></div><div class="game-item-content"><div class="game-item-title">METRO</div></div></div>
                         <div class="game-item" data-img="img/reflect.png" data-title="REFLECT" data-url="builds/reflect/index.html" data-ratio="1.777"><div class="game-item-bg"></div><div class="game-item-content"><div class="game-item-title">REFLECT</div></div></div>
@@ -1403,6 +1536,10 @@
         <button id="pv-close-btn" aria-label="Fermer">
             <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
+        <div class="pv-custom-track">
+            <div class="pv-custom-bar" id="pv-progress-bar"></div>
+        </div>
+        
         <div class="pv-scroll-container">
             <div class="pv-content">
                 </div>
@@ -1411,7 +1548,143 @@
 
     <div id="wip-toast">Work in progress</div>
 
+    <script src="data.js"></script>
+
     <script>
+      /* =========================================
+         CONFIGURATION DES MEDIAS ET METADONNÉES
+         Tout ce qui n'est pas du texte se gère ici
+         ========================================= */
+      const projectConfig = {
+          "metro": {
+              title: "METRO",
+              subtitle: "One Button Runner",
+              heroImg: "img/metro.png",
+              tags: ["Game Design", "Level Design", "Programmation", "UI/UX", "Visual", "Sound Design"],
+              blocksMedia: [
+                  { }, // Index 0 : Ignoré, le mode hero-video prend le dessus
+                  { type: 'image', url: 'img/metro_protos.png' },
+                  { type: 'none' },
+                  { type: 'stacked-video', urls: ['videos/metro_ld1.mp4', 'videos/metro_ld2.mp4'], legends: ['Lent et Oppressant', 'Rapide et Intense'] },
+                  { type: 'carousel', urls: ['img/metro_motif1.png', 'img/metro_motif2.png', 'img/metro_motif3.png'], captions: ['Motif trop visible', 'Motif trop discret', 'Motif parfait'] },
+                  { type: 'video', url: 'videos/metro_ui.mp4' }
+              ]
+          },
+          "mouseknight": {
+              title: "MOUSE KNIGHT",
+              subtitle: "Action Aventure",
+              heroImg: "img/mouse knight.png",
+              tags: ["Game Design", "Level Design", "Programmation", "UI/UX", "Visual"],
+              blocksMedia: [
+                  { }, // Index 0 : Ignoré, le mode hero-video prend le dessus
+                  { type: 'none' },
+                  { type: 'stacked-video', urls: ['videos/mouse_cam1.mp4', 'videos/mouse_cam2.mp4'], legends: ['Avant', 'Après'] },
+                  { type: 'large-video', url: 'videos/mouse_ftue.mp4' }
+              ]
+          },
+          "voracines": {
+              title: "VORACINES",
+              subtitle: "Jeu de plateau tactique",
+              heroImg: "img/voracines.png",
+              tags: ["Game Design", "Visual"],
+              blocksMedia: [
+                  {
+                      type: 'large-carousel',
+                      urls: [
+                          'img/briefGA/1.png', 'img/briefGA/2.png', 'img/briefGA/3.png', 'img/briefGA/4.png',
+                          'img/briefGA/5.png', 'img/briefGA/6.png', 'img/briefGA/7.png', 'img/briefGA/8.png',
+                          'img/briefGA/9.png', 'img/briefGA/10.png', 'img/briefGA/11.png', 'img/briefGA/12.png',
+                          'img/briefGA/13.png', 'img/briefGA/14.png', 'img/briefGA/15.png', 'img/briefGA/16.png',
+                          'img/briefGA/17.png'
+                      ],
+                      captions: [
+                          'Intro', 'Sommaire', 'Univers', 'Mise en page', 'Evolution du plateau', 'Ambiances',
+                          'Ambiance 1', 'Ambiance 2', 'Styles graphiques', 'Style graphique 1', 'Style graphique 2',
+                          'Autres Graphismes', 'Récurrents', 'Bâtiments', 'Spécifications Techniques', 'Besoins', 'Extras'
+                      ]
+                  },
+                  { type: 'none' }
+              ]
+          },
+          "reflect": {
+              title: "REFLECT",
+              subtitle: "Action Puzzle",
+              heroImg: "img/reflect.png",
+              tags: ["Level Design"],
+              blocksMedia: [
+                  { },
+                  { 
+                      type: 'carousel-and-image', 
+                      carouselUrls: ['img/reflect_ld1.png', 'img/reflect_ld2.png', 'img/reflect_ld3.png'],
+                      captions: ['Action Puzzle', 'Puzzle', 'Action'],
+                      singleImg: 'img/reflect_curve.png'
+                  },
+                  { type: 'none' }
+              ]
+          },
+          "pleasantchalk": {
+              title: "PLEASANT CHALK",
+              subtitle: "Arcade Shooter",
+              heroImg: "img/pleasant chalk.png",
+              tags: ["UI/UX", "Visual", "Sound Design"],
+              blocksMedia: [
+                  { }, // Index 0 : Ignoré, le mode hero-video prend le dessus
+                  { type: 'video', url: 'videos/chalk_asteroids.mp4', legend: 'Template de départ' },
+                  { 
+                      type: 'carousel', 
+                      urls: ['img/chalk_juice2.png', 'img/chalk_juice1.png'], 
+                      captions: ['Juice & Feedback', 'Menu dessinable'] 
+                  }
+              ]
+          },
+          "musclesrockets": {
+              title: "MUSCLES & ROCKETS",
+              subtitle: "Action Platformer",
+              heroImg: "img/muscles & rockets.png",
+              tags: ["Game Design", "Level Design", "UI/UX"],
+              blocksMedia: [
+                  { }, // Index 0 : Ignoré, le mode hero-video prend le dessus
+                  { 
+                      type: 'carousel', 
+                      urls: ['img/rockets_ld4.png', 'img/rockets_ld1.png', 'img/rockets_ld2.png', 'img/rockets_ld3.png'],
+                      captions: ['Layout Niveau 1', 'RocketJump : Découverte', 'RocketJump : Apprentissage', 'RocketJump : Maîtrise']
+                  },
+                  { 
+                      type: 'video', 
+                      url: 'videos/rockets_ui.mp4' 
+                  }
+              ]
+          }
+      };
+
+      /* --- INIT SMOOTH SCROLL (LENIS) --- */
+      const lenis = new Lenis({
+        duration: 0.8,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+        direction: 'vertical', 
+        gestureDirection: 'vertical',
+        smooth: true,
+        mouseMultiplier: 0.85, 
+        smoothTouch: false,
+        touchMultiplier: 2,
+      });
+      
+      const bioEl = document.getElementById('bio-content');
+      if (bioEl && typeof bioTextContent !== 'undefined') {
+          bioEl.innerText = bioTextContent;
+      }
+
+      let viewerLenis = null;
+      let viewerResizeObserver = null;
+
+      function raf(time) {
+        lenis.raf(time);
+        if (viewerLenis) viewerLenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+
+      requestAnimationFrame(raf);
+
       const pagesContainer = document.getElementById('pages');
       const tabs = document.querySelectorAll('.nav-tab');
       const navPill = document.getElementById('nav-pill'); 
@@ -1424,32 +1697,22 @@
       
       themeBtn.addEventListener('click', () => {
           const isDay = themeBtn.classList.contains('is-day');
-          
-          // Reset transitions in case we clicked while fading
           themeBtn.style.transition = '';
           themeBtn.querySelectorAll('svg').forEach(el => el.style.transition = '');
 
           if (isDay) {
-              // C'est le jour, on clique -> ça devient nuit
               themeBtn.classList.remove('is-day');
               hideWipToast();
               if (themeTimer) clearTimeout(themeTimer);
           } else {
-              // C'est la nuit, on clique -> ça devient jour + feedback
               themeBtn.classList.add('is-day');
               showWipToast();
-              
-              // Timer 5s
               if (themeTimer) clearTimeout(themeTimer);
               themeTimer = setTimeout(() => {
-                  // Retour lent (fady) vers nuit
                   themeBtn.style.transition = 'all 3s ease-in-out';
                   themeBtn.querySelectorAll('svg').forEach(el => el.style.transition = 'all 3s ease-in-out');
-                  
                   themeBtn.classList.remove('is-day');
                   hideWipToast();
-                  
-                  // Clean styles après anim
                   setTimeout(() => {
                       themeBtn.style.transition = '';
                       themeBtn.querySelectorAll('svg').forEach(el => el.style.transition = '');
@@ -1461,10 +1724,8 @@
       function showWipToast() {
           if (!wipToast) return;
           const rect = themeBtn.getBoundingClientRect();
-          // Positionner le toast sous le bouton (centré)
           wipToast.style.left = (rect.left + rect.width / 2) + 'px';
           wipToast.style.top = (rect.bottom + 8) + 'px';
-          
           wipToast.classList.add('visible');
           if (toastTimer) clearTimeout(toastTimer);
       }
@@ -1474,7 +1735,6 @@
           wipToast.classList.remove('visible');
       }
 
-      // Repositionner le toast si on redimensionne la fenêtre
       window.addEventListener('resize', () => {
           if (wipToast.classList.contains('visible')) showWipToast();
       });
@@ -1490,21 +1750,16 @@
       }
 
       let cinemaIntroPlayed = false;
-
-      // --- LOGIQUE DE REDIMENSIONNEMENT INTELLIGENT ---
       let pageResizeObserver = null;
 
       function updateContainerHeight(activePageElement) {
         if (!activePageElement) return;
-        // On récupère la hauteur du contenu de la page active (le div .page)
         const newHeight = activePageElement.getBoundingClientRect().height;
-        // On l'applique au conteneur global
         pagesContainer.style.height = `${newHeight}px`;
+        lenis.resize();
       }
 
-      // --- FLAG POUR L'ANIMATION PORTFOLIO ---
       let hasPortfolioAnimated = false;
-      // On masque initialement les cartes pour éviter le flash
       const pCards = document.querySelectorAll('.project-card');
       pCards.forEach(c => c.classList.add('is-reveal-hidden'));
 
@@ -1512,61 +1767,45 @@
         const index = pageOrder.indexOf(pageName);
         if (index === -1) return;
         
-        // 1. Slide
         pagesContainer.style.transform = `translate3d(${index * -100}vw, 0, 0)`;
         
-        // 2. Navigation State
         tabs.forEach(t => {
             const isActive = t.dataset.page === pageName;
             t.classList.toggle('active', isActive);
             if (isActive) updateNavPill(t); 
         });
 
-        // 3. Gestion de la hauteur dynamique (FIX SCROLL)
         const activePageEl = document.querySelector(`.page[data-page="${pageName}"]`);
         
-        // Arrêter d'observer l'ancienne page
         if (pageResizeObserver) pageResizeObserver.disconnect();
 
         if (activePageEl) {
-            // Mise à jour immédiate de la hauteur
             updateContainerHeight(activePageEl);
+            
+            let resizeInterval = setInterval(() => { lenis.resize(); }, 50);
+            setTimeout(() => clearInterval(resizeInterval), 1000);
 
-            // Création d'un nouvel observer sur la NOUVELLE page active
-            // Cela permet de réagir si le contenu change (ex: filtre portfolio, chargement images)
-            pageResizeObserver = new ResizeObserver(() => {
-                updateContainerHeight(activePageEl);
-            });
+            pageResizeObserver = new ResizeObserver(() => { updateContainerHeight(activePageEl); });
             pageResizeObserver.observe(activePageEl);
         }
 
-        // 4. ANIMATION PREMIUM (ELEGANT REVEAL)
         if (pageName === 'portfolio' && !hasPortfolioAnimated) {
-            hasPortfolioAnimated = true; // Empêche de le refaire
+            hasPortfolioAnimated = true;
             const cards = document.querySelectorAll('.project-card');
-            
-            // On s'assure qu'elles sont cachées avant de lancer l'anim
             cards.forEach(c => c.classList.add('is-reveal-hidden'));
-
-            // Petit délai pour laisser le slide se lancer
             setTimeout(() => {
                 cards.forEach((card, i) => {
                     setTimeout(() => {
                         card.classList.remove('is-reveal-hidden');
                         card.classList.add('do-reveal');
-                        
-                        // Une fois l'animation finie, on enlève la classe d'animation
-                        // pour que le CSS "pur" reprenne la main (propre pour le hover)
                         card.addEventListener('animationend', () => {
                            card.classList.remove('do-reveal');
                         }, {once: true});
-                        
-                    }, i * 120); // 120ms (un peu plus lent pour l'effet "classe")
+                    }, i * 80);
                 });
             }, 100);
         }
 
-        // 5. Cinema Mode Logic
         const cinemaContainer = document.querySelector('.cinema-container');
         if (pageName === 'jouer') {
             document.body.classList.add('is-cinema');
@@ -1580,30 +1819,26 @@
             if (document.body.classList.contains('is-cinema')) document.body.classList.remove('is-cinema');
         }
         
-        // 6. Reset Scroll
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        lenis.scrollTo(0, { immediate: false });
       }
 
       tabs.forEach(tab => tab.addEventListener('click', () => goToPage(tab.dataset.page)));
       
-      // Init
       goToPage('accueil');
       setTimeout(() => { const initialActive = document.querySelector('.nav-tab.active'); if(initialActive) updateNavPill(initialActive); }, 50);
       window.addEventListener('resize', () => { 
           const currentActive = document.querySelector('.nav-tab.active'); 
           if(currentActive) {
-             updateNavPill(currentActive);
-             // Force update height on window resize
-             const pageName = currentActive.dataset.page;
-             const activePageEl = document.querySelector(`.page[data-page="${pageName}"]`);
-             updateContainerHeight(activePageEl);
+              updateNavPill(currentActive);
+              const pageName = currentActive.dataset.page;
+              const activePageEl = document.querySelector(`.page[data-page="${pageName}"]`);
+              updateContainerHeight(activePageEl);
           }
       });
 
-      // --- PORTFOLIO SORTING LOGIC ---
       const sortToggleBtn = document.getElementById('sort-toggle');
       const grid = document.querySelector('.portfolio-grid');
-      const chronologicalOrder = ['voracines', 'pleasantchalk', 'metro', 'musclesrockets', 'reflect', 'mouseknight'];
+      const chronologicalOrder = ['voracines', 'pleasantchalk', 'metro', 'musclesrockets', 'mouseknight', 'reflect'];
       let originalOrder = [];
       let currentSortState = 'pertinence';
 
@@ -1616,7 +1851,6 @@
 
       if(sortToggleBtn) {
           sortToggleBtn.addEventListener('click', () => {
-              // Toggle state
               if(currentSortState === 'pertinence') {
                   currentSortState = 'date';
                   sortToggleBtn.classList.add('is-date');
@@ -1624,7 +1858,6 @@
                   currentSortState = 'pertinence';
                   sortToggleBtn.classList.remove('is-date');
               }
-              // Trigger sort
               sortGrid(currentSortState);
           });
       }
@@ -1632,19 +1865,29 @@
       function sortGrid(criteria) {
           const cards = Array.from(grid.children);
           
-          // 1. FLIP: First
+          cards.forEach(card => {
+              if (card.classList.contains('do-reveal')) {
+                  card.classList.remove('do-reveal');
+                  card.style.animation = 'none'; 
+                  card.style.opacity = '1';
+                  card.style.transform = 'none';
+                  card.style.filter = 'none';
+              }
+          });
+          
+          void grid.offsetWidth;
+
           const firstPositions = new Map();
           cards.forEach(card => {
               firstPositions.set(card, card.getBoundingClientRect());
               card.classList.add('is-sorting'); 
           });
 
-          // 2. Reorder
           if (criteria === 'date') {
              cards.sort((a, b) => {
                  const indexA = chronologicalOrder.indexOf(a.dataset.projectId);
                  const indexB = chronologicalOrder.indexOf(b.dataset.projectId);
-                 return indexB - indexA; // Descending (Newest first)
+                 return indexB - indexA; 
              });
           } else {
               cards.sort((a, b) => a.dataset.originalIndex - b.dataset.originalIndex);
@@ -1652,11 +1895,9 @@
 
           cards.forEach(card => grid.appendChild(card));
 
-          // 3. FLIP: Invert & Play
           cards.forEach(card => {
               const first = firstPositions.get(card);
               const last = card.getBoundingClientRect();
-              
               const deltaX = first.left - last.left;
               const deltaY = first.top - last.top;
 
@@ -1670,10 +1911,10 @@
               cards.forEach(card => {
                   card.style.transform = '';
                   card.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
-                  
                   setTimeout(() => {
                       card.classList.remove('is-sorting');
                       card.style.transition = '';
+                      card.style.animation = ''; 
                   }, 600);
               });
           });
@@ -1681,129 +1922,98 @@
 
       initSort();
 
-
-      // --- PROJECT VIEWER LOGIC (NEW STRUCTURE) ---
       const viewer = document.getElementById('project-viewer');
       const viewerContent = viewer.querySelector('.pv-content');
       const closeViewerBtn = document.getElementById('pv-close-btn');
-      
       let viewerCloseTimeout = null;
-
-      const projectData = {
-          "metro": {
-              title: "METRO",
-              subtitle: "One Button Runner",
-              heroImg: "img/metro.png",
-              video: "metro.mp4",
-              tags: ["Game Design", "Level Design", "Programmation", "UI/UX", "Visual", "Sound Design"],
-              blocks: [
-                  { 
-                      title: "Le concept", 
-                      text: "L'objectif principal était de créer une ambiance oppressante mais curieuse. Le joueur doit naviguer dans des tunnels de métro abandonnés, où la lumière est sa seule alliée. L'interface a été réduite au strict minimum pour favoriser l'immersion totale.", 
-                      img: "img/metro.png",
-                      reversed: false
-                  },
-                  { 
-                      title: "Défis de Level Design", 
-                      text: "Le plus grand défi a été de guider le joueur sans utiliser de marqueurs d'objectifs traditionnels. J'ai utilisé l'éclairage, la couleur des câbles au sol et le son spatialisé pour indiquer subtilement la direction à suivre. Cela force le joueur à observer son environnement.", 
-                      img: null,
-                      reversed: true
-                  },
-                  { 
-                      title: "Programmation & Tech", 
-                      text: "Développé sous Unity. J'ai implémenté un système de train procédural pour les sections de transition, ainsi qu'un shader personnalisé pour l'effet de crasse et d'humidité sur les murs.", 
-                      img: "img/metro.png",
-                      reversed: false
-                  }
-              ]
-          },
-          "mouseknight": {
-              title: "MOUSE KNIGHT",
-              subtitle: "Aventure épique miniature",
-              heroImg: "img/mouse knight.png",
-              video: "metro.mp4", 
-              tags: ["Game Design", "Level Design", "Programmation", "UI/UX", "Visual"],
-              blocks: [
-                  { 
-                      title: "Direction Artistique", 
-                      text: "Un style visuel unique mélangeant 2D et 3D pour donner l'impression d'un livre de contes vivant. Les animations sont faites image par image pour accentuer le côté artisanal.", 
-                      img: "img/mouse_knight_frame.png",
-                      reversed: false
-                  },
-                  { 
-                      title: "Système de Combat", 
-                      text: "Le combat se veut dynamique et réactif. Inspiré par les classiques du genre, il demande précision et timing. La gestion de la stamina est cruciale pour survivre face aux insectes géants.", 
-                      img: null,
-                      reversed: true
-                  }
-              ]
-          },
-          "voracines": {
-              title: "VORACINES",
-              subtitle: "Survie végétale",
-              heroImg: "img/voracines.png",
-              video: "metro.mp4",
-              tags: ["Game Design"],
-              blocks: [
-                  { 
-                      title: "Gameplay Émergent", 
-                      text: "Dans Voracines, vous contrôlez un système racinaire qui doit puiser des ressources tout en évitant les toxines. Le terrain est généré procéduralement, offrant une rejouabilité infinie.", 
-                      img: "img/voracines_frame.png",
-                      reversed: false
-                  }
-              ]
-          },
-          "reflect": {
-              title: "REFLECT",
-              subtitle: "Puzzle Game Optique",
-              heroImg: "img/reflect.png",
-              video: "metro.mp4",
-              tags: ["Level Design"],
-              blocks: [
-                  { 
-                      title: "Mécanique de Miroirs", 
-                      text: "Le cœur du jeu repose sur la manipulation de rayons laser à l'aide de miroirs rotatifs. Chaque niveau introduit une nouvelle contrainte ou un nouvel élément interactif.", 
-                      img: "img/reflect.png",
-                      reversed: false
-                  },
-                  { 
-                      title: "Courbe de Difficulté", 
-                      text: "L'apprentissage se fait par la pratique. Les premiers niveaux servent de tutoriels invisibles, introduisant les concepts un par un avant de les combiner dans des puzzles complexes.", 
-                      img: null,
-                      reversed: true
-                  }
-              ]
-          },
-          "pleasantchalk": {
-              title: "PLEASANT CHALK",
-              subtitle: "Expérience relaxante",
-              heroImg: "img/pleasant chalk.png",
-              video: "metro.mp4",
-              tags: ["UI/UX", "Visual", "Sound Design"],
-              blocks: [
-                  { 
-                      title: "Satisfaction Utilisateur", 
-                      text: "Tout le jeu est basé sur le 'Juice'. Le simple fait de dessiner à la craie doit être satisfaisant. Le son, les particules de poussière et la réponse visuelle ont été calibrés avec soin.", 
-                      img: "img/pleasant chalk.png",
-                      reversed: false
-                  }
-              ]
-          },
-          "musclesrockets": {
-              title: "MUSCLES & ROCKETS",
-              subtitle: "Action effrénée",
-              heroImg: "img/muscles & rockets.png",
-              video: "metro.mp4",
-              tags: ["Game Design", "Level Design"],
-              blocks: [
-                  { 
-                      title: "Explosions & Chaos", 
-                      text: "Un hommage aux films d'action des années 80. Tout explose, tout le temps. Le moteur physique est poussé à ses limites pour gérer les débris et les ragdolls.", 
-                      img: "img/muscles_rockets_frame.png",
-                      reversed: false
-                  }
-              ]
+      
+      window.toggleProjectVideo = function(el) {
+          const video = el.querySelector('video');
+          if(video) {
+              if(video.paused) { video.play(); el.classList.add('is-playing'); } 
+              else { video.pause(); el.classList.remove('is-playing'); }
           }
+      };
+
+      window.nextCarousel = function(btn, dir) {
+          const container = btn.closest('.pw-large-carousel-container') || btn.closest('.pw-carousel');
+          const carousel = container.classList.contains('pw-large-carousel-container') ? container.querySelector('.pw-carousel') : container;
+          const items = carousel.querySelectorAll('.pw-carousel-item');
+          const totalItems = items.length;
+          let activeIdx = 0;
+
+          items.forEach((item, idx) => { if (item.classList.contains('active')) activeIdx = idx; });
+
+          let nextIdx = activeIdx + dir;
+          if (nextIdx < 0 || nextIdx >= totalItems) return;
+
+          items[activeIdx].classList.remove('active');
+          items[nextIdx].classList.add('active');
+
+          const captionTexts = container.querySelectorAll('.pw-carousel-caption-text');
+          if (captionTexts.length > 0) {
+              if(captionTexts[activeIdx]) captionTexts[activeIdx].classList.remove('active');
+              if(captionTexts[nextIdx]) captionTexts[nextIdx].classList.add('active');
+          }
+
+          if (container.classList.contains('pw-large-carousel-container')) {
+              const inner = carousel.querySelector('.pw-carousel-inner');
+              inner.style.transform = `translate3d(-${nextIdx * 100}%, 0, 0)`;
+          }
+
+          const prevBtn = container.querySelector('.pw-carousel-prev');
+          const nextBtn = container.querySelector('.pw-carousel-next');
+          if (prevBtn) {
+              if(nextIdx === 0) prevBtn.classList.add('disabled');
+              else prevBtn.classList.remove('disabled');
+          }
+          if (nextBtn) {
+              if(nextIdx === totalItems - 1) nextBtn.classList.add('disabled');
+              else nextBtn.classList.remove('disabled');
+          }
+      }
+
+      window.toggleInlineVideo = function(box) {
+          const video = box.querySelector('video');
+          if (video.paused) { video.play(); box.classList.add('is-playing'); } 
+          else { video.pause(); box.classList.remove('is-playing'); }
+      }
+
+      window.resetInlineVideo = function(video) {
+          video.currentTime = 0;
+          const box = video.closest('.pw-inline-video-box');
+          if (box) box.classList.remove('is-playing');
+      };
+
+      // Extract Youtube ID for iframe
+      function extractYTId(url) {
+          if(!url || url === '#') return '';
+          const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+          const match = url.match(regExp);
+          return (match && match[2].length === 11) ? match[2] : null;
+      }
+
+      window.openYTModal = function(url) {
+          if (url === '#') return;
+          const ytId = extractYTId(url);
+          if (!ytId) return;
+
+          const modal = document.getElementById('yt-modal');
+          const iframe = document.getElementById('yt-iframe');
+          iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0&showinfo=0&color=white`;
+          
+          modal.classList.add('active');
+          if(viewerLenis) viewerLenis.stop();
+      };
+
+      window.closeYTModal = function() {
+          const modal = document.getElementById('yt-modal');
+          const iframe = document.getElementById('yt-iframe');
+          modal.classList.remove('active');
+          setTimeout(() => {
+              iframe.src = '';
+          }, 500);
+          if(viewerLenis) viewerLenis.start();
       };
 
       function openViewer(projectId) {
@@ -1812,55 +2022,106 @@
               viewerCloseTimeout = null;
           }
 
-          const data = projectData[projectId];
-          if(!data) return;
+          const textsData = typeof projectTexts !== 'undefined' ? projectTexts[projectId] : null;
+          const configData = projectConfig[projectId];
+          
+          if(!textsData || !configData) return;
 
-          // -- A) HEADER (RESTORED ORIGINAL BANNER + ELEGANT SUBTITLE) --
+          const formatTeam = (str) => {
+              if (str === 'Solo') return '<span style="color:#fff; font-weight:800; letter-spacing:0.05em;">Solo</span>';
+              return str.split(' - ').map(part => {
+                  const match = part.match(/^(\d+)\s+(.+)$/);
+                  if (match) {
+                      return `<b style="color:#fff; font-weight:800;">${match[1]}</b> <span style="color:rgba(255,255,255,0.6); font-size:0.85em; text-transform:uppercase; letter-spacing:0.05em;">${match[2]}</span>`;
+                  }
+                  return part;
+              }).join('<span style="color:rgba(255,255,255,0.2); margin:0 6px; font-weight:300;">/</span>');
+          };
+
+          let specTeam = formatTeam('Solo');
+          let specContext = 'Personnel';
+          let specDate = 'Mars 2025';
+          let specDuration = 'En cours';
+          let specEngine = 'Unity';
+          let showEngine = true;
+
+          if (projectId === 'mouseknight') {
+              specTeam = formatTeam('5 Design - 2 Sound');
+              specContext = 'Académique';
+              specDate = 'Décembre 2025';
+              specDuration = '3 mois';
+          } else if (projectId === 'metro') {
+              specContext = 'Académique / Personnel';
+          } else if (projectId === 'voracines') {
+              specTeam = formatTeam('5 Design - 2 Artists');
+              specContext = 'Académique';
+              specDate = 'Décembre 2025';
+              specDuration = '3 mois';
+              showEngine = false; 
+          } else if (projectId === 'reflect') {
+              specTeam = formatTeam('1 Design & Code - 1 LD - 1 Sound');
+              specContext = 'Personnel';
+              specDate = 'Janvier 2026';
+              specDuration = '6 mois';
+              specEngine = 'Godot';
+          } else if (projectId === 'pleasantchalk') {
+              specTeam = formatTeam('Solo');
+              specContext = 'Académique';
+              specDate = 'Janvier 2025';
+              specDuration = '2 semaines';
+          } else if (projectId === 'musclesrockets') {
+              specTeam = formatTeam('6 Design - 1 Code - 1 Sound');
+              specContext = 'Académique';
+              specDate = 'Mars 2025';
+              specDuration = '6 semaines';
+          }
+
           const headerHTML = `
             <div class="pv-hero">
-                <img src="${data.heroImg}" alt="${data.title} Hero" class="pv-hero-img">
+                <img src="${configData.heroImg}" alt="${configData.title} Hero" class="pv-hero-img" loading="eager">
                 <div class="pv-header-overlay">
-                    <h2 class="pv-title pv-anim-entry" style="animation-delay: 0.1s">${data.title}</h2>
-                    <p class="pv-subtitle pv-anim-entry" style="animation-delay: 0.2s">${data.subtitle || 'Projet Interactif'}</p>
+                    <h2 class="pv-title pv-anim-entry" style="animation-delay: 0.1s">${configData.title}</h2>
+                    <p class="pv-subtitle pv-anim-entry" style="animation-delay: 0.2s">${configData.subtitle || 'Projet Interactif'}</p>
                 </div>
             </div>
           `;
 
-          // -- GENERATE TAGS HTML (Reuse .p-tag style) --
-          const tagsHTML = (data.tags || []).map(tag => `<span class="p-tag">${tag}</span>`).join('');
+          const tagsHTML = (configData.tags || []).map(tag => `<span class="p-tag">${tag}</span>`).join('');
 
-          // -- B) INTRO (Split) --
+          const engineRowHTML = showEngine ? `
+                <div class="pw-spec-row">
+                    <span class="pw-spec-label">Moteur</span>
+                    <span class="pw-spec-val">${specEngine}</span>
+                </div>` : '';
+
           const specsHTML = `
-            <div class="pw-spec-row">
-                <span class="pw-spec-label">Rôle</span>
-                <span class="pw-spec-val">Game Design</span>
-            </div>
-            <div class="pw-spec-row">
-                <span class="pw-spec-label">Team</span>
-                <span class="pw-spec-val">Solo / Group</span>
-            </div>
-            <div class="pw-spec-row">
-                <span class="pw-spec-label">Durée</span>
-                <span class="pw-spec-val">4 Mois</span>
-            </div>
-            <div class="pw-spec-row">
-                <span class="pw-spec-label">Moteur</span>
-                <span class="pw-spec-val">Unity</span>
-            </div>
-             <div class="pw-spec-row">
-                <span class="pw-spec-label">Contexte</span>
-                <span class="pw-spec-val">Scolaire</span>
+            <div class="pw-specs-card">
+                <div class="pw-spec-row">
+                    <span class="pw-spec-label">Equipe</span>
+                    <span class="pw-spec-val">${specTeam}</span>
+                </div>
+                <div class="pw-spec-row">
+                    <span class="pw-spec-label">Contexte</span>
+                    <span class="pw-spec-val">${specContext}</span>
+                </div>
+                <div class="pw-spec-row">
+                    <span class="pw-spec-label">Date</span>
+                    <span class="pw-spec-val">${specDate}</span>
+                </div>
+                <div class="pw-spec-row">
+                    <span class="pw-spec-label">Durée</span>
+                    <span class="pw-spec-val">${specDuration}</span>
+                </div>
+                ${engineRowHTML}
             </div>
           `;
 
           const introHTML = `
             <div class="pw-intro-section">
-                <div class="pw-specs-card">
-                    ${specsHTML}
-                </div>
+                ${specsHTML}
                 <div class="pw-pitch-content">
                     <p class="pw-pitch-text">
-                        Voici une description courte mais percutante du projet. C'est ici que l'on explique la vision globale, l'intention de design majeure ou le "hook" principal du jeu. (Placeholder text)
+                        ${textsData.description || 'Description à venir.'}
                     </p>
                     <div class="pw-contrib-box">
                         <span class="pw-contrib-label">Contributions</span>
@@ -1872,51 +2133,294 @@
             </div>
           `;
 
-          // -- C) BODY (Case Studies) --
           let bodyHTML = '';
-          const blocksToUse = data.blocks || []; 
+          const blocksText = textsData.blocks || [];
+          const blocksMedia = configData.blocksMedia || [];
           
-          if(blocksToUse.length > 0) {
+          if(blocksText.length > 0) {
               bodyHTML = '<div class="pw-body">';
               let isReversed = false; 
               
-              blocksToUse.forEach(block => {
-                  const reverseClass = isReversed ? 'reversed' : '';
-                  const imgBlock = block.img 
-                      ? `<div class="pw-case-img-box"><img src="${block.img}" class="pw-case-img" alt="Case Study"></div>`
-                      : `<div class="pw-case-img-box" style="background:rgba(255,255,255,0.05); aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.3);"><span>Image Placeholder</span></div>`;
+              blocksText.forEach((blockTxt, index) => {
+                  let mediaBlock = '';
+                  let extraClass = '';
+                  const mediaConf = blocksMedia[index] || {};
                   
-                  bodyHTML += `
-                      <div class="pw-case-study ${reverseClass}">
-                          <div class="pw-case-text">
-                              <h3>${block.title}</h3>
-                              <p>${block.text}</p>
+                  let isActualNoMedia = false;
+                  if (index === 0 && projectId !== 'voracines') {
+                      isActualNoMedia = false; 
+                  } else {
+                      if (mediaConf.type === 'none') {
+                          isActualNoMedia = true;
+                      }
+                  }
+
+                  const reverseClass = (isReversed && !isActualNoMedia) ? 'reversed' : '';
+
+                  if (index === 0 && projectId !== 'voracines') {
+                      mediaBlock = `
+                        <div class="pw-video-card" onclick="toggleProjectVideo(this)">
+                            <div class="pw-video-overlay">
+                                <div class="pw-play-pill">
+                                    <div class="pw-play-circle-small">
+                                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                                    </div>
+                                    <span class="pw-play-pill-text">Coup d'œil</span>
+                                </div>
+                            </div>
+                            <video class="pw-video-element" src="videos/${configData.title.toLowerCase()}.mp4" muted loop playsinline preload="metadata"></video>
+                        </div>
+                      `;
+                      bodyHTML += `
+                          <div class="pw-case-study ${reverseClass} pw-hero-mode">
+                              <div class="pw-case-text">
+                                  <h3>${blockTxt.title}</h3>
+                                  <p>${blockTxt.text}</p>
+                              </div>
+                              ${mediaBlock}
                           </div>
-                          ${imgBlock}
-                      </div>
-                  `;
-                  isReversed = !isReversed; // Alternance
+                      `;
+                  } else {
+                      if (mediaConf.type === 'none') {
+                          extraClass = 'no-media';
+                          mediaBlock = '';
+                      } else if (mediaConf.type === 'image') {
+                          mediaBlock = `<div class="pw-case-img-box"><img src="${mediaConf.url}" class="pw-case-img" alt="Case Study" loading="lazy"></div>`;
+                      } else if (mediaConf.type === 'stacked') {
+                          extraClass = 'is-stacked';
+                          mediaBlock = `
+                            <div class="pw-stacked-media">
+                                <div class="pw-case-img-box"><img src="${mediaConf.urls[0]}" class="pw-case-img" alt="Case Study" loading="lazy"></div>
+                                <div class="pw-case-img-box"><img src="${mediaConf.urls[1]}" class="pw-case-img" alt="Case Study" loading="lazy"></div>
+                            </div>
+                          `;
+                      } else if (mediaConf.type === 'stacked-video') {
+                          extraClass = 'is-stacked';
+                          const legend1 = mediaConf.legends && mediaConf.legends[0] ? `<div class="video-glass-legend">${mediaConf.legends[0]}</div>` : '';
+                          const legend2 = mediaConf.legends && mediaConf.legends[1] ? `<div class="video-glass-legend">${mediaConf.legends[1]}</div>` : '';
+                          mediaBlock = `
+                            <div class="pw-stacked-media">
+                                <div class="pw-inline-video-box" onclick="window.toggleInlineVideo(this)">
+                                    ${legend1}
+                                    <video class="pw-inline-video" src="${mediaConf.urls[0]}" playsinline preload="metadata" onended="window.resetInlineVideo(this)"></video>
+                                    <div class="pw-inline-video-play-btn">
+                                        <svg viewBox="0 0 24 24" width="32" height="32" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                                    </div>
+                                </div>
+                                <div class="pw-inline-video-box" onclick="window.toggleInlineVideo(this)">
+                                    ${legend2}
+                                    <video class="pw-inline-video" src="${mediaConf.urls[1]}" playsinline preload="metadata" onended="window.resetInlineVideo(this)"></video>
+                                    <div class="pw-inline-video-play-btn">
+                                        <svg viewBox="0 0 24 24" width="32" height="32" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+                          `;
+                      } else if (mediaConf.type === 'carousel-and-image') {
+                          extraClass = 'is-stacked';
+                          const items = mediaConf.carouselUrls.map((url, i) => {
+                              return `
+                            <div class="pw-carousel-item ${i === 0 ? 'active' : ''}">
+                                <img src="${url}" class="pw-carousel-img" alt="Carousel Image" loading="lazy">
+                            </div>
+                          `;
+                          }).join('');
+
+                          const captions = mediaConf.captions || [];
+                          const hasCaptions = captions.length > 0;
+                          let captionHTML = '';
+                          if (hasCaptions) {
+                              const captionTexts = captions.map((cap, i) => `<div class="pw-carousel-caption-text ${i === 0 ? 'active' : ''}">${cap}</div>`).join('');
+                              captionHTML = `<div class="pw-carousel-caption-box">${captionTexts}</div>`;
+                          }
+                          
+                          mediaBlock = `
+                            <div class="pw-stacked-media">
+                                <div class="pw-case-img-box"><img src="${mediaConf.singleImg}" class="pw-case-img" alt="Case Study" loading="lazy"></div>
+                                <div class="pw-carousel">
+                                    <div class="pw-carousel-inner">
+                                        ${items}
+                                    </div>
+                                    <div class="pw-carousel-controls">
+                                        <button class="pw-carousel-btn pw-carousel-prev disabled" onclick="window.nextCarousel(this, -1)">
+                                            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                        </button>
+                                        ${captionHTML}
+                                        <button class="pw-carousel-btn pw-carousel-next ${mediaConf.carouselUrls.length <= 1 ? 'disabled' : ''}" onclick="window.nextCarousel(this, 1)">
+                                            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                          `;
+                      } else if (mediaConf.type === 'carousel' || mediaConf.type === 'large-carousel') {
+                          const isLarge = mediaConf.type === 'large-carousel';
+                          if (isLarge) {
+                              extraClass = 'pw-large-media';
+                          }
+                          const captions = isLarge ? [] : (mediaConf.captions || []);
+                          const hasCaptions = captions.length > 0;
+                          
+                          const items = mediaConf.urls.map((url, i) => {
+                              return `
+                            <div class="pw-carousel-item ${i === 0 ? 'active' : ''}">
+                                <img src="${url}" class="pw-carousel-img" alt="Carousel Image" loading="lazy">
+                            </div>
+                          `;
+                          }).join('');
+                          
+                          let captionHTML = '';
+                          if (hasCaptions) {
+                              const captionTexts = captions.map((cap, i) => `<div class="pw-carousel-caption-text ${i === 0 ? 'active' : ''}">${cap}</div>`).join('');
+                              captionHTML = `<div class="pw-carousel-caption-box">${captionTexts}</div>`;
+                          }
+
+                          if (isLarge) {
+                              mediaBlock = `
+                                <div class="pw-large-carousel-container">
+                                    <button class="pw-carousel-btn pw-carousel-prev disabled" onclick="window.nextCarousel(this, -1)">
+                                        <svg viewBox="0 0 24 24" width="30" height="30" stroke="currentColor" stroke-width="2" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                    </button>
+                                    <div class="pw-carousel">
+                                        <div class="pw-carousel-inner" style="transform: translate3d(0%, 0, 0);">
+                                            ${items}
+                                        </div>
+                                    </div>
+                                    <button class="pw-carousel-btn pw-carousel-next ${mediaConf.urls.length <= 1 ? 'disabled' : ''}" onclick="window.nextCarousel(this, 1)">
+                                        <svg viewBox="0 0 24 24" width="30" height="30" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                    </button>
+                                </div>
+                              `;
+                          } else {
+                              mediaBlock = `
+                                <div class="pw-carousel">
+                                    <div class="pw-carousel-inner">
+                                        ${items}
+                                    </div>
+                                    <div class="pw-carousel-controls">
+                                        <button class="pw-carousel-btn pw-carousel-prev disabled" onclick="window.nextCarousel(this, -1)">
+                                            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                        </button>
+                                        ${captionHTML}
+                                        <button class="pw-carousel-btn pw-carousel-next ${mediaConf.urls.length <= 1 ? 'disabled' : ''}" onclick="window.nextCarousel(this, 1)">
+                                            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                              `;
+                          }
+                      } else if (mediaConf.type === 'video' || mediaConf.type === 'large-video') {
+                          const legend = mediaConf.legend ? `<div class="video-glass-legend">${mediaConf.legend}</div>` : '';
+                          if (mediaConf.type === 'large-video') extraClass = 'pw-large-media';
+                          mediaBlock = `
+                            <div class="pw-inline-video-box" onclick="window.toggleInlineVideo(this)">
+                                ${legend}
+                                <video class="pw-inline-video" src="${mediaConf.url}" playsinline preload="metadata" onended="window.resetInlineVideo(this)"></video>
+                                <div class="pw-inline-video-play-btn">
+                                    <svg viewBox="0 0 24 24" width="32" height="32" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                                </div>
+                            </div>
+                          `;
+                      } else {
+                          const fallbackUrl = mediaConf.url || 'img/placeholder.png';
+                          mediaBlock = `<div class="pw-case-img-box"><img src="${fallbackUrl}" class="pw-case-img" alt="Case Study" loading="lazy"></div>`;
+                      }
+                      
+                      bodyHTML += `
+                          <div class="pw-case-study ${reverseClass} ${extraClass}">
+                              <div class="pw-case-text">
+                                  <h3>${blockTxt.title}</h3>
+                                  <p>${blockTxt.text}</p>
+                              </div>
+                              ${mediaBlock}
+                          </div>
+                      `;
+                  }
+                  
+                  if (!isActualNoMedia) {
+                      isReversed = !isReversed; 
+                  }
               });
               bodyHTML += '</div>';
           }
 
-          // -- D) PREMIUM BOTTOM ACTION BAR (pw-cta-) --
-          // MODIFICATION: Tous les boutons utilisent la même classe .pw-cta-btn (plus de primary/secondary)
-          const footerHTML = `
-              <div class="pw-cta-wrapper">
-                  <div class="pw-cta-bar">
-                      <a href="#" class="pw-cta-btn">
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                          Trailer
+          /* --- DÉFINITION DES BOUTONS PROJETS --- */
+          let projectLinks = [];
+          switch(projectId) {
+              case 'mouseknight':
+                  projectLinks = [
+                      { label: 'Trailer', url: 'https://youtu.be/pXoGr9FD1V4', type: 'youtube' },
+                      { label: 'Walkthrough', url: 'https://youtu.be/__Ve0LGJgvs', type: 'youtube' },
+                      { label: 'Itch.io', url: 'https://kusalherbe.itch.io/mouse-knight', type: 'external' }
+                  ];
+                  break;
+              case 'metro':
+                  projectLinks = [
+                      { label: 'Trailer', url: 'https://youtu.be/voMQWys06b8', type: 'youtube' },
+                      { label: 'Walkthrough', url: 'https://youtu.be/xdevRLeE7Kk', type: 'youtube' },
+                  ];
+                  break;
+              case 'voracines':
+                  projectLinks = [
+                      { label: 'Trailer', url: 'https://youtu.be/bdllN41GYCA', type: 'youtube' },
+                      { label: 'Gameplay', url: 'https://youtu.be/3aI1dK4PaKc', type: 'youtube' }
+                  ];
+                  break;
+              case 'reflect':
+                  projectLinks = [
+                      { label: 'Itch.io', url: 'https://testiie.itch.io/reflect', type: 'external' }
+                  ];
+                  break;
+              case 'pleasantchalk':
+                  projectLinks = [
+                      { label: 'Gameplay', url: 'https://youtu.be/OlWn9bAsLxc', type: 'youtube' },
+                      { label: 'Itch.io', url: 'https://antoine4.itch.io/pleasant-chalk', type: 'external' }
+                  ];
+                  break;
+              case 'musclesrockets':
+                  projectLinks = [
+                      { label: 'Trailer', url: 'https://youtu.be/cdR5du5tKaw', type: 'youtube' },
+                      { label: 'Walkthrough', url: 'https://youtu.be/Rc5iw1KlldQ', type: 'youtube' }
+                  ];
+                  break;
+              default:
+                  projectLinks = [
+                      { label: 'Trailer', url: '#', type: 'youtube' },
+                      { label: 'Itch.io', url: '#', type: 'external' }
+                  ];
+          }
+
+          const buttonsHTML = projectLinks.map(link => {
+              if (link.type === 'youtube') {
+                  return `
+                      <button class="pw-cta-btn btn-youtube" onclick="window.openYTModal('${link.url}')">
+                          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                          ${link.label}
+                      </button>
+                  `;
+              } else {
+                  return `
+                      <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="pw-cta-btn btn-external">
+                          ${link.label}
+                          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                       </a>
-                      <a href="#" class="pw-cta-btn">Walkthrough</a>
-                      <a href="#" class="pw-cta-btn">Itch.io</a>
-                      <a href="#" class="pw-cta-btn">Download</a>
-                  </div>
+                  `;
+              }
+          }).join('');
+
+          const footerHTML = `
+              <div class="pw-footer-section">
+                <div class="pw-footer-divider">
+                    <div class="pw-line"></div>
+                    <div class="pw-symbol"></div>
+                    <div class="pw-line"></div>
+                </div>
+                <div class="pw-actions-row">
+                      ${buttonsHTML}
+                </div>
               </div>
           `;
 
-          // Assemblage final
           const contentWrapper = `
             <div class="pw-container">
                 ${headerHTML}
@@ -1926,22 +2430,57 @@
             </div>
           `;
 
+          const scrollContainer = viewer.querySelector('.pv-scroll-container');
+          const progressBar = document.getElementById('pv-progress-bar');
+          
+          if(scrollContainer) scrollContainer.scrollTop = 0; 
+          if(progressBar) progressBar.style.transform = 'scaleY(0)';
+          
           viewerContent.innerHTML = contentWrapper;
-
+          
           document.body.classList.add('is-viewer-open');
           viewer.classList.add('active');
-          const scrollContainer = viewer.querySelector('.pv-scroll-container');
-          
-          if(scrollContainer) {
-              // CORRECTION BUG SCROLL : On force le comportement en 'auto' pour que le reset soit instantané
-              // Sinon, le 'scroll-behavior: smooth' du CSS anime le retour à 0, créant cet effet de "roll"
-              scrollContainer.style.scrollBehavior = 'auto';
-              scrollContainer.scrollTop = 0;
-              // On rend la main au CSS après le reset
-              requestAnimationFrame(() => {
-                  scrollContainer.style.scrollBehavior = '';
-              });
-          }
+
+          requestAnimationFrame(() => {
+              if(scrollContainer) {
+                  viewerLenis = new Lenis({
+                    wrapper: scrollContainer,
+                    content: viewerContent, 
+                    duration: 0.6,
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                    direction: 'vertical',
+                    gestureDirection: 'vertical',
+                    smooth: true,
+                    mouseMultiplier: 0.9, 
+                    smoothTouch: false,
+                    touchMultiplier: 2,
+                  });
+                  
+                  viewerLenis.on('scroll', ({ progress }) => {
+                        if(progressBar) {
+                           const clampedProgress = Math.min(1, Math.max(0, progress));
+                           progressBar.style.transform = `scaleY(${clampedProgress})`;
+                        }
+                  });
+                  
+                  viewerLenis.scrollTo(0, { immediate: true, force: true });
+                  
+                  lenis.stop();
+
+                  let resizeTimeout;
+                  viewerResizeObserver = new ResizeObserver(() => {
+                      if(resizeTimeout) clearTimeout(resizeTimeout);
+                      resizeTimeout = setTimeout(() => {
+                          if(viewerLenis) viewerLenis.resize();
+                      }, 20);
+                  });
+                  viewerResizeObserver.observe(viewerContent);
+                  
+                  setTimeout(() => {
+                      if(viewerLenis) viewerLenis.resize();
+                  }, 700);
+              }
+          });
       }
 
       function closeDemo() {
@@ -1950,9 +2489,11 @@
         document.body.classList.remove('game-running');
         requestAnimationFrame(() => playOverlay.classList.remove('active'));
 
+        lenis.start();
+
         const cinemaContainer = document.querySelector('.cinema-container');
         if (cinemaContainer) {
-          cinemaContainer.classList.remove('animate-close');
+          cinemaContainer.classList.remove('animate-close', 'animate-open');
           void cinemaContainer.offsetWidth; 
           cinemaContainer.classList.add('animate-open');
         }
@@ -1967,9 +2508,22 @@
           viewer.classList.remove('active');
           document.body.classList.remove('is-viewer-open');
           
+          if (viewerLenis) {
+              viewerLenis.destroy();
+              viewerLenis = null;
+          }
+          if (viewerResizeObserver) {
+              viewerResizeObserver.disconnect();
+              viewerResizeObserver = null;
+          }
+
+          lenis.start();
+
           viewerCloseTimeout = setTimeout(() => {
               viewerContent.innerHTML = '';
               viewerCloseTimeout = null;
+              const progressBar = document.getElementById('pv-progress-bar');
+              if(progressBar) progressBar.style.transform = 'scaleY(0)';
           }, 650);
       }
 
@@ -1983,13 +2537,24 @@
       closeViewerBtn.addEventListener('click', closeViewer);
 
       document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape' && viewer.classList.contains('active')) {
-              closeViewer();
+          if (e.key === 'Escape') {
+              if(document.getElementById('yt-modal').classList.contains('active')) {
+                  closeYTModal();
+              } else if (viewer.classList.contains('active')) {
+                  closeViewer();
+              }
+          }
+
+          if (viewer.classList.contains('active') && viewerLenis) {
+             const scrollAmount = 100;
+             if (e.key === 'ArrowDown') {
+                 viewerLenis.scrollTo(viewerLenis.scroll + scrollAmount);
+             } else if (e.key === 'ArrowUp') {
+                 viewerLenis.scrollTo(viewerLenis.scroll - scrollAmount);
+             }
           }
       });
 
-
-      // --- PLAY PAGE / CINEMA MODE INTERACTION ---
       const gameItems = document.querySelectorAll('.game-item');
       const bg1 = document.getElementById('cinema-bg-1');
       const bg2 = document.getElementById('cinema-bg-2');
@@ -2018,6 +2583,8 @@
       }
 
       function openGame(url, title, ratio) {
+        lenis.stop();
+
         const iframe = document.createElement('iframe');
         iframe.className = 'play-iframe';
         iframe.allow = "autoplay; fullscreen; gamepad; clipboard-read; clipboard-write";
@@ -2070,6 +2637,7 @@
               });
 
               item.addEventListener('click', () => {
+                  if (isCinemaInteractionLocked) return;
                   isCinemaInteractionLocked = true;
                   document.body.classList.add('cursor-launching');
                   const cinemaContainer = document.querySelector('.cinema-container');
@@ -2083,7 +2651,6 @@
           });
       }
 
-      // --- NEW ROBUST COPY LOGIC ---
       const copyTimeouts = new WeakMap();
       document.querySelectorAll('.contact-row[data-copy]').forEach(el => {
         el.addEventListener('click', (e) => {
@@ -2116,7 +2683,7 @@
           const containerRect = container.getBoundingClientRect();
           const originX = rect.left + rect.width / 2 - containerRect.left;
           const originY = rect.top + rect.height / 2 - containerRect.top;
-          for (let i = 0; i < particleCount; i++) {
+          for (i = 0; i < particleCount; i++) {
               const p = document.createElement('div');
               p.classList.add('blob-particle');
               p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
@@ -2186,7 +2753,6 @@
           });
       }
 
-      // --- CUSTOM TV CURSOR LOGIC ---
       const tvCursor = document.getElementById('tv-cursor');
       const tvZone = document.querySelector('.cinema-container');
       document.addEventListener('mousemove', (e) => { if (!tvCursor) return; tvCursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`; });
