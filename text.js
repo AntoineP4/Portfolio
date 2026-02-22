@@ -8,8 +8,8 @@ const translations = {
     fr: {
         siteTexts: {
             global: {
-                metaTitle: "Portfolio - Antoine Pezzulo",
-                metaDesc: "Personal game dev portfolio.",
+                metaTitle: "Antoine Pezzulo",
+                metaDesc: "Game Design Portfolio",
                 mobileWarningTitle: "ANTOINE PEZZULO<br>PORTFOLIO",
                 mobileWarningDesc: "Conçu pour ordinateur",
                 wipToast: "Work in progress",
@@ -284,8 +284,8 @@ const translations = {
     en: {
         siteTexts: {
             global: {
-                metaTitle: "Portfolio - Antoine Pezzulo",
-                metaDesc: "Personal game dev portfolio.",
+                metaTitle: "Antoine Pezzulo",
+                metaDesc: "Game Design Portfolio",
                 mobileWarningTitle: "ANTOINE PEZZULO<br>PORTFOLIO",
                 mobileWarningDesc: "Designed for desktop",
                 wipToast: "Work in progress",
@@ -332,7 +332,7 @@ const translations = {
                     toolsLabel: "Tools",
                     toolsVal: "Unity · Godot · Excel · Git · Figma"
                 },
-                cvLabel: "Resume",
+                cvLabel: "esume",
                 cvFr: "French",
                 cvEn: "English",
                 bioTitle: "Biography",
