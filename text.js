@@ -332,7 +332,7 @@ const translations = {
                     toolsLabel: "Tools",
                     toolsVal: "Unity · Godot · Excel · Git · Figma"
                 },
-                cvLabel: "esume",
+                cvLabel: "Resume",
                 cvFr: "French",
                 cvEn: "English",
                 bioTitle: "Biography",

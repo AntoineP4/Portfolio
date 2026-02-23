@@ -15,9 +15,12 @@
     <meta name="twitter:description" content="Game Design Portfolio" />
     <meta name="twitter:image" content="https://antoinepezzulo.com/img/preview.png?v=2" />
 
-    <link rel="preload" as="image" href="img/mouse_knight_frame.png" fetchpriority="high" />
-    <link rel="preload" as="image" href="img/voracines_frame.png" fetchpriority="high" />
-    <link rel="preload" as="image" href="img/muscles_rockets_frame.png" fetchpriority="high" />
+    <link rel="preload" as="image" href="img/metro.avif" fetchpriority="low" />
+    <link rel="preload" as="image" href="img/mouse-knight.avif" fetchpriority="low" />
+    <link rel="preload" as="image" href="img/voracines.avif" fetchpriority="low" />
+    <link rel="preload" as="image" href="img/reflect.avif" fetchpriority="low" />
+    <link rel="preload" as="image" href="img/pleasant-chalk.avif" fetchpriority="low" />
+    <link rel="preload" as="image" href="img/muscles-rockets.avif" fetchpriority="low" />
 
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
     <script data-goatcounter="https://antoinepezzulo.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
@@ -81,7 +84,17 @@
         }
         body.is-cinema #cinema-dimmer { opacity: 1; pointer-events: auto; z-index: 5; }
         
-        #site-root { position: relative; z-index: 10; min-height: 100vh; padding-top: calc(var(--nav-h) + 18px); padding-bottom: 26px; transition: filter 0.5s ease; }
+        @keyframes siteFadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        #site-root { 
+            position: relative; z-index: 10; min-height: 100vh; padding-top: calc(var(--nav-h) + 18px); padding-bottom: 26px; 
+            transition: filter 0.5s ease;
+            opacity: 0;
+            animation: siteFadeIn 1s var(--ease-elegant) forwards;
+        }
         body.is-viewer-open #site-root { filter: blur(6px) brightness(0.6); pointer-events: none; transform: scale(0.96); transition: all 0.7s var(--ease-smooth); }
 
         /* Animation de transition spécifique aux textes lors du changement de langue */
@@ -91,14 +104,38 @@
         html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
 
         @keyframes pulseBackground { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        
+        /* --- NOUVELLES ANIMATIONS MATURES --- */
+        @keyframes introReveal { 
+            0% { opacity: 0; transform: translate3d(0, 40px, 0) scale(0.96); filter: blur(12px); } 
+            100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0px); } 
+        }
         @keyframes slideFadeIn { to { opacity: 1; transform: translateY(0); } }
         @keyframes slideFadeInUp { to { opacity: 1; transform: translateY(0); } }
         @keyframes blobMorph { 0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; } 25% { border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%; } 50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; } 75% { border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%; } 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; } }
         @keyframes blobBump { 0% { transform: scale(1); } 25% { transform: scale(1.4, 0.6) translateY(10px); } 45% { transform: scale(0.8, 1.35) translateY(-15px); } 65% { transform: scale(1.15, 0.9) translateY(2px); } 80% { transform: scale(0.95, 1.05) translateY(0); } 100% { transform: scale(1) translateY(0); } }
         @keyframes floatBubble { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 
-        #top-nav { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); width: fit-content; max-width: calc(100vw - 28px); height: var(--nav-h); z-index: 12000; display: flex; align-items: center; justify-content: center; gap: 64px; border-radius: 999px; background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.10); backdrop-filter: blur(18px) saturate(160%); -webkit-backdrop-filter: blur(18px) saturate(160%); box-shadow: 0 18px 55px rgba(0,0,0,0.48), inset 0 1px 0 rgba(255,255,255,0.06); padding: 10px 14px; overflow: hidden; transition: transform 0.6s var(--ease-smooth), opacity 0.6s ease; }
-        body.is-viewer-open #top-nav { transform: translate(-50%, -180%); opacity: 0; pointer-events: none; }
+        /* --- NAV BAR : Entrée Élégante --- */
+        #top-nav { 
+            position: fixed; top: 14px; left: 50%; 
+            transform: translate3d(-50%, -150%, 0) scale(0.95); opacity: 0; 
+            width: fit-content; max-width: calc(100vw - 28px); height: var(--nav-h); z-index: 12000; display: flex; align-items: center; justify-content: center; gap: 64px; border-radius: 999px; background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.10); backdrop-filter: blur(18px) saturate(160%); -webkit-backdrop-filter: blur(18px) saturate(160%); box-shadow: 0 18px 55px rgba(0,0,0,0.48), inset 0 1px 0 rgba(255,255,255,0.06); padding: 10px 14px; overflow: hidden; 
+            /* Transition de base pour les ouvertures/fermetures de projets */
+            transition: transform 0.6s var(--ease-smooth), opacity 0.6s ease; 
+        }
+        
+        /* Classe d'intro pour le lancement : cinématique et ample */
+        body.intro-running #top-nav {
+            transition: transform 1.4s var(--ease-elegant), opacity 1.4s ease;
+        }
+        body.nav-ready #top-nav { 
+            transform: translate3d(-50%, 0, 0) scale(1); opacity: 1; 
+        }
+        body.is-viewer-open #top-nav,
+        body.nav-ready.is-viewer-open #top-nav { 
+            transform: translate3d(-50%, -180%, 0) scale(0.95); opacity: 0; pointer-events: none; 
+        }
 
         /* Unified Buttons (Lang & Theme) */
         .toggle-btn { appearance: none; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(255, 255, 255, 0.8); transition: all 0.3s var(--ease-smooth); position: relative; overflow: hidden; flex-shrink: 0; -webkit-mask-image: -webkit-radial-gradient(white, black); mask-image: radial-gradient(white, black); }
@@ -143,9 +180,15 @@
         .page { flex: 0 0 100vw; width: 100vw; padding: 0 18px; min-height: calc(100vh - var(--nav-h) - 18px - 26px); }
         .page-inner { max-width: 1180px; margin: 0 auto; padding: 8px 0 40px 0; }
 
-        .page-hero { text-align: center; margin: 26px auto 50px auto; opacity: 0; transform: translateY(16px); animation: slideFadeIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+        .page-hero { text-align: center; margin: 26px auto 50px auto; opacity: 0; transform: translateY(16px); animation: introReveal 1.2s var(--ease-elegant) forwards; }
         .page-hero h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 950; letter-spacing: 0.02em; }
         .page-hero p { margin-top: 10px; color: rgba(255,255,255,0.70); letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; font-size: 0.95rem; }
+
+        /* Timing décalé uniquement pour la page d'accueil pour le show d'ouverture fluide */
+        .page[data-page="accueil"] .page-hero { animation-delay: 0.15s; }
+        .page[data-page="accueil"] .status-card { animation-delay: 0.30s; }
+        .page[data-page="accueil"] .blob-intro { animation-delay: 0.45s; }
+        .page[data-page="accueil"] .about-line { animation-delay: 0.60s; }
 
         .portfolio-controls { display: flex; justify-content: center; margin-bottom: 40px; opacity: 0; animation: slideFadeIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.1s; }
         .sort-mono-btn { appearance: none; border: none; outline: none; display: flex; align-items: center; gap: 0; background: rgba(30, 30, 35, 0.6); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 99px; padding: 0; cursor: pointer; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); transition: background 0.5s var(--ease-elegant), border-color 0.5s var(--ease-elegant), transform 0.5s var(--ease-elegant), box-shadow 0.5s var(--ease-elegant); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5); position: relative; overflow: hidden; transform: translateZ(0); -webkit-font-smoothing: antialiased; backface-visibility: hidden; }
@@ -361,7 +404,7 @@
         }
 
         /* --- ACCUEIL BLOB & ELEMENTS --- */
-        .blob-intro { display: flex; align-items: center; justify-content: center; gap: 2rem; margin: 0 auto 60px auto; max-width: 900px; opacity: 0; transform: translateY(18px); animation: slideFadeIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards; animation-delay: 0.12s; position: relative; }
+        .blob-intro { display: flex; align-items: center; justify-content: center; gap: 2rem; margin: 0 auto 60px auto; max-width: 900px; opacity: 0; transform: translateY(18px); animation: introReveal 1.2s var(--ease-elegant) forwards; }
         .blob { width: 86px; height: 86px; background: linear-gradient(135deg, var(--accent), #a3b8ff); border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; animation: blobMorph 6s ease-in-out infinite; box-shadow: 0 12px 35px rgba(107, 140, 255, 0.35); flex-shrink: 0; position: relative; cursor: pointer; transition: background 0.5s ease, transform 0.1s ease; -webkit-tap-highlight-color: transparent; user-select: none; z-index: 2; }
         .blob.angry { background: linear-gradient(135deg, #ff6b6b, #ff8e8e); box-shadow: 0 12px 35px rgba(255, 107, 107, 0.35); cursor: not-allowed; }
         .blob.bumping { animation: blobMorph 6s ease-in-out infinite, blobBump 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
@@ -374,10 +417,10 @@
         .welcome-bubble { position: relative; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(18px) saturate(160%); padding: 1rem 1.4rem; border-radius: 18px; border-bottom-left-radius: 4px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); animation: floatBubble 5s ease-in-out infinite; max-width: 420px; z-index: 5; }
         .welcome-bubble p { font-size: 1rem; line-height: 1.55; color: rgba(255, 255, 255, 0.92); font-weight: 400; margin: 0; transition: opacity 0.3s ease; }
         .welcome-bubble p.fade-out { opacity: 0; }
-        .about-line { text-align: center; max-width: 800px; margin: 0 auto; padding: 1.2rem; border-radius: 20px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(14px); opacity: 0; transform: translateY(18px); animation: slideFadeIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards; animation-delay: 0.18s; }
+        .about-line { text-align: center; max-width: 800px; margin: 0 auto; padding: 1.2rem; border-radius: 20px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(14px); opacity: 0; transform: translateY(18px); animation: introReveal 1.2s var(--ease-elegant) forwards; }
         .about-line p { font-size: 1.05rem; color: rgba(255, 255, 255, 0.88); line-height: 1.6; letter-spacing: 0.01em; }
         @media (max-width: 768px) { .blob-intro { flex-direction: column; gap: 1.2rem; text-align: center; } .welcome-bubble { border-bottom-left-radius: 18px; border-top-left-radius: 18px; border-top-right-radius: 18px; } .nav-tabs { display: none; } }
-        .status-card { position: relative; max-width: 900px; margin: 0 auto 60px auto; border-radius: 20px; overflow: hidden; transform: translateY(18px); opacity: 0; animation: slideFadeIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards; animation-delay: 0.06s; z-index: 0; background: rgba(18, 18, 22, 0.7); border: 1px solid rgba(255, 255, 255, 0.06); box-shadow: 0 20px 50px rgba(0,0,0,0.3); -webkit-mask-image: -webkit-radial-gradient(white, black); mask-image: radial-gradient(white, black); }
+        .status-card { position: relative; max-width: 900px; margin: 0 auto 60px auto; border-radius: 20px; overflow: hidden; transform: translateY(18px); opacity: 0; animation: introReveal 1.2s var(--ease-elegant) forwards; z-index: 0; background: rgba(18, 18, 22, 0.7); border: 1px solid rgba(255, 255, 255, 0.06); box-shadow: 0 20px 50px rgba(0,0,0,0.3); -webkit-mask-image: -webkit-radial-gradient(white, black); mask-image: radial-gradient(white, black); }
         .status-card::before { content: ""; position: absolute; top: 0; left: 0; width: 350px; height: 80px; offset-path: rect(0 100% 100% 0 round 20px); animation: travel 10s linear infinite; background: linear-gradient(90deg, transparent 0%, rgba(107, 140, 255, 0.4) 30%, rgba(255, 255, 255, 0.95) 50%, rgba(107, 140, 255, 0.4) 70%, transparent 100%); mix-blend-mode: screen; filter: blur(20px); opacity: 1; pointer-events: none; z-index: 0; offset-anchor: center; will-change: offset-distance; }
         @keyframes travel { from { offset-distance: 0%; } to { offset-distance: 100%; } }
         .status-inner { position: relative; margin: 1px; border-radius: 19px; background: rgba(18, 18, 24, 0.94); padding: 1.4rem; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 1; }
@@ -409,7 +452,7 @@
         .cv-magic-container:hover .cv-actions, .cv-magic-container.locked-open .cv-actions { opacity: 1; transform: translateX(0); transition: all 0.3s var(--ease-punch) 0.1s; }
         .cv-btn { text-decoration: none; padding: 10px 18px; border-radius: 24px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.95); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.2s ease; }
         .cv-btn:hover { background: #fff; color: #000; transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.2); border-color: #fff; }
-        .bio-block { grid-column: 1 / -1; margin: 0; padding: 2.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 26px; backdrop-filter: blur(18px); box-shadow: inset 0 0 20px rgba(255,255,255,0.02), 0 12px 40px rgba(0,0,0,0.28); opacity: 0; transform: translateY(18px); animation: slideFadeIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards; animation-delay: 0.1s; }
+        .bio-block { grid-column: 1 / -1; margin: 0; padding: 2.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 26px; backdrop-filter: blur(18px); box-shadow: inset 0 0 20px rgba(255,255,255,0.02), 0 12px 40px rgba(0,0,0,0.28); opacity: 0; transform: translateY(18px); animation: introReveal 1.2s var(--ease-elegant) forwards; animation-delay: 0.1s; }
         .bio-block h2 { font-size: 1.25rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.95); font-weight: 900; margin-bottom: 0.6rem; }
         .bio-block p { line-height: 1.8; font-size: 1.05rem; color: rgba(255,255,255,0.86); white-space: pre-line; }
         .marquee-separator { display: flex; align-items: center; justify-content: center; gap: 22px; max-width: 680px; text-align: center; margin: 50px auto 25px auto; font-size: 0.85rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.6); font-weight: 700; opacity: 0; animation: slideFadeIn 0.8s ease forwards 0.2s; }
@@ -704,7 +747,7 @@
               <div class="portfolio-grid">
                   
                   <div class="project-card" data-project-id="metro">
-                      <div class="project-media"><img src="img/metro.png" alt="Metro Project" loading="lazy"></div>
+                      <div class="project-media"><img src="img/metro.avif" alt="Metro Project"></div>
                       <div class="project-info">
                           <h3 class="project-title"></h3>
                           <div class="project-tags"></div>
@@ -712,7 +755,7 @@
                   </div>
 
                   <div class="project-card" data-project-id="mouseknight">
-                      <div class="project-media"><img src="img/mouse knight.png" alt="Mouse Knight" loading="lazy"></div>
+                      <div class="project-media"><img src="img/mouse-knight.avif" alt="Mouse Knight"></div>
                       <div class="project-info">
                           <h3 class="project-title"></h3>
                           <div class="project-tags"></div>
@@ -720,7 +763,7 @@
                   </div>
 
                   <div class="project-card" data-project-id="voracines">
-                      <div class="project-media"><img src="img/voracines.png" alt="Voracines" loading="lazy"></div>
+                      <div class="project-media"><img src="img/voracines.avif" alt="Voracines"></div>
                       <div class="project-info">
                           <h3 class="project-title"></h3>
                           <div class="project-tags"></div>
@@ -728,7 +771,7 @@
                   </div>
 
                   <div class="project-card" data-project-id="reflect">
-                      <div class="project-media"><img src="img/reflect.png" alt="Reflect" loading="lazy"></div>
+                      <div class="project-media"><img src="img/reflect.avif" alt="Reflect"></div>
                       <div class="project-info">
                           <h3 class="project-title"></h3>
                           <div class="project-tags"></div>
@@ -736,7 +779,7 @@
                   </div>
 
                   <div class="project-card" data-project-id="pleasantchalk">
-                      <div class="project-media"><img src="img/pleasant chalk.png" alt="Pleasant Chalk" loading="lazy"></div>
+                      <div class="project-media"><img src="img/pleasant-chalk.avif" alt="Pleasant Chalk"></div>
                       <div class="project-info">
                           <h3 class="project-title"></h3>
                           <div class="project-tags"></div>
@@ -744,7 +787,7 @@
                   </div>
 
                   <div class="project-card" data-project-id="musclesrockets">
-                      <div class="project-media"><img src="img/muscles & rockets.png" alt="Muscles & Rockets" loading="lazy"></div>
+                      <div class="project-media"><img src="img/muscles-rockets.avif" alt="Muscles & Rockets"></div>
                       <div class="project-info">
                           <h3 class="project-title"></h3>
                           <div class="project-tags"></div>
@@ -872,17 +915,17 @@
               <div class="page-inner" style="max-width: 1400px; padding: 0;">
                 <div class="cinema-container" data-lenis-prevent>
                     <div class="cinema-bg-layer">
-                        <div class="cinema-bg-img active" id="cinema-bg-1" style="background-image: url('img/metro.png');"></div>
-                        <div class="cinema-bg-img" id="cinema-bg-2" style="background-image: url('img/pleasant chalk.png');"></div>
+                        <div class="cinema-bg-img active" id="cinema-bg-1"></div>
+                        <div class="cinema-bg-img" id="cinema-bg-2"></div>
                     </div>
                     <div class="cinema-scanlines"></div>
                     <div class="cinema-vignette"></div>
                     <div class="cinema-ambient-light"></div>
                     <div class="cinema-content" data-lenis-prevent>
                         <div class="game-list-header"></div>
-                        <div class="game-item active" data-img="img/metro.png" data-title="METRO" data-url="builds/metro/index.html" data-ratio="1.777"> <div class="game-item-bg"></div><div class="game-item-content"><div class="game-item-title">METRO</div></div></div>
-                        <div class="game-item" data-img="img/reflect.png" data-title="REFLECT" data-url="builds/reflect/index.html" data-ratio="1.777"><div class="game-item-bg"></div><div class="game-item-content"><div class="game-item-title">REFLECT</div></div></div>
-                        <div class="game-item" data-img="img/pleasant chalk.png" data-title="PLEASANT CHALK" data-url="builds/pleasant chalk/index.html" data-ratio="1"><div class="game-item-bg"></div><div class="game-item-content"><div class="game-item-title">PLEASANT CHALK</div></div></div>
+                        <div class="game-item active" data-img="img/metro.avif" data-title="METRO" data-url="builds/metro/index.html" data-ratio="1.777"> <div class="game-item-bg"></div><div class="game-item-content"><div class="game-item-title">METRO</div></div></div>
+                        <div class="game-item" data-img="img/reflect.avif" data-title="REFLECT" data-url="builds/reflect/index.html" data-ratio="1.777"><div class="game-item-bg"></div><div class="game-item-content"><div class="game-item-title">REFLECT</div></div></div>
+                        <div class="game-item" data-img="img/pleasant-chalk.avif" data-title="PLEASANT CHALK" data-url="builds/pleasant chalk/index.html" data-ratio="1"><div class="game-item-bg"></div><div class="game-item-content"><div class="game-item-title">PLEASANT CHALK</div></div></div>
                     </div>
                 </div>
               </div>
@@ -914,7 +957,7 @@
     <script>
       const projectConfig = {
           "metro": {
-              heroImg: "img/metro.png",
+              heroImg: "img/metro.avif",
               blocksMedia: [
                   { }, 
                   { type: 'image', url: 'img/metro_protos.png' },
@@ -925,7 +968,7 @@
               ]
           },
           "mouseknight": {
-              heroImg: "img/mouse knight.png",
+              heroImg: "img/mouse-knight.avif",
               blocksMedia: [
                   { },
                   { type: 'none' },
@@ -934,7 +977,7 @@
               ]
           },
           "voracines": {
-              heroImg: "img/voracines.png",
+              heroImg: "img/voracines.avif",
               blocksMedia: [
                   {
                       type: 'large-carousel',
@@ -950,7 +993,7 @@
               ]
           },
           "reflect": {
-              heroImg: "img/reflect.png",
+              heroImg: "img/reflect.avif",
               blocksMedia: [
                   { },
                   { 
@@ -962,7 +1005,7 @@
               ]
           },
           "pleasantchalk": {
-              heroImg: "img/pleasant chalk.png",
+              heroImg: "img/pleasant-chalk.avif",
               blocksMedia: [
                   { },
                   { type: 'video', url: 'videos/chalk_asteroids.mp4' },
@@ -970,7 +1013,7 @@
               ]
           },
           "musclesrockets": {
-              heroImg: "img/muscles & rockets.png",
+              heroImg: "img/muscles-rockets.avif",
               blocksMedia: [
                   { },
                   { type: 'carousel', urls: ['img/rockets_ld4.png', 'img/rockets_ld1.png', 'img/rockets_ld2.png', 'img/rockets_ld3.png'] },
@@ -1316,6 +1359,14 @@
         const cinemaContainer = document.querySelector('.cinema-container');
         if (pageName === 'jouer') {
             document.body.classList.add('is-cinema');
+            
+            // On s'assure d'injecter la première image de fond si elle n'est pas là
+            const firstActiveGame = document.querySelector('.game-item.active');
+            const bg1 = document.getElementById('cinema-bg-1');
+            if (firstActiveGame && bg1 && !bg1.style.backgroundImage) {
+                bg1.style.backgroundImage = `url('${firstActiveGame.getAttribute('data-img')}')`;
+            }
+
             if (!cinemaIntroPlayed) {
                 cinemaIntroPlayed = true;
                 cinemaContainer.classList.remove('animate-close', 'animate-open');
@@ -2247,6 +2298,39 @@
       document.querySelectorAll('.game-item').forEach(btn => {
           btn.addEventListener('mouseenter', () => document.body.classList.add('game-hover-active'));
           btn.addEventListener('mouseleave', () => document.body.classList.remove('game-hover-active'));
+      });
+
+      // --- CHORÉGRAPHIE D'ENTRÉE & CHARGEMENT DES IMAGES MATURE ---
+      document.addEventListener("DOMContentLoaded", () => {
+          const keyImages = [
+              'img/metro.avif',
+              'img/mouse-knight.avif',
+              'img/voracines.avif',
+              'img/reflect.avif',
+              'img/pleasant-chalk.avif',
+              'img/muscles-rockets.avif'
+          ];
+          
+          // 1. Lancement invisible des téléchargements d'images (pour forcer le cache JS en plus du preload HTML)
+          keyImages.forEach(url => { const img = new Image(); img.src = url; });
+
+          // 2. Déclenchement de l'animation d'ouverture "Premium"
+          setTimeout(() => {
+              // Activation de la transition ultra-douce pour l'entrée
+              document.body.classList.add('intro-running');
+              
+              // Force le rafraîchissement CSS
+              void document.body.offsetWidth;
+              
+              // La barre tombe avec le easing "mature" (cubic-bezier)
+              document.body.classList.add('nav-ready');
+              
+              // On restaure la petite transition de base (0.6s) pour que 
+              // les ouvertures de projets (is-viewer-open) restent réactives
+              setTimeout(() => {
+                  document.body.classList.remove('intro-running');
+              }, 1400); 
+          }, 150); 
       });
     </script>
 </body>
