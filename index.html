@@ -232,6 +232,11 @@
         .project-card:hover .p-tag:nth-child(3) { transition-delay: 0.11s; }
         .project-card:hover .p-tag:nth-child(4) { transition-delay: 0.14s; }
         .project-card:hover .p-tag:nth-child(5) { transition-delay: 0.17s; }
+        .project-card:hover .p-tag:nth-child(6) { transition-delay: 0.20s; }
+        .project-card:hover .p-tag:nth-child(7) { transition-delay: 0.23s; }
+        .project-card:hover .p-tag:nth-child(8) { transition-delay: 0.26s; }
+        .project-card:hover .p-tag:nth-child(9) { transition-delay: 0.29s; }
+        .project-card:hover .p-tag:nth-child(10) { transition-delay: 0.32s; }
         
         @media (max-width: 768px) {
             .portfolio-grid { grid-template-columns: 1fr; }
@@ -806,7 +811,7 @@
               </div>
               <div class="moi-bento">
                 <div class="portrait">
-                  <img src="img/portrait.png" alt="Antoine Pezzulo" />
+                  <img src="img/portrait.avif" alt="Antoine Pezzulo" />
                 </div>
                 <div class="about-text">
                   <h2><span data-i18n="moi.name"></span><div class="underline"></div></h2>
@@ -960,10 +965,10 @@
               heroImg: "img/metro.avif",
               blocksMedia: [
                   { }, 
-                  { type: 'image', url: 'img/metro_protos.png' },
+                  { type: 'image', url: 'img/metro_protos.avif' },
                   { type: 'none' },
                   { type: 'stacked-video', urls: ['videos/metro_ld1.mp4', 'videos/metro_ld2.mp4'] },
-                  { type: 'carousel', urls: ['img/metro_motif1.png', 'img/metro_motif2.png', 'img/metro_motif3.png'] },
+                  { type: 'carousel', urls: ['img/metro_motif1.avif', 'img/metro_motif2.avif', 'img/metro_motif3.avif'] },
                   { type: 'video', url: 'videos/metro_ui.mp4' }
               ]
           },
@@ -982,11 +987,11 @@
                   {
                       type: 'large-carousel',
                       urls: [
-                          'img/briefGA/1.png', 'img/briefGA/2.png', 'img/briefGA/3.png', 'img/briefGA/4.png',
-                          'img/briefGA/5.png', 'img/briefGA/6.png', 'img/briefGA/7.png', 'img/briefGA/8.png',
-                          'img/briefGA/9.png', 'img/briefGA/10.png', 'img/briefGA/11.png', 'img/briefGA/12.png',
-                          'img/briefGA/13.png', 'img/briefGA/14.png', 'img/briefGA/15.png', 'img/briefGA/16.png',
-                          'img/briefGA/17.png'
+                          'img/briefGA/1.avif', 'img/briefGA/2.avif', 'img/briefGA/3.avif', 'img/briefGA/4.avif',
+                          'img/briefGA/5.avif', 'img/briefGA/6.avif', 'img/briefGA/7.avif', 'img/briefGA/8.avif',
+                          'img/briefGA/9.avif', 'img/briefGA/10.avif', 'img/briefGA/11.avif', 'img/briefGA/12.avif',
+                          'img/briefGA/13.avif', 'img/briefGA/14.avif', 'img/briefGA/15.avif', 'img/briefGA/16.avif',
+                          'img/briefGA/17.avif'
                       ]
                   },
                   { type: 'none' }
@@ -998,8 +1003,8 @@
                   { },
                   { 
                       type: 'carousel-and-image', 
-                      carouselUrls: ['img/reflect_ld1.png', 'img/reflect_ld2.png', 'img/reflect_ld3.png'],
-                      singleImg: 'img/reflect_curve.png'
+                      carouselUrls: ['img/reflect_ld1.avif', 'img/reflect_ld2.avif', 'img/reflect_ld3.avif'],
+                      singleImg: 'img/reflect_curve.avif'
                   },
                   { type: 'none' }
               ]
@@ -1009,14 +1014,14 @@
               blocksMedia: [
                   { },
                   { type: 'video', url: 'videos/chalk_asteroids.mp4' },
-                  { type: 'carousel', urls: ['img/chalk_juice2.png', 'img/chalk_juice1.png'] }
+                  { type: 'carousel', urls: ['img/chalk_juice2.avif', 'img/chalk_juice1.avif'] }
               ]
           },
           "musclesrockets": {
               heroImg: "img/muscles-rockets.avif",
               blocksMedia: [
                   { },
-                  { type: 'carousel', urls: ['img/rockets_ld4.png', 'img/rockets_ld1.png', 'img/rockets_ld2.png', 'img/rockets_ld3.png'] },
+                  { type: 'carousel', urls: ['img/rockets_ld4.avif', 'img/rockets_ld1.avif', 'img/rockets_ld2.avif', 'img/rockets_ld3.avif'] },
                   { type: 'video', url: 'videos/rockets_ui.mp4' }
               ]
           }
@@ -1088,7 +1093,7 @@
               const fullList = [...games, ...games]; 
               marqueeTrack.innerHTML = fullList.map((game, i) => {
                   const imgNum = (i % 12) + 1;
-                  return `<div class="marquee-item" style="background-image: url('img/jeuX/jeu${imgNum}.png');"><span>${game}</span></div>`;
+                  return `<div class="marquee-item" style="background-image: url('img/jeuX/jeu${imgNum}.avif');"><span>${game}</span></div>`;
               }).join('');
           }
 
@@ -1493,6 +1498,13 @@
           }
       };
 
+      // Fonction d'ajout pour remettre à zéro la vidéo "coup d'oeil"
+      window.resetProjectVideo = function(video) {
+          video.currentTime = 0;
+          const card = video.closest('.pw-video-card');
+          if (card) card.classList.remove('is-playing');
+      };
+
       window.nextCarousel = function(btn, dir) {
           const container = btn.closest('.pw-large-carousel-container') || btn.closest('.pw-carousel');
           const carousel = container.classList.contains('pw-large-carousel-container') ? container.querySelector('.pw-carousel') : container;
@@ -1699,7 +1711,7 @@
                                     <span class="pw-play-pill-text">${tSite.projectViewer.glance}</span>
                                 </div>
                             </div>
-                            <video class="pw-video-element" src="videos/${textsData.title.toLowerCase()}.mp4" muted loop playsinline preload="metadata"></video>
+                            <video class="pw-video-element" src="videos/${textsData.title.toLowerCase()}.mp4" muted playsinline preload="metadata" onended="window.resetProjectVideo(this)"></video>
                         </div>
                       `;
                       bodyHTML += `

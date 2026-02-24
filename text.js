@@ -346,7 +346,7 @@ const translations = {
             contacts: {
                 heroTitle: "CONTACTS",
                 heroSubtitle: "Online presence & contact info",
-                sectionContact: "Contacts",
+                sectionContact: "Contact",
                 email: "Email",
                 linkedin: "LinkedIn",
                 phone: "Phone",
