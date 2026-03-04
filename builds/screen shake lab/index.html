@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Screen Shake Lab</title>
+    <style>
+      body { margin: 0; padding: 0; overflow: hidden; background: #000; width: 100vw; height: 100vh; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+      #unity-container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+      #unity-canvas { width: 100%; height: 100%; display: block; background: #000; outline: none; }
+
+      #custom-loader {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        z-index: 10;
+        transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .loader-percent {
+        color: #fff;
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        font-variant-numeric: tabular-nums;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+      }
+
+      .progress-track {
+        width: 220px;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 2px;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+      }
+
+      .progress-bar {
+        width: 0%;
+        height: 100%;
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.2);
+        transition: width 0.15s ease-out;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="unity-container">
+      <canvas id="unity-canvas" tabindex="-1"></canvas>
+      <div id="custom-loader">
+        <div class="loader-percent" id="loader-text">0%</div>
+        <div class="progress-track">
+          <div class="progress-bar" id="custom-progress-bar"></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      var canvas = document.querySelector("#unity-canvas");
+      var loadingBox = document.querySelector("#custom-loader");
+      var progressBar = document.querySelector("#custom-progress-bar");
+      var percentText = document.querySelector("#loader-text");
+
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/Downloads.loader.js";
+      var config = {
+        dataUrl: buildUrl + "/Downloads.data",
+        frameworkUrl: buildUrl + "/Downloads.framework.js",
+        codeUrl: buildUrl + "/Downloads.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "Screen Shake Lab",
+        productVersion: "0.1.0",
+        devicePixelRatio: 1, 
+      };
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+      }
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          var percent = Math.round(progress * 100);
+          progressBar.style.width = (100 * progress) + "%";
+          percentText.textContent = percent + "%";
+        }).then((unityInstance) => {
+          percentText.textContent = "100%";
+          progressBar.style.width = "100%";
+          loadingBox.style.opacity = "0";
+          setTimeout(() => { loadingBox.style.display = "none"; }, 600);
+        }).catch((message) => { alert(message); });
+      };
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>

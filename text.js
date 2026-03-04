@@ -278,6 +278,14 @@ const translations = {
                 mediaTexts: {
                     block1: { captions: ['Layout Niveau 1', 'RocketJump : Découverte', 'RocketJump : Apprentissage', 'RocketJump : Maîtrise'] }
                 }
+            },
+            "screenshakelab": {
+                title: "SCREEN SHAKE LAB",
+                subtitle: "Outil Interactif",
+                tags: ["Tool", "Game Feel", "Programmation"],
+                specs: { team: "Solo", context: "Personnel", date: "Mars 2026", duration: "-", engine: "Unity" },
+                description: "Un outil interactif conçu pour tester, itérer et ajuster facilement différents paramètres de screen shake (description complète à venir).",
+                blocks: []
             }
         }
     },
@@ -554,6 +562,14 @@ const translations = {
                 mediaTexts: {
                     block1: { captions: ['Level 1 Layout', 'RocketJump: Discovery', 'RocketJump: Learning', 'RocketJump: Mastery'] }
                 }
+            },
+            "screenshakelab": {
+                title: "SCREEN SHAKE LAB",
+                subtitle: "Interactive Tool",
+                tags: ["Tool", "Game Feel", "Programming"],
+                specs: { team: "Solo", context: "Personal", date: "March 2026", duration: "-", engine: "Unity" },
+                description: "An interactive tool designed to easily test, iterate, and fine-tune various screen shake parameters (full description coming soon).",
+                blocks: []
             }
         }
     }
