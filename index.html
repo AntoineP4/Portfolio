@@ -1039,7 +1039,8 @@
           "screenshakelab": {
               heroImg: "img/screen-shake-lab.avif",
               blocksMedia: [
-                  { }
+                  { type: 'large-video', url: 'videos/screen shake lab.mp4' },
+                  { type: 'none' }
               ]
           }
       };
@@ -1708,7 +1709,7 @@
                   const mediaTexts = (textsData.mediaTexts && textsData.mediaTexts['block' + index]) ? textsData.mediaTexts['block' + index] : {};
                   
                   let isActualNoMedia = false;
-                  if (index === 0 && projectId !== 'voracines') {
+                  if (index === 0 && projectId !== 'voracines' && projectId !== 'screenshakelab') {
                       isActualNoMedia = false; 
                   } else {
                       if (mediaConf.type === 'none' || !mediaConf.type) {
@@ -1718,7 +1719,7 @@
 
                   const reverseClass = (isReversed && !isActualNoMedia) ? 'reversed' : '';
 
-                  if (index === 0 && projectId !== 'voracines') {
+                  if (index === 0 && projectId !== 'voracines' && projectId !== 'screenshakelab') {
                       mediaBlock = `
                         <div class="pw-video-card" onclick="toggleProjectVideo(this)">
                             <div class="pw-video-overlay">
@@ -1942,6 +1943,11 @@
                   projectLinks = [
                       { label: tSite.projectViewer.links.trailer, url: 'https://youtu.be/cdR5du5tKaw', type: 'youtube' },
                       { label: tSite.projectViewer.links.walkthrough, url: 'https://youtu.be/Rc5iw1KlldQ', type: 'youtube' }
+                  ];
+                  break;
+              case 'screenshakelab':
+                  projectLinks = [
+                      { label: tSite.projectViewer.links.itch, url: 'https://antoine4.itch.io/screen-shake-lab', type: 'external' }
                   ];
                   break;
               default:

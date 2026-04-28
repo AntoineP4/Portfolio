@@ -247,7 +247,7 @@ const translations = {
                     },
                     {
                         title: "Direction sensorielle",
-                        text: "Afin de soutenir cette direction, j’ai développé une ambiance chill et lo-fi reposant sur un travail sonore et un post-process granuleux, contribuant à installer une atmosphère douce et apaisante. Dans un souci de continuité, les déplacements de la craie permettent de dessiner directement en jeu, une possibilité également reprise dans les menus à la souris.\n\nL’ensemble est soutenu par des feedbacks visuels et sonores soignés, pensés pour rester discrets et préserver l’équilibre de l’expérience plutôt que de tomber dans une surenchère d’effets."
+                        text: "Afin de soutenir cette direction, j’ai développé une ambiance chill et lo-fi reposant sur un travail sonore et un post-process granuleux, contribuant à installer une atmosphère douce et apaisante. Dans un souci de continuity, les déplacements de la craie permettent de dessiner directement en jeu, une possibilité également reprise dans les menus à la souris.\n\nL’ensemble est soutenu par des feedbacks visuels et sonores soignés, pensés pour rester discrets et préserver l’équilibre de l’expérience plutôt que de tomber dans une surenchère d’effets."
                     }
                 ],
                 mediaTexts: {
@@ -282,10 +282,19 @@ const translations = {
             "screenshakelab": {
                 title: "SCREEN SHAKE LAB",
                 subtitle: "Outil Interactif",
-                tags: ["Tool", "Game Feel", "Programmation"],
-                specs: { team: "Solo", context: "Personnel", date: "Mars 2026", duration: "-", engine: "Unity" },
-                description: "Un outil interactif conçu pour tester, itérer et ajuster facilement différents paramètres de screen shake (description complète à venir).",
-                blocks: []
+                tags: ["Tool", "Game Feel", "UI/UX", "Programmation"],
+                specs: { team: "Solo", context: "Personnel", date: "Mars 2026", duration: "1 semaine", engine: "Unity" },
+                description: "Un outil interactif conçu pour les designers et développeurs, permettant d'expérimenter, de tweaker et de comprendre toutes les nuances des screen shakes.",
+                blocks: [
+                    {
+                        title: "Pédagogie",
+                        text: "L'objectif de ce projet est avant tout pédagogique. Le screen shake est une mécanique bien plus profonde qu'il n'y paraît et son impact sur le game feel est immense. J'ai voulu créer un espace où l'on peut expérimenter en temps réel pour en saisir chaque nuance. L'utilisateur est accompagné par un panneau d'aide dynamique qui s'adapte au réglage survolé pour en expliquer l'usage. Il peut aussi s'appuyer sur plusieurs profils prédéfinis pour s'inspirer et décortiquer la construction d'effets classiques."
+                    },
+                    {
+                        title: "UI / UX",
+                        text: "Pour l'interface, le défi était d'exposer de nombreux paramètres et informations à l'écran sans obstruer la vue, avec pour objectif d'offrir la meilleure perception possible du shake. Plusieurs choix de design ont été faits en ce sens. Le bouton qui déclenche l'effet est par exemple intradiégétique et placé au centre de la pièce. Cela force naturellement l'utilisateur à s'ancrer dans l'espace 3D au moment du shake, pour mieux le ressentir."
+                    }
+                ]
             }
         }
     },
@@ -566,10 +575,19 @@ const translations = {
             "screenshakelab": {
                 title: "SCREEN SHAKE LAB",
                 subtitle: "Interactive Tool",
-                tags: ["Tool", "Game Feel", "Programming"],
-                specs: { team: "Solo", context: "Personal", date: "March 2026", duration: "-", engine: "Unity" },
-                description: "An interactive tool designed to easily test, iterate, and fine-tune various screen shake parameters (full description coming soon).",
-                blocks: []
+                tags: ["Tool", "Game Feel", "UI/UX", "Programming"],
+                specs: { team: "Solo", context: "Personal", date: "March 2026", duration: "1 week", engine: "Unity" },
+                description: "An interactive tool designed for designers and developers, allowing them to experiment, tweak, and understand every nuance of screen shake.",
+                blocks: [
+                    {
+                        title: "Pedagogy",
+                        text: "The primary goal of this project is educational. Screen shake is a much deeper mechanic than it appears and its impact on game feel is immense. I wanted to create a space where one can experiment in real time to grasp every nuance. The user is guided by a dynamic help panel that adapts to the hovered setting to explain its purpose. They can also rely on several preset profiles to find inspiration and break down the construction of classic effects."
+                    },
+                    {
+                        title: "UI / UX",
+                        text: "Regarding the interface, the challenge was to display numerous parameters and information on screen without obstructing the view, aiming to provide the best possible perception of the shake. Several design choices were made to achieve this. For instance, the trigger button is diegetic and placed right in the center of the room. This naturally forces the user to anchor their vision in the 3D space at the exact moment of the shake, allowing them to feel it better."
+                    }
+                ]
             }
         }
     }
