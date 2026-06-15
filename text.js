@@ -31,7 +31,7 @@ const translations = {
             accueil: {
                 heroTitle: "ANTOINE PEZZULO",
                 heroSubtitle: "Game Designer en formation",
-                status: "Actuellement disponible pour un stage de 4 mois (ou moins) à partir du 1er mai.",
+                status: "Actuellement disponible pour un stage à partir du 13 juillet 2026",
                 blobWelcome: "Bonjour à vous et bienvenue sur le site d’Antoine, bonne visite !",
                 blobAngry: "Antoine m’avait juste mis là pour dire bonjour… et voilà ce qui arrive à chaque fois.",
                 aboutLine: "Game Designer junior passionné par le game feel, l’UX et la tutorialisation.<br>J’aime travailler directement dans le moteur, les mains dans le cambouis."
@@ -324,7 +324,7 @@ const translations = {
             accueil: {
                 heroTitle: "ANTOINE PEZZULO",
                 heroSubtitle: "Game Designer in training",
-                status: "Available for an internship starting May 1st (up to 4 months).",
+                status: "Available for an internship starting on 13 July 2026",
                 blobWelcome: "Hello and welcome to Antoine's website, enjoy your visit!",
                 blobAngry: "Antoine just put me here to say hello... and this is what happens every time.",
                 aboutLine: "Junior Game Designer passionate about game feel, UX, and onboarding.<br>I love working directly in the engine, getting my hands dirty."
