@@ -295,6 +295,27 @@ const translations = {
                         text: "Pour l'interface, le défi était d'exposer de nombreux paramètres et informations à l'écran sans obstruer la vue, avec pour objectif d'offrir la meilleure perception possible du shake. Plusieurs choix de design ont été faits en ce sens. Le bouton qui déclenche l'effet est par exemple intradiégétique et placé au centre de la pièce. Cela force naturellement l'utilisateur à s'ancrer dans l'espace 3D au moment du shake, pour mieux le ressentir."
                     }
                 ]
+            },
+            "groovexe": {
+                title: "GROOVEXE",
+                subtitle: "Jeu de rythme (Placeholder)",
+                tags: ["Game Design", "Game Feel", "Programmation", "UI/UX"],
+                specs: { team: "Placeholder", context: "Académique", date: "2026", duration: "Placeholder", engine: "Unity" },
+                description: "Texte de présentation temporaire pour Groovexe. Remplace ce paragraphe par l'intention principale du projet, le contexte de production et ton rôle clé dans l'équipe.",
+                blocks: [
+                    {
+                        title: "Pitch",
+                        text: "Texte placeholder pour le pitch de Groovexe.\n\nDécris ici en deux ou trois lignes la boucle centrale, le feeling recherché et la promesse immédiate du jeu."
+                    },
+                    {
+                        title: "Game Design & Rythme",
+                        text: "Bloc placeholder dédié aux choix de design. Explique ici comment les mécaniques s'articulent autour du tempo, de la lisibilité et de la courbe de difficulté.\n\nTu pourras y détailler les itérations clés issues des playtests et ce qui a permis de verrouiller le flow du jeu."
+                    },
+                    {
+                        title: "Game Feel & Polish",
+                        text: "Bloc placeholder dédié aux feedbacks visuels, sonores et à l'UI/UX. Décris ici comment les signes et retours renforcent la précision des inputs et la sensation de maîtrise manette ou clavier en main."
+                    }
+                ]
             }
         }
     },
@@ -586,6 +607,27 @@ const translations = {
                     {
                         title: "UI / UX",
                         text: "Regarding the interface, the challenge was to display numerous parameters and information on screen without obstructing the view, aiming to provide the best possible perception of the shake. Several design choices were made to achieve this. For instance, the trigger button is diegetic and placed right in the center of the room. This naturally forces the user to anchor their vision in the 3D space at the exact moment of the shake, allowing them to feel it better."
+                    }
+                ]
+            },
+            "groovexe": {
+                title: "GROOVEXE",
+                subtitle: "Rhythm Game (Placeholder)",
+                tags: ["Game Design", "Game Feel", "Programming", "UI/UX"],
+                specs: { team: "Placeholder", context: "Academic", date: "2026", duration: "Placeholder", engine: "Unity" },
+                description: "Temporary overview text for Groovexe. Replace this paragraph with the core design intent, production context, and your main role on the project.",
+                blocks: [
+                    {
+                        title: "Pitch",
+                        text: "Placeholder pitch text for Groovexe.\n\nSummarize the core loop, the intended feel, and the immediate hook of the game in two or three sentences."
+                    },
+                    {
+                        title: "Game Design & Rhythm",
+                        text: "Placeholder block for design decisions. Detail how the mechanics tie into the tempo, readability, and difficulty curve.\n\nUse this section to highlight key iterations from playtests and what locked in the game's flow."
+                    },
+                    {
+                        title: "Game Feel & Polish",
+                        text: "Placeholder block for visual feedback, audio cues, and UI/UX. Explain how signs and feedback sharpen input precision and reinforce the sense of mastery."
                     }
                 ]
             }

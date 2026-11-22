@@ -22,6 +22,7 @@
     <link rel="preload" as="image" href="img/pleasant-chalk.avif" fetchpriority="low" />
     <link rel="preload" as="image" href="img/muscles-rockets.avif" fetchpriority="low" />
     <link rel="preload" as="image" href="img/screen-shake-lab.avif" fetchpriority="low" />
+    <link rel="preload" as="image" href="img/Groovexe.avif" fetchpriority="low" />
 
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
     <script data-goatcounter="https://antoinepezzulo.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
@@ -809,6 +810,14 @@
                       </div>
                   </div>
 
+                  <div class="project-card" data-project-id="groovexe">
+                      <div class="project-media"><img src="img/Groovexe.avif" alt="Groovexe"></div>
+                      <div class="project-info">
+                          <h3 class="project-title">GROOVEXE</h3>
+                          <div class="project-tags"></div>
+                      </div>
+                  </div>
+
               </div>
               </div>
           </section>
@@ -942,6 +951,7 @@
                         <div class="game-item" data-img="img/reflect.avif" data-title="REFLECT" data-url="builds/reflect/index.html" data-ratio="1.777"><div class="game-item-bg"></div><div class="game-item-content"><div class="game-item-title">REFLECT</div></div></div>
                         <div class="game-item" data-img="img/pleasant-chalk.avif" data-title="PLEASANT CHALK" data-url="builds/pleasant chalk/index.html" data-ratio="1"><div class="game-item-bg"></div><div class="game-item-content"><div class="game-item-title">PLEASANT CHALK</div></div></div>
                         <div class="game-item" data-img="img/screen-shake-lab.avif" data-title="SCREEN SHAKE LAB" data-url="builds/screen shake lab/index.html" data-ratio="1.777"><div class="game-item-bg"></div><div class="game-item-content"><div class="game-item-title">SCREEN SHAKE LAB</div></div></div>
+                        <div class="game-item" data-img="img/Groovexe.avif" data-title="GROOVEXE" data-url="builds/Groovexe/index.html" data-ratio="1.777"><div class="game-item-bg"></div><div class="game-item-content"><div class="game-item-title">GROOVEXE</div></div></div>
                     </div>
                 </div>
               </div>
@@ -1042,6 +1052,13 @@
                   { type: 'large-video', url: 'videos/screen shake lab.mp4' },
                   { type: 'none' }
               ]
+          },
+          "groovexe": {
+              fallbackTitle: "GROOVEXE",
+              heroImg: "img/Groovexe.avif",
+              blocksMedia: [
+                  { }
+              ]
           }
       };
 
@@ -1067,7 +1084,7 @@
       }
 
       const langBtn = document.getElementById('lang-btn');
-      if (window.currentLang === 'en') {
+      if (langBtn && window.currentLang === 'en') {
           langBtn.classList.add('is-en');
       }
 
@@ -1146,6 +1163,7 @@
       (function() {
           const topNav = document.getElementById('top-nav');
           const navTabs = document.querySelector('.nav-tabs');
+          if (!topNav || !navTabs) return;
           
           topNav.style.width = 'fit-content';
           navTabs.style.width = 'fit-content';
@@ -1168,84 +1186,86 @@
       })();
 
       let isLangAnimating = false;
-      langBtn.addEventListener('click', () => {
-          if (isLangAnimating) return;
-          isLangAnimating = true;
-          const topNav = document.getElementById('top-nav');
-          const navTabsContainer = document.querySelector('.nav-tabs');
-          const tabs = document.querySelectorAll('.nav-tab');
-          
-          navTabsContainer.style.pointerEvents = 'none'; // Désactiver les clics sur les onglets pendant l'animation
-          
-          const textElements = document.querySelectorAll(
-              '[data-i18n]:not(.nav-tab):not(.lang-text), ' +
-              '.project-title, .p-tag, #bio-content, .marquee-item span, ' +
-              '.sm-val, .pw-pitch-text, .pw-spec-val, .pw-spec-label, .pw-contrib-label, .video-glass-legend'
-          );
-
-          textElements.forEach(el => {
-              el.classList.add('text-lang-transition', 'text-lang-fade');
-          });
-          
-          const isEn = langBtn.classList.toggle('is-en');
-          window.currentLang = isEn ? 'en' : 'fr';
-          localStorage.setItem('portfolio_lang', window.currentLang);
-          document.documentElement.lang = window.currentLang;
-
-          setTimeout(() => {
-              const oldWidths = Array.from(tabs).map(t => t.getBoundingClientRect().width);
+      if (langBtn) {
+          langBtn.addEventListener('click', () => {
+              if (isLangAnimating) return;
+              isLangAnimating = true;
+              const topNav = document.getElementById('top-nav');
+              const navTabsContainer = document.querySelector('.nav-tabs');
+              const tabs = document.querySelectorAll('.nav-tab');
               
-              tabs.forEach(t => t.style.transition = 'none');
+              navTabsContainer.style.pointerEvents = 'none'; // Désactiver les clics sur les onglets pendant l'animation
               
-              initContent();
-              
-              tabs.forEach(t => t.style.width = ''); 
-              const newWidths = Array.from(tabs).map(t => t.getBoundingClientRect().width);
-              
-              const currentActive = document.querySelector('.nav-tab.active');
-              let newPillLeft = 0;
-              let newPillWidth = 0;
-              if (currentActive) {
-                  newPillLeft = currentActive.offsetLeft;
-                  newPillWidth = currentActive.getBoundingClientRect().width;
-              }
-              
-              tabs.forEach((t, i) => t.style.width = oldWidths[i] + 'px');
-              void topNav.offsetWidth; 
-              
-              tabs.forEach((t, i) => {
-                  t.style.transition = 'width 0.4s var(--ease-smooth), color 0.3s ease, background 0.3s ease, border-color 0.3s ease';
-                  t.style.width = newWidths[i] + 'px';
-              });
-              
-              if (currentActive) {
-                  const navPill = document.getElementById('nav-pill');
-                  navPill.style.width = `${newPillWidth}px`;
-                  navPill.style.left = `${newPillLeft}px`;
-              }
+              const textElements = document.querySelectorAll(
+                  '[data-i18n]:not(.nav-tab):not(.lang-text), ' +
+                  '.project-title, .p-tag, #bio-content, .marquee-item span, ' +
+                  '.sm-val, .pw-pitch-text, .pw-spec-val, .pw-spec-label, .pw-contrib-label, .video-glass-legend'
+              );
 
               textElements.forEach(el => {
-                  el.classList.remove('text-lang-fade');
+                  el.classList.add('text-lang-transition', 'text-lang-fade');
               });
+              
+              const isEn = langBtn.classList.toggle('is-en');
+              window.currentLang = isEn ? 'en' : 'fr';
+              localStorage.setItem('portfolio_lang', window.currentLang);
+              document.documentElement.lang = window.currentLang;
 
               setTimeout(() => {
-                  tabs.forEach(t => {
-                      t.style.width = '';
-                      t.style.transition = '';
-                  });
-                  const finalActive = document.querySelector('.nav-tab.active');
-                  if (finalActive) updateNavPill(finalActive);
-
-                  textElements.forEach(el => {
-                      el.classList.remove('text-lang-transition');
+                  const oldWidths = Array.from(tabs).map(t => t.getBoundingClientRect().width);
+                  
+                  tabs.forEach(t => t.style.transition = 'none');
+                  
+                  initContent();
+                  
+                  tabs.forEach(t => t.style.width = ''); 
+                  const newWidths = Array.from(tabs).map(t => t.getBoundingClientRect().width);
+                  
+                  const currentActive = document.querySelector('.nav-tab.active');
+                  let newPillLeft = 0;
+                  let newPillWidth = 0;
+                  if (currentActive) {
+                      newPillLeft = currentActive.offsetLeft;
+                      newPillWidth = currentActive.getBoundingClientRect().width;
+                  }
+                  
+                  tabs.forEach((t, i) => t.style.width = oldWidths[i] + 'px');
+                  void topNav.offsetWidth; 
+                  
+                  tabs.forEach((t, i) => {
+                      t.style.transition = 'width 0.4s var(--ease-smooth), color 0.3s ease, background 0.3s ease, border-color 0.3s ease';
+                      t.style.width = newWidths[i] + 'px';
                   });
                   
-                  navTabsContainer.style.pointerEvents = ''; // Réactiver les clics
-                  isLangAnimating = false;
-              }, 450);
+                  if (currentActive) {
+                      const navPill = document.getElementById('nav-pill');
+                      navPill.style.width = `${newPillWidth}px`;
+                      navPill.style.left = `${newPillLeft}px`;
+                  }
 
-          }, 250); 
-      });
+                  textElements.forEach(el => {
+                      el.classList.remove('text-lang-fade');
+                  });
+
+                  setTimeout(() => {
+                      tabs.forEach(t => {
+                          t.style.width = '';
+                          t.style.transition = '';
+                      });
+                      const finalActive = document.querySelector('.nav-tab.active');
+                      if (finalActive) updateNavPill(finalActive);
+
+                      textElements.forEach(el => {
+                          el.classList.remove('text-lang-transition');
+                      });
+                      
+                      navTabsContainer.style.pointerEvents = ''; // Réactiver les clics
+                      isLangAnimating = false;
+                  }, 450);
+
+              }, 250); 
+          });
+      }
 
       const lenis = new Lenis({
         duration: 0.8,
@@ -1279,25 +1299,27 @@
       let toastTimer = null;
       let themeAutoRevertTimeout = null;
       
-      themeBtn.addEventListener('click', () => {
-          const isDay = themeBtn.classList.toggle('is-day');
+      if (themeBtn) {
+          themeBtn.addEventListener('click', () => {
+              const isDay = themeBtn.classList.toggle('is-day');
 
-          if (isDay) {
-              showWipToast();
-              
-              if (themeAutoRevertTimeout) clearTimeout(themeAutoRevertTimeout);
-              themeAutoRevertTimeout = setTimeout(() => {
-                  themeBtn.classList.remove('is-day');
+              if (isDay) {
+                  showWipToast();
+                  
+                  if (themeAutoRevertTimeout) clearTimeout(themeAutoRevertTimeout);
+                  themeAutoRevertTimeout = setTimeout(() => {
+                      themeBtn.classList.remove('is-day');
+                      hideWipToast();
+                  }, 2000);
+              } else {
                   hideWipToast();
-              }, 2000);
-          } else {
-              hideWipToast();
-              if (themeAutoRevertTimeout) clearTimeout(themeAutoRevertTimeout);
-          }
-      });
+                  if (themeAutoRevertTimeout) clearTimeout(themeAutoRevertTimeout);
+              }
+          });
+      }
 
       function showWipToast() {
-          if (!wipToast) return;
+          if (!wipToast || !themeBtn) return;
           const rect = themeBtn.getBoundingClientRect();
           wipToast.style.left = (rect.left + rect.width / 2) + 'px';
           wipToast.style.top = (rect.bottom + 8) + 'px';
@@ -1311,11 +1333,11 @@
       }
 
       window.addEventListener('resize', () => {
-          if (wipToast.classList.contains('visible')) showWipToast();
+          if (wipToast && wipToast.classList.contains('visible')) showWipToast();
       });
 
       function updateNavPill(activeBtn) {
-          if (!activeBtn) return;
+          if (!activeBtn || !navPill) return;
           navPill.style.width = `${activeBtn.offsetWidth}px`;
           navPill.style.left = `${activeBtn.offsetLeft}px`;
           navPill.style.opacity = '1';
@@ -1325,7 +1347,7 @@
       let pageResizeObserver = null;
 
       function updateContainerHeight(activePageElement) {
-        if (!activePageElement) return;
+        if (!activePageElement || !pagesContainer) return;
         const newHeight = activePageElement.getBoundingClientRect().height;
         pagesContainer.style.height = `${newHeight}px`;
         lenis.resize();
@@ -1336,6 +1358,7 @@
       pCards.forEach(c => c.classList.add('is-reveal-hidden'));
 
       function goToPage(pageName) {
+        if (!pagesContainer) return;
         const index = pageOrder.indexOf(pageName);
         if (index === -1) return;
         
@@ -1389,7 +1412,7 @@
                 bg1.style.backgroundImage = `url('${firstActiveGame.getAttribute('data-img')}')`;
             }
 
-            if (!cinemaIntroPlayed) {
+            if (!cinemaIntroPlayed && cinemaContainer) {
                 cinemaIntroPlayed = true;
                 cinemaContainer.classList.remove('animate-close', 'animate-open');
                 void cinemaContainer.offsetWidth; 
@@ -1418,8 +1441,8 @@
 
       const sortToggleBtn = document.getElementById('sort-toggle');
       const grid = document.querySelector('.portfolio-grid');
-      // Screen Shake Lab est tout à la fin pour qu'il apparaisse en premier quand on tri par date (le plus récent)
-      const chronologicalOrder = ['voracines', 'pleasantchalk', 'metro', 'musclesrockets', 'mouseknight', 'reflect', 'screenshakelab'];
+      // Les plus récents sont à la fin pour apparaître en premier lors du tri par date
+      const chronologicalOrder = ['voracines', 'pleasantchalk', 'metro', 'musclesrockets', 'mouseknight', 'reflect', 'screenshakelab', 'groovexe'];
       let originalOrder = [];
       let currentSortState = 'pertinence';
 
@@ -1504,7 +1527,7 @@
       initSort();
 
       const viewer = document.getElementById('project-viewer');
-      const viewerContent = viewer.querySelector('.pv-content');
+      const viewerContent = viewer ? viewer.querySelector('.pv-content') : null;
       const closeViewerBtn = document.getElementById('pv-close-btn');
       let viewerCloseTimeout = null;
       
@@ -1604,6 +1627,7 @@
       };
 
       function openViewer(projectId) {
+          if (!viewer || !viewerContent) return;
           if (viewerCloseTimeout) {
               clearTimeout(viewerCloseTimeout);
               viewerCloseTimeout = null;
@@ -1613,12 +1637,20 @@
           const tSite = currentTexts.siteTexts;
           const tProj = currentTexts.projectTexts;
 
-          const textsData = tProj ? tProj[projectId] : null;
           const configData = projectConfig[projectId];
-          
-          if(!textsData || !configData || !tSite) return;
+          if (!configData || !tSite) return;
+
+          const textsData = (tProj && tProj[projectId]) ? tProj[projectId] : {
+              title: configData.fallbackTitle || projectId.toUpperCase(),
+              subtitle: "",
+              tags: [],
+              specs: { team: "", context: "", date: "", duration: "", engine: "" },
+              description: "",
+              blocks: []
+          };
 
           const formatTeam = (str) => {
+              if (!str) return '';
               if (str === 'Solo' || str === tSite.projectViewer.solo) return `<span style="color:#fff; font-weight:800; letter-spacing:0.05em;">${str}</span>`;
               return str.split(' - ').map(part => {
                   const match = part.match(/^(\d+)\s+(.+)$/);
@@ -1629,11 +1661,13 @@
               }).join('<span style="color:rgba(255,255,255,0.2); margin:0 6px; font-weight:300;">/</span>');
           };
 
-          let specTeam = formatTeam(textsData.specs.team || tSite.projectViewer.solo);
-          let specContext = textsData.specs.context || '';
-          let specDate = textsData.specs.date || '';
-          let specDuration = textsData.specs.duration || '';
-          let specEngine = textsData.specs.engine || '';
+          const specsObj = textsData.specs || {};
+          const rawTeam = specsObj.team !== undefined ? specsObj.team : tSite.projectViewer.solo;
+          let specTeam = formatTeam(rawTeam);
+          let specContext = specsObj.context || '';
+          let specDate = specsObj.date || '';
+          let specDuration = specsObj.duration || '';
+          let specEngine = specsObj.engine || '';
           let showEngine = !!specEngine;
 
           const headerHTML = `
@@ -1949,6 +1983,9 @@
                       { label: tSite.projectViewer.links.itch, url: 'https://antoine4.itch.io/screen-shake-lab', type: 'external' }
                   ];
                   break;
+              case 'groovexe':
+                  projectLinks = [];
+                  break;
               default:
                   projectLinks = [];
           }
@@ -2068,6 +2105,7 @@
       }
 
       function closeViewer() {
+          if (!viewer) return;
           viewer.classList.remove('active');
           document.body.classList.remove('is-viewer-open');
           
@@ -2083,7 +2121,7 @@
           lenis.start();
 
           viewerCloseTimeout = setTimeout(() => {
-              viewerContent.innerHTML = '';
+              if (viewerContent) viewerContent.innerHTML = '';
               viewerCloseTimeout = null;
               const progressBar = document.getElementById('pv-progress-bar');
               if(progressBar) progressBar.style.transform = 'scaleY(0)';
@@ -2097,18 +2135,19 @@
           });
       });
 
-      closeViewerBtn.addEventListener('click', closeViewer);
+      if (closeViewerBtn) closeViewerBtn.addEventListener('click', closeViewer);
 
       document.addEventListener('keydown', (e) => {
           if (e.key === 'Escape') {
-              if(document.getElementById('yt-modal').classList.contains('active')) {
+              const ytModal = document.getElementById('yt-modal');
+              if(ytModal && ytModal.classList.contains('active')) {
                   closeYTModal();
-              } else if (viewer.classList.contains('active')) {
+              } else if (viewer && viewer.classList.contains('active')) {
                   closeViewer();
               }
           }
 
-          if (viewer.classList.contains('active') && viewerLenis) {
+          if (viewer && viewer.classList.contains('active') && viewerLenis) {
              const scrollAmount = 100;
              if (e.key === 'ArrowDown') {
                  viewerLenis.scrollTo(viewerLenis.scroll + scrollAmount);
@@ -2126,15 +2165,15 @@
       let isGameRunning = false;
 
       const playOverlay = document.getElementById('play-overlay');
-      const playCloseBtn = playOverlay.querySelector('[data-play-close]');
-      const playTitleSpan = playOverlay.querySelector('.play-game-title');
-      const playModal = playOverlay.querySelector('.play-modal');
+      const playCloseBtn = playOverlay ? playOverlay.querySelector('[data-play-close]') : null;
+      const playTitleSpan = playOverlay ? playOverlay.querySelector('.play-game-title') : null;
+      const playModal = playOverlay ? playOverlay.querySelector('.play-modal') : null;
       let currentResizeHandler = null;
       let currentAspectRatio = 0; 
       let gameLaunchTimeout = null;
 
       function updateModalSize() {
-          if (!currentAspectRatio) return;
+          if (!currentAspectRatio || !playModal) return;
           const headerHeight = 64; const margin = 20; 
           const maxWidth = window.innerWidth - (margin * 2);
           const maxHeight = window.innerHeight - headerHeight - (margin * 2);
@@ -2146,6 +2185,7 @@
       }
 
       function openGame(url, title, ratio) {
+        if (!playOverlay || !playModal) return;
         lenis.stop();
 
         const iframe = document.createElement('iframe');
@@ -2181,7 +2221,7 @@
         }, 450);
       }
 
-      playCloseBtn.addEventListener('click', closeDemo);
+      if (playCloseBtn) playCloseBtn.addEventListener('click', closeDemo);
 
       if(gameItems.length > 0) {
           gameItems.forEach(item => {
@@ -2344,7 +2384,8 @@
               'img/reflect.avif',
               'img/pleasant-chalk.avif',
               'img/muscles-rockets.avif',
-              'img/screen-shake-lab.avif'
+              'img/screen-shake-lab.avif',
+              'img/Groovexe.avif'
           ];
           
           // 1. Lancement invisible des téléchargements d'images (pour forcer le cache JS en plus du preload HTML)
