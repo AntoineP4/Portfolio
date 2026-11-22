@@ -54,7 +54,7 @@ const translations = {
                     specialtyLabel: "Spécialité",
                     specialtyVal: "Game Feel · Tutorialisation · UX",
                     toolsLabel: "Outils",
-                    toolsVal: "Unity · Godot · Excel · Git · Figma"
+                    toolsVal: "Unreal · Unity · Godot<br>GitHub · Perforce · Figma · Excel"
                 },
                 cvLabel: "CV",
                 cvFr: "Francais",
@@ -76,7 +76,7 @@ const translations = {
                 phone: "Téléphone",
                 discord: "Discord",
                 sectionPlatforms: "Plateformes",
-                platforms: ["Itch.io", "Newgrounds", "GitHub"],
+                platforms: ["GitHub", "Itch.io", "Newgrounds", "Backloggd"],
                 sectionArticles: "Articles et Réflexions",
                 btnCv: "CV",
                 articles: [
@@ -118,7 +118,7 @@ const translations = {
             "metro": {
                 title: "METRO",
                 subtitle: "One Button Runner",
-                tags: ["Game Design", "Level Design", "Programmation", "UI/UX", "Visual", "Sound Design"],
+                tags: ["Game Design", "Level Design", "Programmation", "UI/UX", "Art", "Sound Design"],
                 specs: { team: "Solo", context: "Académique / Personnel", date: "Mars 2025", duration: "En cours", engine: "Unity" },
                 description: "METRO est né d’une contrainte : concevoir un jeu entièrement jouable avec la barre espace. Je continue aujourd’hui de le développer sur mon temps personnel afin d’en approfondir le contenu et d’atteindre un haut niveau de finition.",
                 blocks: [
@@ -155,7 +155,7 @@ const translations = {
             "mouseknight": {
                 title: "MOUSE KNIGHT",
                 subtitle: "Action Aventure",
-                tags: ["Game Design", "Level Design", "Programmation", "UI/UX", "Visual"],
+                tags: ["Game Design", "Level Design", "Programmation", "UI/UX", "Art"],
                 specs: { team: "5 Design - 2 Sound", context: "Académique", date: "Décembre 2025", duration: "3 mois", engine: "Unity" },
                 description: "Réalisé en équipe à ISART, Mouse Knight m’a amené à jouer un rôle structurant dans la conception et l’implémentation du jeu. Fortement impliqué dans le développement, j’ai veillé à maintenir une expérience cohérente.",
                 blocks: [
@@ -183,7 +183,7 @@ const translations = {
             "voracines": {
                 title: "VORACINES",
                 subtitle: "Jeu de plateau tactique",
-                tags: ["Game Design", "Visual"],
+                tags: ["Game Design"],
                 specs: { team: "5 Design - 2 Artists", context: "Académique", date: "Décembre 2025", duration: "3 mois", engine: "" },
                 description: "Avec Voracines, l’objectif était de concevoir un jeu de plateau tactique capable de générer des décisions pertinentes à partir d’un ensemble de règles volontairement simples.",
                 blocks: [
@@ -233,7 +233,7 @@ const translations = {
             "pleasantchalk": {
                 title: "PLEASANT CHALK",
                 subtitle: "Arcade Shooter",
-                tags: ["UI/UX", "Visual", "Sound Design"],
+                tags: ["UI/UX", "Art", "Sound Design"],
                 specs: { team: "Solo", context: "Académique", date: "Janvier 2025", duration: "2 semaines", engine: "Unity" },
                 description: "Pleasant Chalk s’inscrit dans le cadre du projet Juice It, dont l’objectif était de transformer une base de jeu volontairement austère et fade en une expérience juicy, sans modifier le gameplay.",
                 blocks: [
@@ -258,7 +258,7 @@ const translations = {
             "musclesrockets": {
                 title: "MUSCLES & ROCKETS",
                 subtitle: "Action Platformer",
-                tags: ["Game Design", "Level Design", "UI/UX"],
+                tags: ["Game Design", "Level Design", "UI/UX", "Art"],
                 specs: { team: "6 Design - 1 Code - 1 Sound", context: "Académique", date: "Mars 2025", duration: "6 semaines", engine: "Unity" },
                 description: "Muscles & Rockets avait pour objectif d’unifier défis de plateforme et de combat au sein d’un action-platformer reposant sur une mécanique centrale hybride.",
                 blocks: [
@@ -282,7 +282,7 @@ const translations = {
             "screenshakelab": {
                 title: "SCREEN SHAKE LAB",
                 subtitle: "Outil Interactif",
-                tags: ["Tool", "Game Feel", "UI/UX", "Programmation"],
+                tags: ["Tool", "Game Feel", "UI/UX", "Programmation", "Art"],
                 specs: { team: "Solo", context: "Personnel", date: "Mars 2026", duration: "1 semaine", engine: "Unity" },
                 description: "Un outil interactif conçu pour les designers et développeurs, permettant d'expérimenter, de tweaker et de comprendre toutes les nuances des screen shakes.",
                 blocks: [
@@ -368,7 +368,7 @@ const translations = {
                     specialtyLabel: "Specialty",
                     specialtyVal: "Game Feel · Onboarding · UX",
                     toolsLabel: "Tools",
-                    toolsVal: "Unity · Godot · Excel · Git · Figma"
+                    toolsVal: "Unreal · Unity · Godot<br>GitHub · Perforce · Figma · Excel"
                 },
                 cvLabel: "Resume",
                 cvFr: "French",
@@ -390,7 +390,7 @@ const translations = {
                 phone: "Phone",
                 discord: "Discord",
                 sectionPlatforms: "Platforms",
-                platforms: ["Itch.io", "Newgrounds", "GitHub"],
+                platforms: ["GitHub", "Itch.io", "Newgrounds", "Backloggd"],
                 sectionArticles: "Articles and Thoughts",
                 btnCv: "Resume",
                 articles: [
@@ -432,7 +432,7 @@ const translations = {
             "metro": {
                 title: "METRO",
                 subtitle: "One Button Runner",
-                tags: ["Game Design", "Level Design", "Programming", "UI/UX", "Visual", "Sound Design"],
+                tags: ["Game Design", "Level Design", "Programming", "UI/UX", "Art", "Sound Design"],
                 specs: { team: "Solo", context: "Academic / Personal", date: "March 2025", duration: "Ongoing", engine: "Unity" },
                 description: "METRO was born from a constraint: designing a game entirely playable with the spacebar. I am still developing it in my spare time today to deepen its content and achieve a high level of polish.",
                 blocks: [
@@ -469,7 +469,7 @@ const translations = {
             "mouseknight": {
                 title: "MOUSE KNIGHT",
                 subtitle: "Action Adventure",
-                tags: ["Game Design", "Level Design", "Programming", "UI/UX", "Visual"],
+                tags: ["Game Design", "Level Design", "Programming", "UI/UX", "Art"],
                 specs: { team: "5 Design - 2 Sound", context: "Academic", date: "December 2025", duration: "3 months", engine: "Unity" },
                 description: "Created as a team at ISART, Mouse Knight led me to play a structuring role in the game's design and implementation. Deeply involved in development, I made sure to maintain a cohesive experience.",
                 blocks: [
@@ -497,7 +497,7 @@ const translations = {
             "voracines": {
                 title: "VORACINES",
                 subtitle: "Tactical Board Game",
-                tags: ["Game Design", "Visual"],
+                tags: ["Game Design"],
                 specs: { team: "5 Design - 2 Artists", context: "Academic", date: "December 2025", duration: "3 months", engine: "" },
                 description: "With Voracines, the goal was to design a tactical board game capable of generating meaningful decisions from a deliberately simple set of rules.",
                 blocks: [
@@ -547,7 +547,7 @@ const translations = {
             "pleasantchalk": {
                 title: "PLEASANT CHALK",
                 subtitle: "Arcade Shooter",
-                tags: ["UI/UX", "Visual", "Sound Design"],
+                tags: ["UI/UX", "Art", "Sound Design"],
                 specs: { team: "Solo", context: "Academic", date: "January 2025", duration: "2 weeks", engine: "Unity" },
                 description: "Pleasant Chalk was part of the 'Juice It' project, aiming to transform a deliberately austere and dull base game into a juicy experience, without modifying the gameplay.",
                 blocks: [
@@ -572,7 +572,7 @@ const translations = {
             "musclesrockets": {
                 title: "MUSCLES & ROCKETS",
                 subtitle: "Action Platformer",
-                tags: ["Game Design", "Level Design", "UI/UX"],
+                tags: ["Game Design", "Level Design", "UI/UX", "Art"],
                 specs: { team: "6 Design - 1 Code - 1 Sound", context: "Academic", date: "March 2025", duration: "6 weeks", engine: "Unity" },
                 description: "Muscles & Rockets aimed to unify platforming challenges and combat within an action-platformer built upon a hybrid core mechanic.",
                 blocks: [
@@ -596,7 +596,7 @@ const translations = {
             "screenshakelab": {
                 title: "SCREEN SHAKE LAB",
                 subtitle: "Interactive Tool",
-                tags: ["Tool", "Game Feel", "UI/UX", "Programming"],
+                tags: ["Tool", "Game Feel", "UI/UX", "Programming", "Art"],
                 specs: { team: "Solo", context: "Personal", date: "March 2026", duration: "1 week", engine: "Unity" },
                 description: "An interactive tool designed for designers and developers, allowing them to experiment, tweak, and understand every nuance of screen shake.",
                 blocks: [
