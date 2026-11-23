@@ -47,7 +47,6 @@ const translations = {
                 heroTitle: "Moi",
                 heroSubtitle: "Mieux me connaître",
                 name: "ANTOINE PEZZULO",
-                motto: "Faire. Ressentir. Ajuster. Refaire.",
                 stats: {
                     formationLabel: "Formation",
                     formationVal: "ISART Digital Paris · Game Design",
@@ -298,22 +297,18 @@ const translations = {
             },
             "groovexe": {
                 title: "GROOVEXE",
-                subtitle: "Jeu de rythme (Placeholder)",
-                tags: ["Game Design", "Game Feel", "Programmation", "UI/UX"],
-                specs: { team: "Placeholder", context: "Académique", date: "2026", duration: "Placeholder", engine: "Unity" },
-                description: "Texte de présentation temporaire pour Groovexe. Remplace ce paragraphe par l'intention principale du projet, le contexte de production et ton rôle clé dans l'équipe.",
+                subtitle: "Jeu de rythme",
+                tags: ["Game Design", "Level Design"],
+                specs: { team: "2 Design - 3 Code - 4 Art - 1 Sound", context: "Game Jam", date: "Septembre 2026", duration: "4 Jours", engine: "Unity" },
+                description: "GroovExe a été réalisé lors d’une game jam organisée au sein de l’école ISART Digital sur le thème « l’empreinte », et a remporté le prix Coup de cœur des joueurs.",
                 blocks: [
                     {
                         title: "Pitch",
-                        text: "Texte placeholder pour le pitch de Groovexe.\n\nDécris ici en deux ou trois lignes la boucle centrale, le feeling recherché et la promesse immédiate du jeu."
+                        text: "Dans GroovExe, vous incarnez une jeune fille qui tente de protéger son empreinte numérique tout en piratant les données des autres. Vos actions suivent le rythme de la musique."
                     },
                     {
-                        title: "Game Design & Rythme",
-                        text: "Bloc placeholder dédié aux choix de design. Explique ici comment les mécaniques s'articulent autour du tempo, de la lisibilité et de la courbe de difficulté.\n\nTu pourras y détailler les itérations clés issues des playtests et ce qui a permis de verrouiller le flow du jeu."
-                    },
-                    {
-                        title: "Game Feel & Polish",
-                        text: "Bloc placeholder dédié aux feedbacks visuels, sonores et à l'UI/UX. Décris ici comment les signes et retours renforcent la précision des inputs et la sensation de maîtrise manette ou clavier en main."
+                        title: "Game Design",
+                        text: "L’objectif que je m’étais fixé était de trouver une mécanique de jeu de rythme forte et efficace, qui permettrait au joueur de vivre le fantasme stéréotypé du hacker surdoué.\n\nJ’ai donc décidé de reprendre le concept d’Osu! en y soustrayant la souris, c’est-à-dire en jouant uniquement au clavier, ce qui a permis de rendre le jeu plus accessible aux joueurs et plus maîtrisé pour le format de jam."
                     }
                 ]
             }
@@ -361,7 +356,6 @@ const translations = {
                 heroTitle: "Me",
                 heroSubtitle: "Get to know me",
                 name: "ANTOINE PEZZULO",
-                motto: "Make. Feel. Tweak. Repeat.",
                 stats: {
                     formationLabel: "Education",
                     formationVal: "ISART Digital Paris · Game Design",
@@ -612,22 +606,18 @@ const translations = {
             },
             "groovexe": {
                 title: "GROOVEXE",
-                subtitle: "Rhythm Game (Placeholder)",
-                tags: ["Game Design", "Game Feel", "Programming", "UI/UX"],
-                specs: { team: "Placeholder", context: "Academic", date: "2026", duration: "Placeholder", engine: "Unity" },
-                description: "Temporary overview text for Groovexe. Replace this paragraph with the core design intent, production context, and your main role on the project.",
+                subtitle: "Rhythm Game",
+                tags: ["Game Design", "Level Design"],
+                specs: { team: "2 Design - 3 Code - 4 Art - 1 Sound", context: "Game Jam", date: "September 2026", duration: "4 Days", engine: "Unity" },
+                description: "GroovExe was created during a game jam hosted at ISART Digital around the theme \"footprint\", and won the Players' Choice award.",
                 blocks: [
                     {
                         title: "Pitch",
-                        text: "Placeholder pitch text for Groovexe.\n\nSummarize the core loop, the intended feel, and the immediate hook of the game in two or three sentences."
+                        text: "In GroovExe, you play as a girl trying to protect her digital footprint while hacking into other people's data. Your actions follow the rhythm of the music."
                     },
                     {
-                        title: "Game Design & Rhythm",
-                        text: "Placeholder block for design decisions. Detail how the mechanics tie into the tempo, readability, and difficulty curve.\n\nUse this section to highlight key iterations from playtests and what locked in the game's flow."
-                    },
-                    {
-                        title: "Game Feel & Polish",
-                        text: "Placeholder block for visual feedback, audio cues, and UI/UX. Explain how signs and feedback sharpen input precision and reinforce the sense of mastery."
+                        title: "Game Design",
+                        text: "My goal was to find a strong and effective rhythm game mechanic that would let the player live out the stereotypical fantasy of the prodigy hacker.\n\nI therefore decided to take the concept of Osu! and remove the mouse, making it playable entirely with the keyboard. This made the game both more accessible to players and better scoped for a game jam format."
                     }
                 ]
             }

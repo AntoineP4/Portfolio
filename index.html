@@ -19,10 +19,10 @@
     <link rel="preload" as="image" href="img/mouse-knight.avif" fetchpriority="low" />
     <link rel="preload" as="image" href="img/voracines.avif" fetchpriority="low" />
     <link rel="preload" as="image" href="img/reflect.avif" fetchpriority="low" />
+    <link rel="preload" as="image" href="img/groovexe.avif" fetchpriority="low" />
     <link rel="preload" as="image" href="img/pleasant-chalk.avif" fetchpriority="low" />
     <link rel="preload" as="image" href="img/muscles-rockets.avif" fetchpriority="low" />
     <link rel="preload" as="image" href="img/screen-shake-lab.avif" fetchpriority="low" />
-    <link rel="preload" as="image" href="img/groovexe.avif" fetchpriority="low" />
 
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
     <script data-goatcounter="https://antoinepezzulo.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
@@ -578,18 +578,10 @@
         body.game-running #site-root, body.game-running #cinema-dimmer { content-visibility: hidden; visibility: hidden; }
         body.game-running #play-overlay { backdrop-filter: none; -webkit-backdrop-filter: none; background: #070707; }
         body.game-running * { animation-play-state: paused !important; }
-        body.game-running .play-eq-bar { animation-play-state: running !important; }
         .play-modal { position: absolute; left: 50%; top: 50%; transform: translate3d(-50%,-50%,0); width: auto; height: auto; border-radius: 22px; overflow: hidden; border: 1px solid rgba(255,255,255,0.10); background: rgba(0,0,0,0.75); box-shadow: 0 28px 90px rgba(0,0,0,0.70); max-width: 100vw; max-height: 100vh; }
         .play-modal-top { height: 64px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; background: #0a0a0a; border-bottom: 1px solid rgba(255, 255, 255, 0.08); position: relative; z-index: 10; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
-        .play-header-info { display: flex; flex-direction: column; justify-content: center; gap: 4px; }
-        .play-status-row { display: flex; align-items: center; gap: 8px; }
-        @keyframes eqPulse { 0%, 100% { height: 4px; opacity: 0.5; } 50% { height: 8px; opacity: 1; } }
-        .play-eq-icon { display: flex; align-items: center; gap: 2px; height: 12px; }
-        .play-eq-bar { width: 2px; height: 4px; background: #2ecc71; border-radius: 1px; animation: eqPulse 1s ease-in-out infinite; }
-        .play-eq-bar:nth-child(2) { animation-delay: 0.2s; height: 6px; }
-        .play-eq-bar:nth-child(3) { animation-delay: 0.4s; }
-        .play-status-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
-        .play-game-title { font-family: inherit; font-weight: 800; letter-spacing: 0.03em; text-transform: uppercase; font-size: 1.1rem; color: rgba(255,255,255,0.95); line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60vw; text-shadow: 0 0 20px rgba(255, 255, 255, 0.1); }
+        .play-header-info { display: flex; align-items: center; min-width: 0; }
+        .play-game-title { font-family: inherit; font-weight: 850; letter-spacing: 0.06em; text-transform: uppercase; font-size: 1.2rem; color: rgba(255,255,255,0.95); line-height: 1; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60vw; text-shadow: 0 0 20px rgba(255, 255, 255, 0.1); }
         .play-action-btn { appearance: none; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 6px 6px 6px 18px; border-radius: 30px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); color: rgba(255,255,255,0.7); }
         .play-btn-label { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: inherit; user-select: none; }
         .play-btn-icon-box { width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
@@ -634,14 +626,6 @@
       <div class="play-modal" role="dialog" aria-modal="true" aria-label="Jeu WebGL">
         <div class="play-modal-top">
           <div class="play-header-info">
-              <div class="play-status-row">
-                  <div class="play-eq-icon">
-                      <div class="play-eq-bar"></div>
-                      <div class="play-eq-bar"></div>
-                      <div class="play-eq-bar"></div>
-                  </div>
-                  <span class="play-status-label" data-i18n="jouer.sessionActive"></span>
-              </div>
               <h2 class="play-game-title" data-i18n="jouer.gameTitleFallback"></h2>
           </div>
           <button class="play-action-btn" type="button" data-play-close aria-label="Terminer la session">
@@ -786,6 +770,14 @@
                       </div>
                   </div>
 
+                  <div class="project-card" data-project-id="groovexe">
+                      <div class="project-media"><img src="img/groovexe.avif" alt="Groovexe"></div>
+                      <div class="project-info">
+                          <h3 class="project-title"></h3>
+                          <div class="project-tags"></div>
+                      </div>
+                  </div>
+
                   <div class="project-card" data-project-id="pleasantchalk">
                       <div class="project-media"><img src="img/pleasant-chalk.avif" alt="Pleasant Chalk"></div>
                       <div class="project-info">
@@ -810,14 +802,6 @@
                       </div>
                   </div>
 
-                  <div class="project-card" data-project-id="groovexe">
-                      <div class="project-media"><img src="img/groovexe.avif" alt="Groovexe"></div>
-                      <div class="project-info">
-                          <h3 class="project-title">GROOVEXE</h3>
-                          <div class="project-tags"></div>
-                      </div>
-                  </div>
-
               </div>
               </div>
           </section>
@@ -834,7 +818,7 @@
                 </div>
                 <div class="about-text">
                   <h2><span data-i18n="moi.name"></span><div class="underline"></div></h2>
-                  <p data-i18n="moi.motto" style="margin-top: -0.5rem; margin-bottom: 1.5rem; color: rgba(255,255,255,0.75); font-weight: 500; letter-spacing: 0.05em;"></p>
+                <div style="height: 1rem;"></div>
                   <ul class="id-stats">
                     <li>
                       <div class="stat-row-left">
@@ -1058,7 +1042,8 @@
               fallbackTitle: "GROOVEXE",
               heroImg: "img/groovexe.avif",
               blocksMedia: [
-                  { }
+                  { },
+                  { type: 'none' }
               ]
           }
       };
@@ -1120,7 +1105,7 @@
 
           const bioEl = document.getElementById('bio-content');
           if (bioEl && tBio) {
-              bioEl.innerText = tBio;
+              bioEl.innerHTML = tBio;
           }
 
           const marqueeTrack = document.querySelector('.marquee-track');
@@ -1985,7 +1970,9 @@
                   ];
                   break;
               case 'groovexe':
-                  projectLinks = [];
+                  projectLinks = [
+                      { label: tSite.projectViewer.links.itch, url: 'https://guiguizzz.itch.io/groovexe', type: 'external' }
+                  ];
                   break;
               default:
                   projectLinks = [];
@@ -2383,10 +2370,10 @@
               'img/mouse-knight.avif',
               'img/voracines.avif',
               'img/reflect.avif',
+              'img/groovexe.avif',
               'img/pleasant-chalk.avif',
               'img/muscles-rockets.avif',
-              'img/screen-shake-lab.avif',
-              'img/groovexe.avif'
+              'img/screen-shake-lab.avif'
           ];
           
           // 1. Lancement invisible des téléchargements d'images (pour forcer le cache JS en plus du preload HTML)
