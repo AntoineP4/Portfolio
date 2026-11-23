@@ -57,8 +57,8 @@ const translations = {
                     toolsVal: "Unreal · Unity · Godot<br>GitHub · Perforce · Figma · Excel"
                 },
                 cvLabel: "CV",
-                cvFr: "Francais",
-                cvEn: "Anglais",
+                cvFr: "Consulter",
+                cvEn: "Télécharger",
                 bioTitle: "Biographie",
                 gamesTitle: "Ces jeux qui m’ont marqué",
                 gamesList: [
@@ -370,9 +370,9 @@ const translations = {
                     toolsLabel: "Tools",
                     toolsVal: "Unreal · Unity · Godot<br>GitHub · Perforce · Figma · Excel"
                 },
-                cvLabel: "Resume",
-                cvFr: "French",
-                cvEn: "English",
+                cvLabel: "CV",
+                cvFr: "View",
+                cvEn: "Download",
                 bioTitle: "Biography",
                 gamesTitle: "Games that left a mark on me",
                 gamesList: [
@@ -392,7 +392,7 @@ const translations = {
                 sectionPlatforms: "Platforms",
                 platforms: ["GitHub", "Itch.io", "Newgrounds", "Backloggd"],
                 sectionArticles: "Articles and Thoughts",
-                btnCv: "Resume",
+                btnCv: "CV",
                 articles: [
                     { tag: "Guide", title: "Gameplay guide - 1 million views" },
                     { tag: "Article", title: "Matchmaking system analysis" },
